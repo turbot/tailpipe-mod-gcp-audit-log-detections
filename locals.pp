@@ -10,7 +10,7 @@ locals {
 locals {
   # Local internal variables to build the SQL select clause for common
   # dimensions. Do not edit directly.
-  audit_log_detection_sql_columns = <<-EOQ
+  audit_log_admin_activity_detection_sql_columns = <<-EOQ
   tp_timestamp as timestamp,
   string_split(method_name, '.')[1] || ':' || method_name as operation,
   __RESOURCE_SQL__ as resource,
