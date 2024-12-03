@@ -6,7 +6,7 @@ locals {
   audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_privilege_elevations_sql_columns                        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_creations_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_firewall_rule_changes_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_firewall_rule_changes_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_unusual_resource_consumption_sql_columns                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpn_tunnel_changes_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_sql_database_changes_sql_columns                        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -33,17 +33,20 @@ locals {
   audit_log_admin_activity_detect_pubsub_subscription_deletion_updates_sql_columns        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_log_sink_deletion_updates_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_logging_bucket_deletion_updates_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_storage_set_iam_policy_sql_columns                      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 detection_benchmark "audit_log_admin_activity_detections" {
-  title       = "GCP Audit Log Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Audit Logs."
+  title       = "GCP Admin Activity Audit Logs Detections"
+  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Audit Logs."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_unauthorized_access_attempts,
     detection.audit_log_admin_activity_detect_privilege_elevations,
     detection.audit_log_admin_activity_detect_service_account_creations,
-    detection.audit_log_admin_activity_detect_firewall_rule_changes,
+    detection.audit_log_admin_activity_detect_compute_firewall_rule_changes,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes,
     detection.audit_log_admin_activity_detect_unusual_resource_consumption,
     detection.audit_log_admin_activity_detect_vpn_tunnel_changes,
     detection.audit_log_admin_activity_detect_sql_database_changes,
@@ -69,7 +72,8 @@ detection_benchmark "audit_log_admin_activity_detections" {
     detection.audit_log_admin_activity_detect_pubsub_topic_deletion_updates,
     detection.audit_log_admin_activity_detect_pubsub_subscription_deletion_updates,
     detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
-    detection.audit_log_admin_activity_detect_logging_bucket_deletion_updates
+    detection.audit_log_admin_activity_detect_logging_bucket_deletion_updates,
+    detection.audit_log_admin_activity_detect_storage_set_iam_policy,
   ]
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -114,11 +118,22 @@ detection "audit_log_admin_activity_detect_service_account_creations" {
   })
 }
 
-detection "audit_log_admin_activity_detect_firewall_rule_changes" {
+detection "audit_log_admin_activity_detect_compute_firewall_rule_changes" {
   title       = "Detect Firewall Rule Changes"
   description = "Detect changes to firewall rules that may expose resources to threats."
   severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_firewall_rule_changes
+  query       = query.audit_log_admin_activity_detect_compute_firewall_rule_changes
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
+  title       = "Detect App Engine Ingress Firewall Rule Changes"
+  description = "Detect changes to App Engine ingress firewall rules that may expose resources to threats."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -411,6 +426,17 @@ detection "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
   })
 }
 
+detection "audit_log_admin_activity_detect_storage_set_iam_policy" {
+  title       = "Detect Storage Set IAM Policy"
+  description = "Detect changes to storage IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_storage_set_iam_policy
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = ""
+  })
+}
+
 /*
  * Queries
  */
@@ -423,6 +449,7 @@ query "audit_log_admin_activity_detect_unauthorized_access_attempts" {
       gcp_audit_log_admin_activity
     where
       method_name = 'google.logging.v2.WriteLogEntries'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -437,6 +464,7 @@ query "audit_log_admin_activity_detect_privilege_elevations" {
     where
       service_name = 'iam.googleapis.com'
       and method_name = 'SetIamPolicy'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -451,20 +479,37 @@ query "audit_log_admin_activity_detect_service_account_creations" {
     where
       service_name = 'iam.googleapis.com'
       and method_name = 'google.iam.admin.v1.CreateServiceAccount'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
 }
 
-query "audit_log_admin_activity_detect_firewall_rule_changes" {
+query "audit_log_admin_activity_detect_compute_firewall_rule_changes" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_firewall_rule_changes_sql_columns}
+      ${local.audit_log_admin_activity_detect_compute_firewall_rule_changes_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
-      service_name in ('compute.googleapis.com', 'appengine.googleapis.com')
-      and method_name in ('v1.compute.firewalls.insert', 'v1.compute.firewalls.update', 'v1.compute.firewalls.delete', 'google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
+      service_name = 'compute.googleapis.com'
+      and method_name in ('v1.compute.firewalls.insert', 'v1.compute.firewalls.update', 'v1.compute.firewalls.delete')
+      and severity != 'Error'
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'appengine.googleapis.com'
+      and method_name in ('google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -478,6 +523,7 @@ query "audit_log_admin_activity_detect_unusual_resource_consumption" {
       gcp_audit_log_admin_activity
     where
       method_name = 'google.monitoring.v3.CreateTimeSeries'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -492,6 +538,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_changes" {
     where
       service_name = 'compute.googleapis.com'
       and method_name in ('google.cloud.compute.v1.VpnTunnels.Patch', 'google.cloud.compute.v1.VpnTunnels.Delete')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -506,6 +553,7 @@ query "audit_log_admin_activity_detect_sql_database_changes" {
     where
       service_name = 'sqladmin.googleapis.com'
       and method_name in ('cloudsql.instances.delete', 'cloudsql.instances.patch')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -520,6 +568,7 @@ query "audit_log_admin_activity_detect_dns_zone_changes" {
     where
       service_name = 'dns.googleapis.com'
       and method_name in ('dns.managedZones.patch', 'dns.managedZones.delete')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -534,6 +583,7 @@ query "audit_log_admin_activity_detect_storage_bucket_changes" {
     where
       service_name = 'storage.googleapis.com'
       and method_name in ('storage.buckets.update', 'storage.buckets.delete')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -548,6 +598,7 @@ query "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
     where
       service_name = 'compute.googleapis.com'
       and method_name in ('google.cloud.compute.v1.PacketMirrorings.Delete', 'google.cloud.compute.v1.PacketMirrorings.Insert', 'google.cloud.compute.v1.PacketMirrorings.Patch', 'google.cloud.compute.v1.PacketMirrorings.List', 'google.cloud.compute.v1.PacketMirrorings.AggregatedList', 'google.cloud.compute.v1.PacketMirrorings.Get')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -562,6 +613,7 @@ query "audit_log_admin_activity_detect_kubernetes_secrets_modification_updates" 
     where
       service_name = 'k8s.io'
       and method_name in ('io.k8s.api.core.v1.secrets.delete', 'io.k8s.api.core.v1.secrets.update')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -576,6 +628,7 @@ query "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
     where
       service_name = 'iam.googleapis.com'
       and method_name in ('google.iam.admin.v1.ServiceAccounts.Delete', 'google.iam.admin.v1.ServiceAccounts.Disable')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -590,6 +643,7 @@ query "audit_log_admin_activity_detect_access_policy_deletion_updates" {
     where
       service_name = 'accesscontextmanager.googleapis.com'
       and method_name in ('accesscontextmanager.accessPolicies.authorizedOrgsDescs.delete', 'accesscontextmanager.accessPolicies.accessZones.delete', 'accesscontextmanager.accessPolicies.accessLevels.delete', 'accesscontextmanager.accessPolicies.delete')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -604,6 +658,7 @@ query "audit_log_admin_activity_detect_storage_bucket_enumeration_updates" {
     where
       service_name = 'storage.googleapis.com'
       and method_name in ('storage.buckets.list', 'storage.buckets.listChannels')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -618,6 +673,7 @@ query "audit_log_admin_activity_detect_dlp_reidentify_content" {
     where
       service_name = 'dlp.googleapis.com'
       and method_name = 'google.privacy.dlp.v2.DlpService.ReidentifyContent'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -632,6 +688,7 @@ query "audit_log_admin_activity_detect_kubernetes_admission_webhook_config_chang
     where
       service_name = 'admissionregistration.k8s.io'
       and method_name in ('admissionregistration.k8s.io.v1.mutatingwebhookconfigurations.create', 'admissionregistration.k8s.io.v1.mutatingwebhookconfigurations.replace', 'admissionregistration.k8s.io.v1.validatingwebhookconfigurations.patch')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -646,6 +703,7 @@ query "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
     where
       service_name = 'batch.k8s.io'
       and method_name in ('io.k8s.api.batch.v1.cronjobs.delete', 'io.k8s.api.batch.v1.cronjobs.update', 'io.k8s.api.batch.v1.cronjobs.create')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -660,6 +718,7 @@ query "audit_log_admin_activity_detect_kubernetes_role_binding_changes" {
     where
       service_name = 'rbac.authorization.k8s.io'
       and method_name in ('io.k8s.authorization.rbac.v1.rolebindings.delete', 'io.k8s.authorization.rbac.v1.clusterrolebindings.update', 'io.k8s.authorization.rbac.v1.rolebindings.patch', 'io.k8s.authorization.rbac.v1.clusterrolebindings.create')
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -674,6 +733,7 @@ query "audit_log_admin_activity_detect_compute_snapshots_insert" {
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.snapshots.insert'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -688,6 +748,7 @@ query "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.images.setIamPolicy'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -702,6 +763,7 @@ query "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.disks.setIamPolicy'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -716,6 +778,7 @@ query "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" 
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.snapshots.setIamPolicy'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -730,6 +793,7 @@ query "audit_log_admin_activity_detect_project_level_iam_policy_change" {
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name = 'google.cloud.resourcemanager.v1.Projects.SetIamPolicy'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -744,6 +808,7 @@ query "audit_log_admin_activity_detect_service_account_access_token_generation" 
     where
       service_name = 'iamcredentials.googleapis.com'
       and method_name = 'google.iam.credentials.v1.IAMCredentials.GenerateAccessToken'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -758,6 +823,7 @@ query "audit_log_admin_activity_detect_pubsub_subscription_creation_updates" {
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Subscriber.CreateSubscription'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -772,6 +838,7 @@ query "audit_log_admin_activity_detect_pubsub_topic_creation_updates" {
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Publisher.CreateTopic'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -786,6 +853,7 @@ query "audit_log_admin_activity_detect_pubsub_topic_deletion_updates" {
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Publisher.DeleteTopic'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -800,6 +868,7 @@ query "audit_log_admin_activity_detect_pubsub_subscription_deletion_updates" {
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Subscriber.DeleteSubscription'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -814,6 +883,7 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
     where
       service_name = 'logging.googleapis.com'
       and method_name = 'google.logging.v2.ConfigServiceV2.DeleteSink'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
@@ -828,6 +898,22 @@ query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
     where
       service_name = 'logging.googleapis.com'
       and method_name = 'google.logging.v2.ConfigServiceV2.DeleteBucket'
+      and severity != 'Error'
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_storage_set_iam_policy" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_storage_set_iam_policy_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'storage.googleapis.com'
+      and method_name = 'storage.setIamPermissions'
+      and severity != 'Error'
     order by
       timestamp desc;
   EOQ
