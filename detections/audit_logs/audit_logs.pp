@@ -463,8 +463,8 @@ query "audit_log_admin_activity_detect_firewall_rule_changes" {
     from
       gcp_audit_log_admin_activity_admin_activity
     where
-      service_name = 'compute.googleapis.com'
-      and method_name in ('insert', 'update', 'delete')
+      service_name in ('compute.googleapis.com', 'appengine.googleapis.com')
+      and method_name in ('v1.compute.firewalls.insert', 'v1.compute.firewalls.update', 'v1.compute.firewalls.delete', 'google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
     order by
       timestamp desc;
   EOQ
