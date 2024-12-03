@@ -420,7 +420,7 @@ query "audit_log_admin_activity_detect_unauthorized_access_attempts" {
     select
       ${local.audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       method_name = 'google.logging.v2.WriteLogEntries'
     order by
@@ -433,7 +433,7 @@ query "audit_log_admin_activity_detect_privilege_elevations" {
     select
       ${local.audit_log_admin_activity_detect_privilege_elevations_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
       and method_name = 'SetIamPolicy'
@@ -447,7 +447,7 @@ query "audit_log_admin_activity_detect_service_account_creations" {
     select
       ${local.audit_log_admin_activity_detect_service_account_creations_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
       and method_name = 'google.iam.admin.v1.CreateServiceAccount'
@@ -461,7 +461,7 @@ query "audit_log_admin_activity_detect_firewall_rule_changes" {
     select
       ${local.audit_log_admin_activity_detect_firewall_rule_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name in ('compute.googleapis.com', 'appengine.googleapis.com')
       and method_name in ('v1.compute.firewalls.insert', 'v1.compute.firewalls.update', 'v1.compute.firewalls.delete', 'google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
@@ -475,7 +475,7 @@ query "audit_log_admin_activity_detect_unusual_resource_consumption" {
     select
       ${local.audit_log_admin_activity_detect_unusual_resource_consumption_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       method_name = 'google.monitoring.v3.CreateTimeSeries'
     order by
@@ -488,7 +488,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_changes" {
     select
       ${local.audit_log_admin_activity_detect_vpn_tunnel_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name in ('google.cloud.compute.v1.VpnTunnels.Patch', 'google.cloud.compute.v1.VpnTunnels.Delete')
@@ -502,7 +502,7 @@ query "audit_log_admin_activity_detect_sql_database_changes" {
     select
       ${local.audit_log_admin_activity_detect_sql_database_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'sqladmin.googleapis.com'
       and method_name in ('cloudsql.instances.delete', 'cloudsql.instances.patch')
@@ -516,7 +516,7 @@ query "audit_log_admin_activity_detect_dns_zone_changes" {
     select
       ${local.audit_log_admin_activity_detection_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'dns.googleapis.com'
       and method_name in ('dns.managedZones.patch', 'dns.managedZones.delete')
@@ -530,7 +530,7 @@ query "audit_log_admin_activity_detect_storage_bucket_changes" {
     select
       ${local.audit_log_admin_activity_detection_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'storage.googleapis.com'
       and method_name in ('storage.buckets.update', 'storage.buckets.delete')
@@ -544,7 +544,7 @@ query "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
     select
       ${local.audit_log_admin_activity_detect_full_network_traffic_packet_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name in ('google.cloud.compute.v1.PacketMirrorings.Delete', 'google.cloud.compute.v1.PacketMirrorings.Insert', 'google.cloud.compute.v1.PacketMirrorings.Patch', 'google.cloud.compute.v1.PacketMirrorings.List', 'google.cloud.compute.v1.PacketMirrorings.AggregatedList', 'google.cloud.compute.v1.PacketMirrorings.Get')
@@ -558,7 +558,7 @@ query "audit_log_admin_activity_detect_kubernetes_secrets_modification_updates" 
     select
       ${local.audit_log_admin_activity_detect_kubernetes_secrets_modified_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'k8s.io'
       and method_name in ('io.k8s.api.core.v1.secrets.delete', 'io.k8s.api.core.v1.secrets.update')
@@ -572,7 +572,7 @@ query "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
     select
       ${local.audit_log_admin_activity_detect_service_account_disabled_or_deleted_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
       and method_name in ('google.iam.admin.v1.ServiceAccounts.Delete', 'google.iam.admin.v1.ServiceAccounts.Disable')
@@ -586,7 +586,7 @@ query "audit_log_admin_activity_detect_access_policy_deletion_updates" {
     select
       ${local.audit_log_admin_activity_detect_access_policy_deletion_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'accesscontextmanager.googleapis.com'
       and method_name in ('accesscontextmanager.accessPolicies.authorizedOrgsDescs.delete', 'accesscontextmanager.accessPolicies.accessZones.delete', 'accesscontextmanager.accessPolicies.accessLevels.delete', 'accesscontextmanager.accessPolicies.delete')
@@ -600,7 +600,7 @@ query "audit_log_admin_activity_detect_storage_bucket_enumeration_updates" {
     select
       ${local.audit_log_admin_activity_detect_storage_bucket_enumeration_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'storage.googleapis.com'
       and method_name in ('storage.buckets.list', 'storage.buckets.listChannels')
@@ -614,7 +614,7 @@ query "audit_log_admin_activity_detect_dlp_reidentify_content" {
     select
       ${local.audit_log_admin_activity_detect_dlp_reidentify_content_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'dlp.googleapis.com'
       and method_name = 'google.privacy.dlp.v2.DlpService.ReidentifyContent'
@@ -628,7 +628,7 @@ query "audit_log_admin_activity_detect_kubernetes_admission_webhook_config_chang
     select
       ${local.audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'admissionregistration.k8s.io'
       and method_name in ('admissionregistration.k8s.io.v1.mutatingwebhookconfigurations.create', 'admissionregistration.k8s.io.v1.mutatingwebhookconfigurations.replace', 'admissionregistration.k8s.io.v1.validatingwebhookconfigurations.patch')
@@ -642,7 +642,7 @@ query "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
     select
       ${local.audit_log_admin_activity_detect_kubernetes_cronjob_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'batch.k8s.io'
       and method_name in ('io.k8s.api.batch.v1.cronjobs.delete', 'io.k8s.api.batch.v1.cronjobs.update', 'io.k8s.api.batch.v1.cronjobs.create')
@@ -656,7 +656,7 @@ query "audit_log_admin_activity_detect_kubernetes_role_binding_changes" {
     select
       ${local.audit_log_admin_activity_detect_kubernetes_role_binding_changes_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'rbac.authorization.k8s.io'
       and method_name in ('io.k8s.authorization.rbac.v1.rolebindings.delete', 'io.k8s.authorization.rbac.v1.clusterrolebindings.update', 'io.k8s.authorization.rbac.v1.rolebindings.patch', 'io.k8s.authorization.rbac.v1.clusterrolebindings.create')
@@ -670,7 +670,7 @@ query "audit_log_admin_activity_detect_compute_snapshots_insert" {
     select
       ${local.audit_log_admin_activity_detect_compute_snapshots_insert_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.snapshots.insert'
@@ -684,7 +684,7 @@ query "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
     select
       ${local.audit_log_admin_activity_detect_compute_images_set_iam_policy_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.images.setIamPolicy'
@@ -698,7 +698,7 @@ query "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
     select
       ${local.audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.disks.setIamPolicy'
@@ -712,7 +712,7 @@ query "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" 
     select
       ${local.audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
       and method_name = 'v1.compute.snapshots.setIamPolicy'
@@ -726,7 +726,7 @@ query "audit_log_admin_activity_detect_project_level_iam_policy_change" {
     select
       ${local.audit_log_admin_activity_detect_project_level_iam_policy_change_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name = 'google.cloud.resourcemanager.v1.Projects.SetIamPolicy'
@@ -740,7 +740,7 @@ query "audit_log_admin_activity_detect_service_account_access_token_generation" 
     select
       ${local.audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'iamcredentials.googleapis.com'
       and method_name = 'google.iam.credentials.v1.IAMCredentials.GenerateAccessToken'
@@ -754,7 +754,7 @@ query "audit_log_admin_activity_detect_pubsub_subscription_creation_updates" {
     select
       ${local.audit_log_admin_activity_detect_pubsub_subscription_creation_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Subscriber.CreateSubscription'
@@ -768,7 +768,7 @@ query "audit_log_admin_activity_detect_pubsub_topic_creation_updates" {
     select
       ${local.audit_log_admin_activity_detect_pubsub_topic_creation_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Publisher.CreateTopic'
@@ -782,7 +782,7 @@ query "audit_log_admin_activity_detect_pubsub_topic_deletion_updates" {
     select
       ${local.audit_log_admin_activity_detect_pubsub_topic_deletion_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Publisher.DeleteTopic'
@@ -796,7 +796,7 @@ query "audit_log_admin_activity_detect_pubsub_subscription_deletion_updates" {
     select
       ${local.audit_log_admin_activity_detect_pubsub_subscription_deletion_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'pubsub.googleapis.com'
       and method_name = 'google.pubsub.v1.Subscriber.DeleteSubscription'
@@ -810,7 +810,7 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
     select
       ${local.audit_log_admin_activity_detect_log_sink_deletion_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
       and method_name = 'google.logging.v2.ConfigServiceV2.DeleteSink'
@@ -824,7 +824,7 @@ query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
     select
       ${local.audit_log_admin_activity_detect_logging_bucket_deletion_updates_sql_columns}
     from
-      gcp_audit_log_admin_activity_admin_activity
+      gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
       and method_name = 'google.logging.v2.ConfigServiceV2.DeleteBucket'
