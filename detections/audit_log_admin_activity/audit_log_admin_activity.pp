@@ -514,7 +514,7 @@ query "audit_log_admin_activity_detect_sql_database_changes" {
 query "audit_log_admin_activity_detect_dns_zone_changes" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detection_sql_columns}
+      ${local.audit_log_admin_activity_detect_dns_zone_changes_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
@@ -528,7 +528,7 @@ query "audit_log_admin_activity_detect_dns_zone_changes" {
 query "audit_log_admin_activity_detect_storage_bucket_changes" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detection_sql_columns}
+      ${local.audit_log_admin_activity_detect_storage_bucket_changes_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
