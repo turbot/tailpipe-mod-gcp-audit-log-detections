@@ -12,7 +12,7 @@ locals {
   # dimensions. Do not edit directly.
   audit_log_admin_activity_detection_sql_columns = <<-EOQ
   tp_timestamp as timestamp,
-  string_split(method_name, '.')[1] || ':' || method_name as operation,
+  method_name as operation,
   __RESOURCE_SQL__ as resource,
   authentication_info::JSON ->> 'principal_email' as actor,
   tp_source_ip as source_ip,
