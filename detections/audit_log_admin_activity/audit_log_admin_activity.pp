@@ -6,7 +6,7 @@ locals {
   audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_privilege_elevations_sql_columns                        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_creations_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_compute_firewall_rule_changes_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_firewall_rule_changes_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_unusual_resource_consumption_sql_columns                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpn_tunnel_changes_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_sql_database_changes_sql_columns                        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -38,7 +38,7 @@ locals {
 }
 
 detection_benchmark "audit_log_admin_activity_detections" {
-  title       = "GCP Admin Activity Audit Logs Detections"
+  title       = "Admin Activity Audit Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Audit Logs."
   type        = "detection"
   children = [

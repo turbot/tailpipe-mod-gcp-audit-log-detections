@@ -14,9 +14,9 @@ locals {
   tp_timestamp as timestamp,
   method_name as operation,
   __RESOURCE_SQL__ as resource,
-  authentication_info::JSON ->> 'principal_email' as actor,
+  authentication_info.principal_email as actor,
   tp_source_ip as source_ip,
-  tp_index::varchar as project,
+  tp_index as project,
   tp_id as source_id,
   *
   EOQ
