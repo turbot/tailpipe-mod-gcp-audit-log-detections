@@ -21,6 +21,10 @@ locals {
   *
   EOQ
 
+  audit_log_admin_activity_detection_where_conditions = <<-EOQ
+    and severity != 'Error'
+    and (operation is null or operation.last = true)
+  EOQ
   // Keep same order as SQL statement for easier readability
   # cloudtrail_log_detection_default_columns = [
   #   "timestamp",
