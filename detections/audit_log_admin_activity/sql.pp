@@ -6,7 +6,7 @@ locals {
   audit_log_admin_activity_detect_sql_database_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_sql_detections" {
+benchmark "audit_log_admin_activity_sql_detections" {
   title       = "Admin Activity SQL Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity SQL Logs."
   type        = "detection"

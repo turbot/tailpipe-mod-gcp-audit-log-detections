@@ -6,7 +6,7 @@
   
 # }
 
-# detection_benchmark "audit_log_admin_activity_cloudfunction_detections" {
+# benchmark "audit_log_admin_activity_cloudfunction_detections" {
 #   title       = "Admin Activity Cloudfunction Logs Detections"
 #   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Cloudfunction Logs."
 #   type        = "detection"

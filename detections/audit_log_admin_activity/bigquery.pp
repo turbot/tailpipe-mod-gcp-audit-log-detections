@@ -7,7 +7,7 @@
   
 # }
 
-# detection_benchmark "audit_log_admin_activity_bigquery_detections" {
+# benchmark "audit_log_admin_activity_bigquery_detections" {
 #   title       = "Admin Activity BigQuery Logs Detections"
 #   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity BigQuery Logs."
 #   type        = "detection"

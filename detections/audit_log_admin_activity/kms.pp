@@ -6,7 +6,7 @@
   
 # }
 
-# detection_benchmark "audit_log_admin_activity_kms_detections" {
+# benchmark "audit_log_admin_activity_kms_detections" {
 #   title       = "Admin Activity KMS Logs Detections"
 #   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity KMS Logs."
 #   type        = "detection"

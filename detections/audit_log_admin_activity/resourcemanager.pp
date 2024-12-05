@@ -6,7 +6,7 @@ locals {
 
 }
 
-detection_benchmark "audit_log_admin_activity_resourcemanager_detections" {
+benchmark "audit_log_admin_activity_resourcemanager_detections" {
   title       = "Admin Activity Resource Manager Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Resource Manager Logs."
   type        = "detection"

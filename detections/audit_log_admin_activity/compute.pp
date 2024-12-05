@@ -11,7 +11,7 @@ locals {
   audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_compute_detections" {
+benchmark "audit_log_admin_activity_compute_detections" {
   title       = "Admin Activity Compute Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Compute Logs."
   type        = "detection"

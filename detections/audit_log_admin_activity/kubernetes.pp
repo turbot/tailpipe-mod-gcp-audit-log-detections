@@ -10,7 +10,7 @@ locals {
   audit_log_admin_activity_detect_kubernetes_role_binding_changes_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_kubernetes_detections" {
+benchmark "audit_log_admin_activity_kubernetes_detections" {
   title       = "Admin Activity Kubernetes Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Kubernetes Logs."
   type        = "detection"

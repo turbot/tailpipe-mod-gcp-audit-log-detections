@@ -6,7 +6,7 @@ locals {
   audit_log_admin_activity_detect_dlp_reidentify_content_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_dlp_detections" {
+benchmark "audit_log_admin_activity_dlp_detections" {
   title       = "Admin Activity DLP Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity DLP Logs."
   type        = "detection"

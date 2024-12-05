@@ -9,7 +9,7 @@ locals {
   audit_log_admin_activity_detect_pubsub_subscription_deletion_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_pubsub_detections" {
+benchmark "audit_log_admin_activity_pubsub_detections" {
   title       = "Admin Activity Pub/Sub Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Pubsub Logs."
   type        = "detection"

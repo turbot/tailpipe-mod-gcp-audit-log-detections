@@ -9,7 +9,7 @@ locals {
 
 }
 
-detection_benchmark "audit_log_admin_activity_iam_detections" {
+benchmark "audit_log_admin_activity_iam_detections" {
   title       = "Admin Activity IAM Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity IAM Logs."
   type        = "detection"

@@ -8,7 +8,7 @@ locals {
   audit_log_admin_activity_detect_storage_set_iam_policy_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-detection_benchmark "audit_log_admin_activity_storage_detections" {
+benchmark "audit_log_admin_activity_storage_detections" {
   title       = "Admin Activity Storage Logs Detections"
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Storage Logs."
   type        = "detection"
