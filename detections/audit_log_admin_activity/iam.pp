@@ -24,18 +24,6 @@ detection_benchmark "audit_log_admin_activity_iam_detections" {
   })
 }
 
-
-detection "audit_log_admin_activity_detect_privilege_elevations" {
-  title       = "Detect Privilege Elevations"
-  description = "Detect privilege escalations by monitoring IAM policy changes."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_privilege_elevations
-
-  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0003:T1136"
-  })
-}
-
 detection "audit_log_admin_activity_detect_service_account_creations" {
   title       = "Detect Service Account Creations"
   description = "Detect newly created service accounts that might indicate potential misuse."
