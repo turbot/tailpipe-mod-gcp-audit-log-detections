@@ -130,7 +130,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_changes" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name like 'google.cloud.compute.v%.VpnTunnels.Patch' or methood_name like 'google.cloud.compute.v%.VpnTunnels.Delete')
+      and (method_name like 'google.cloud.compute.v%.VpnTunnels.Patch' or method_name like 'google.cloud.compute.v%.VpnTunnels.Delete')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
