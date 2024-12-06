@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_compute_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "Compute"
+    service = "GCP/Compute"
   })
   audit_log_admin_activity_detect_vpn_tunnel_changes_sql_columns                      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -205,7 +205,6 @@ query "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates" {
       gcp_audit_log_admin_activity
     where
       method_name = 'compute.instances.osLogin.authenticate'
-      and authentication_info.principal_email not like '%@turbot.com'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

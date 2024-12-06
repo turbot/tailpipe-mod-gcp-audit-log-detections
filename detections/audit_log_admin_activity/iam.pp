@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_iam_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "IAM"
+    service = "GCP/IAM"
   })
 
   audit_log_admin_activity_detect_service_account_creations_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

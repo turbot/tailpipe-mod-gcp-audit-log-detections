@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_appengine_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "AppEngine"
+    service = "GCP/AppEngine"
   })
 
   audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

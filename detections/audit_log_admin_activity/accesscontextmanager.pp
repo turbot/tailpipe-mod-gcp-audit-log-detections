@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_access_context_manager_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "AccessContextManager"
+    service = "GCP/AccessContextManager"
   })
 
   audit_log_admin_activity_detect_access_policy_deletion_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

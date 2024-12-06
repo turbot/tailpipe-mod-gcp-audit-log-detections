@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_resourcemanager_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "ResourceManager"
+    service = "GCP/ResourceManager"
   })
   audit_log_admin_activity_detect_project_level_iam_policy_change_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 

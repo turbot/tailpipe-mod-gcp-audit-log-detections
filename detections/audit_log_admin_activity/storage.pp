@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_storage_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "Storage"
+    service = "GCP/Storage"
   })
 
   audit_log_admin_activity_detect_storage_bucket_changes_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

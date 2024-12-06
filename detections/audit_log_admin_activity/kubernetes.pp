@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_kubernetes_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "Kubernetes"
+    service = "GCP/Kubernetes"
   })
 
   audit_log_admin_activity_detect_kubernetes_secrets_modification_updates                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE__", "resource_name")

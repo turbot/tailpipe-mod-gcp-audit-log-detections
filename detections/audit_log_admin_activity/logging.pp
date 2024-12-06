@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_logging_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "Logging"
+    service = "GCP/Logging"
   })
   audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_log_sink_deletion_updates_sql_columns       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

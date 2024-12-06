@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_dlp_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "DLP"
+    service = "GCP/DLP"
   })
 
   audit_log_admin_activity_detect_dlp_reidentify_content_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
