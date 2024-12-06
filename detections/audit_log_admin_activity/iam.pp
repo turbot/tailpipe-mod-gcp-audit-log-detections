@@ -84,7 +84,7 @@ query "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name in ('google.iam.admin.v1.ServiceAccounts.Delete', 'google.iam.admin.v1.ServiceAccounts.Disable')
+      and (method_name like 'google.iam.admin.v%.ServiceAccounts.Delete' or method_name like 'google.iam.admin.v1.ServiceAccounts.Disable')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

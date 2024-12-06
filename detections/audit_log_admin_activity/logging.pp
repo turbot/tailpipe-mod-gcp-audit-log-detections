@@ -63,7 +63,7 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name like 'google.logging.v%.ConfigServiceV2.DeleteSink'
+      and method_name like 'google.logging.v%.ConfigServiceV%.DeleteSink'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -78,7 +78,7 @@ query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name like 'google.logging.v%.ConfigServiceV2.DeleteBucket'
+      and method_name like 'google.logging.v%.ConfigServiceV%.DeleteBucket'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

@@ -19,9 +19,9 @@ benchmark "audit_log_admin_activity_detections" {
     benchmark.audit_log_admin_activity_kubernetes_detections,
     benchmark.audit_log_admin_activity_logging_detections,
     benchmark.audit_log_admin_activity_monitoring_detections,
-    benchmark.audit_log_admin_activity_pubsub_detections,
+    # benchmark.audit_log_admin_activity_pubsub_detections,
     benchmark.audit_log_admin_activity_resourcemanager_detections,
-    benchmark.audit_log_admin_activity_sql_detections,
+    # benchmark.audit_log_admin_activity_sql_detections,
     benchmark.audit_log_admin_activity_storage_detections,
   ]
 
