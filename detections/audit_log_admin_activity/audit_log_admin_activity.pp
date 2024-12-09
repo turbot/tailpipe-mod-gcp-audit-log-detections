@@ -1,7 +1,7 @@
 locals {
-  audit_log_admin_activity_detection_common_tags = {
-    service = "GCP/AuditLogs"
-  }
+  audit_log_admin_activity_detection_common_tags = merge(local.gcp_detections_common_tags, {
+    service = "GCP/AuditLogAdminActivity"
+  })
 
 }
 
