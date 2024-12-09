@@ -23,6 +23,7 @@ benchmark "audit_log_admin_activity_detections" {
     benchmark.audit_log_admin_activity_resourcemanager_detections,
     # benchmark.audit_log_admin_activity_sql_detections,
     benchmark.audit_log_admin_activity_storage_detections,
+    benchmark.audit_log_admin_activity_apigee_detections,
   ]
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
