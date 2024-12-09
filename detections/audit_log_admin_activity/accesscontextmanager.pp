@@ -4,8 +4,8 @@ locals {
   })
 
   audit_log_admin_activity_detect_access_policy_deletion_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_access_zone_deletion_updates_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "accessPolicies", "accessZones")
-  audit_log_admin_activity_detect_access_level_deletion_updates_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "accessPolicies", "accessLevels")
+  audit_log_admin_activity_detect_access_zone_deletion_updates_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_access_level_deletion_updates_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_access_context_manager_detections" {
