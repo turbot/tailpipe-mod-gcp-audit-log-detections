@@ -263,7 +263,7 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
         select *
-        from unnest(cast(json_extract(protopayload->'request'->'networkinterfaces', '$[*].accessconfigs[*].type') as varchar[])) as access_type
+        from unnest(cast(json_extract(request -> 'networkinterfaces', '$[*].accessconfigs[*].type') as varchar[])) as access_type
         where access_type = 'one_to_one_nat'
       )
     order by
@@ -280,7 +280,7 @@ query "audit_log_admin_activity_detect_public_ip_address_creation" {
     where
       service_name = 'compute.googleapis.com'
       and method_name like 'v%.compute.addresses.insert'
-      and request -> 'addressType' = 'EXTERNAL'
+      and cast(json_extract(request, '$.addressType') as varchar) = 'EXTERNAL'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

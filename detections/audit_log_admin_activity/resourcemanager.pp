@@ -92,7 +92,7 @@ query "audit_log_admin_activity_detect_login_without_mfa" {
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name like 'google.cloud.identitytoolkit.v%.Authenticate'
-      and request -> 'mfaVerified' = false
+      and cast(request -> 'mfaVerified' as boolean) = false
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -123,7 +123,7 @@ query "audit_log_admin_activity_detect_iam_policy_revoked" {
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name like 'google.cloud.resourcemanager.v%.Projects.SetIamPolicy'
-      and json_array_length(response -> 'bindings') = 0;
+      and json_array_length(response -> 'bindings') = 0
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

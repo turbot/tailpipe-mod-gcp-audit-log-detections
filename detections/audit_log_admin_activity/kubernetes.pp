@@ -124,7 +124,10 @@ query "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" 
     where
       service_name = 'container.googleapis.com'
       and (method_name like 'v%.container.clusters.create' or method_name like 'v%.container.clusters.update')
-      and (request -> 'cluster' -> 'privateClusterConfig' -> 'enablePrivateNodes' = false or request -> 'update' -> 'desiredPrivateClusterConfig' -> 'enablePrivateEndpoint' = false)
+      and (
+        cast(json_extract(request, '$.cluster.privateClusterConfig.enablePrivateNodes') as boolean) = false
+        or cast(json_extract(request, '$.update.desiredPrivateClusterConfig.enablePrivateEndpoint') as boolean) = false
+      )
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
