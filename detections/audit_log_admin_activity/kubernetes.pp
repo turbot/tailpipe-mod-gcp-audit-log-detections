@@ -7,6 +7,7 @@ locals {
   audit_log_admin_activity_detect_kubernetes_secrets_modified_sql_columns                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_cronjob_changes_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_kubernetes_detections" {
@@ -17,6 +18,7 @@ benchmark "audit_log_admin_activity_kubernetes_detections" {
     detection.audit_log_admin_activity_detect_kubernetes_secrets_modification_updates,
     detection.audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes,
     detection.audit_log_admin_activity_detect_kubernetes_cronjob_changes,
+    detection.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint,
   ]
 
   tags = merge(local.audit_log_admin_activity_kubernetes_detection_common_tags, {
@@ -54,6 +56,17 @@ detection "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
+  })
+}
+
+detection "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" {
+  title       = "Detect Kubernetes Cluster with Public Endpoint"
+  description = "Detect Kubernetes clusters with public endpoints that might expose resources to threats or indicate unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T119"
   })
 }
 
@@ -96,6 +109,22 @@ query "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
     where
       service_name = 'batch.k8s.io'
       and method_name in ('io.k8s.api.batch.v1.cronjobs.delete', 'io.k8s.api.batch.v1.cronjobs.update', 'io.k8s.api.batch.v1.cronjobs.create')
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'container.googleapis.com'
+      and (method_name like 'v%.container.clusters.create' or method_name like 'v%.container.clusters.update')
+      and (request -> 'cluster' -> 'privateClusterConfig' -> 'enablePrivateNodes' = false or request -> 'update' -> 'desiredPrivateClusterConfig' -> 'enablePrivateEndpoint' = false)
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
