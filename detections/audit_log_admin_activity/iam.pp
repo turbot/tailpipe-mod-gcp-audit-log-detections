@@ -9,6 +9,8 @@ locals {
   audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_service_account_token_creator_role_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_organization_iam_policy_change_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_iam_detections" {
@@ -22,6 +24,8 @@ benchmark "audit_log_admin_activity_iam_detections" {
     detection.audit_log_admin_activity_detect_service_account_access_token_generation,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
+    detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
+    detection.audit_log_admin_activity_detect_organization_iam_policy_change
   ]
 
   tags = merge(local.audit_log_admin_activity_iam_detection_common_tags, {
@@ -89,6 +93,28 @@ detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_auth
   description = "Detect IAM roles that grant access to all authenticated users."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1199"
+  })
+}
+
+detection "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
+  title       = "Detect IAM Service Account Token Creator Role"
+  description = "Detect the assignment of the IAM service account token creator role that might indicate potential misuse or unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_iam_service_account_token_creator_role
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1199"
+  })
+}
+
+detection "audit_log_admin_activity_detect_organization_iam_policy_change" {
+  title       = "Detect Organization IAM Policy Change"
+  description = "Detect changes to the organization IAM policy that might expose resources to threats or indicate unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_organization_iam_policy_change
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199"
@@ -188,6 +214,41 @@ query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenti
         from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
         where member = 'allAuthenticatedUsers'
       )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_iam_service_account_token_creator_role_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.v%.SetIamPolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
+        where roles = 'roles/iam.serviceAccountTokenCreator'
+      )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_organization_iam_policy_change" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_organization_iam_policy_change_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'cloudresourcemanager.googleapis.com'
+      and method_name ilike 'google.cloud.resourcemanager.v%.Organizations.SetIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

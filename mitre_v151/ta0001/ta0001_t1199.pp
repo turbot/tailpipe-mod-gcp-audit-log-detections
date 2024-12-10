@@ -10,7 +10,10 @@ benchmark "mitre_v151_ta0001_t1199" {
   documentation = file("./mitre_v151/docs/ta0001_t1199.md")
   children = [
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
-    detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users
+    detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
+    detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
+    detection.audit_log_admin_activity_detect_organization_iam_policy_change,
+    detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,
   ]
 
   tags = local.mitre_v151_ta0001_t1199_common_tags

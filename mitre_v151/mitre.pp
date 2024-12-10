@@ -12,7 +12,8 @@ benchmark "mitre_v151" {
   type          = "detection"
   documentation = file("./mitre_v151/docs/mitre.md")
   children = [
-    benchmark.mitre_v151_ta0001
+    benchmark.mitre_v151_ta0001,
+    benchmark.mitre_v151_ta0002,
   ]
 
   tags = merge(local.mitre_v151_common_tags, {
