@@ -4,6 +4,7 @@ locals {
   })
 
   audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_appengine_detections" {
@@ -12,6 +13,7 @@ benchmark "audit_log_admin_activity_appengine_detections" {
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes,
+    detection.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled,
   ]
 
   tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
@@ -30,6 +32,17 @@ detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_chang
   })
 }
 
+detection "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
+  title       = "Detect App Engine Admin API Execution Enabled"
+  description = "Detect when the App Engine Admin API is enabled."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled
+
+  tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
+    mitre_attack_ids = "TA0002:T1648"
+  })
+}
+
 query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
   sql = <<-EOQ
     select
@@ -39,6 +52,22 @@ query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" 
     where
       service_name = 'appengine.googleapis.com'
       and method_name in ('google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'appengine.googleapis.com'
+      and method_name ilike 'google.appengine.v%.Apps.Patch'
+      and cast(request -> 'featureSettings' -> 'adminApiEnabled' as boolean) = true
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

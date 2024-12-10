@@ -8,6 +8,8 @@ locals {
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_cronjob_changes_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloud_scheduler_run_job_sql_columns                     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_container_executed_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")  
 }
 
 benchmark "audit_log_admin_activity_kubernetes_detections" {
@@ -19,6 +21,7 @@ benchmark "audit_log_admin_activity_kubernetes_detections" {
     detection.audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes,
     detection.audit_log_admin_activity_detect_kubernetes_cronjob_changes,
     detection.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint,
+    detection.audit_log_admin_activity_detect_cloud_scheduler_run_job,
   ]
 
   tags = merge(local.audit_log_admin_activity_kubernetes_detection_common_tags, {
@@ -67,6 +70,28 @@ detection "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoi
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T119"
+  })
+}
+
+detection "audit_log_admin_activity_detect_cloud_scheduler_run_job" {
+  title       = "Detect Cloud Scheduler Run Job"
+  description = "Detects when a Cloud Scheduler job is run."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_cloud_scheduler_run_job
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0002:T1651"
+  })
+}
+
+detection "audit_log_admin_activity_detect_container_executed" {
+  title       = "Detect Container Executed"
+  description = "Detects when a container is executed."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_container_executed
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0002:T1651"
   })
 }
 
@@ -128,6 +153,36 @@ query "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" 
         cast(json_extract(request, '$.cluster.privateClusterConfig.enablePrivateNodes') as boolean) = false
         or cast(json_extract(request, '$.update.desiredPrivateClusterConfig.enablePrivateEndpoint') as boolean) = false
       )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_container_executed" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_container_executed_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'kubernetes.io'
+      and method_name ilike 'Exec'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_cloud_scheduler_run_job" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_cloud_scheduler_run_job_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'cloudscheduler.googleapis.com'
+      and method_name ilike 'google.cloud.scheduler.v%.CloudScheduler.RunJob'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
