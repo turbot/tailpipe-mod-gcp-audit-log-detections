@@ -37,7 +37,7 @@ query "audit_log_admin_activity_detect_unusual_resource_consumption" {
     from
       gcp_audit_log_admin_activity
     where
-      method_name like 'google.monitoring.v%.CreateTimeSeries'
+      method_name ilike 'google.monitoring.v%.CreateTimeSeries'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

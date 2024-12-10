@@ -1,6 +1,6 @@
 locals {
   audit_log_admin_activity_apigee_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service  = "GCP/Apigee"
+    service = "GCP/Apigee"
   })
 
   audit_log_admin_activity_detect_api_access_to_vulnerable_services_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -32,7 +32,7 @@ query "audit_log_admin_activity_detect_api_access_to_vulnerable_services" {
       gcp_audit_log_admin_activity
     where
       service_name = 'apigee.googleapis.com'
-      and (method_name like 'google.apigee.v%.AccessResource' or method_name like 'google.apigee.v%.AttackService')
+      and (method_name ilike 'google.apigee.v%.AccessResource' or method_name ilike 'google.apigee.v%.AttackService')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

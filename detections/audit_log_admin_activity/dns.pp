@@ -66,7 +66,7 @@ query "audit_log_admin_activity_detect_dns_record_modifications" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dns.googleapis.com'
-      and method_name like 'google.cloud.dns.v%.ChangeResourceRecordSet'
+      and method_name ilike 'google.cloud.dns.v%.ChangeResourceRecordSet'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

@@ -12,9 +12,9 @@ benchmark "audit_log_admin_activity_logging_detections" {
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Logging Logs."
   type        = "detection"
   children = [
-  detection.audit_log_admin_activity_detect_unauthorized_access_attempts,
-  detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
-  detection.audit_log_admin_activity_detect_logging_bucket_deletion_updates,
+    detection.audit_log_admin_activity_detect_unauthorized_access_attempts,
+    detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
+    detection.audit_log_admin_activity_detect_logging_bucket_deletion_updates,
   ]
 
   tags = merge(local.audit_log_admin_activity_logging_detection_common_tags, {
@@ -63,7 +63,7 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name like 'google.logging.v%.ConfigServiceV%.DeleteSink'
+      and method_name ilike 'google.logging.v%.ConfigServiceV%.DeleteSink'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -78,7 +78,7 @@ query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name like 'google.logging.v%.ConfigServiceV%.DeleteBucket'
+      and method_name ilike 'google.logging.v%.ConfigServiceV%.DeleteBucket'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -92,7 +92,7 @@ query "audit_log_admin_activity_detect_unauthorized_access_attempts" {
     from
       gcp_audit_log_admin_activity
     where
-      method_name like 'google.logging.v%.WriteLogEntries'
+      method_name ilike 'google.logging.v%.WriteLogEntries'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

@@ -11,7 +11,7 @@ locals {
   audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_compute_detections" {
@@ -154,7 +154,7 @@ query "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'v%.compute.firewalls.delete'
+      and method_name ilike 'v%.compute.firewalls.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -169,7 +169,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_changes" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name like 'google.cloud.compute.v%.VpnTunnels.Patch' or method_name like 'google.cloud.compute.v%.VpnTunnels.Delete')
+      and (method_name ilike 'google.cloud.compute.v%.VpnTunnels.Patch' or method_name ilike 'google.cloud.compute.v%.VpnTunnels.Delete')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -184,7 +184,7 @@ query "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name like 'google.cloud.compute.v%.PacketMirrorings.Delete' or method_name like 'google.cloud.compute.v%.PacketMirrorings.Insert' or method_name like 'google.cloud.compute.v%.PacketMirrorings.Patch')
+      and (method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Delete' or method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Insert' or method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Patch')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -199,7 +199,7 @@ query "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'v%.compute.images.setIamPolicy'
+      and method_name ilike 'v%.compute.images.setIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -214,7 +214,7 @@ query "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'v%.compute.disks.setIamPolicy'
+      and method_name ilike 'v%.compute.disks.setIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -229,7 +229,7 @@ query "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" 
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'v%.compute.snapshots.setIamPolicy'
+      and method_name ilike 'v%.compute.snapshots.setIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -258,7 +258,7 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name like 'v%.compute.instances.insert' or method_name like 'v%.compute.instances.update')
+      and (method_name ilike 'v%.compute.instances.insert' or method_name ilike 'v%.compute.instances.update')
       and request.resource.networkInterfaces.accessConfigs.natIP is not null
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
@@ -279,7 +279,7 @@ query "audit_log_admin_activity_detect_public_ip_address_creation" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'v%.compute.addresses.insert'
+      and method_name ilike 'v%.compute.addresses.insert'
       and cast(json_extract(request, '$.addressType') as varchar) = 'EXTERNAL'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
@@ -295,7 +295,7 @@ query "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name like 'google.cloud.compute.v%.Projects.EnableXpnResource'
+      and method_name ilike 'google.cloud.compute.v%.Projects.EnableXpnResource'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

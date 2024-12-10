@@ -38,7 +38,7 @@ query "audit_log_admin_activity_detect_dlp_reidentify_content" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dlp.googleapis.com'
-      and method_name like 'google.privacy.dlp.v%.DlpService.ReidentifyContent'
+      and method_name ilike 'google.privacy.dlp.v%.DlpService.ReidentifyContent'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

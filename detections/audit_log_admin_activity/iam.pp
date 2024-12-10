@@ -3,11 +3,12 @@ locals {
     service = "GCP/IAM"
   })
 
-  audit_log_admin_activity_detect_service_account_creations_sql_columns                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_disabled_or_deleted_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_key_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_creations_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_disabled_or_deleted_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns              = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_iam_detections" {
@@ -19,6 +20,8 @@ benchmark "audit_log_admin_activity_iam_detections" {
     detection.audit_log_admin_activity_detect_service_account_key_creation,
     detection.audit_log_admin_activity_detect_service_account_disabled_or_deleted,
     detection.audit_log_admin_activity_detect_service_account_access_token_generation,
+    detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
+    detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
   ]
 
   tags = merge(local.audit_log_admin_activity_iam_detection_common_tags, {
@@ -80,6 +83,18 @@ detection "audit_log_admin_activity_detect_workload_identity_pool_provider_creat
     mitre_attack_ids = "TA0001:T1078"
   })
 }
+
+detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users" {
+  title       = "Detect IAM Roles Granting Access to All Authenticated Users"
+  description = "Detect IAM roles that grant access to all authenticated users."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1199"
+  })
+}
+
 /*
  * Queries
  */
@@ -92,7 +107,7 @@ query "audit_log_admin_activity_detect_service_account_creations" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name like 'google.iam.admin.v%.CreateServiceAccount'
+      and method_name ilike 'google.iam.admin.v%.CreateServiceAccount'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -107,7 +122,7 @@ query "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and (method_name like 'google.iam.admin.v%.ServiceAccounts.Delete' or method_name like 'google.iam.admin.v1.ServiceAccounts.Disable')
+      and (method_name ilike 'google.iam.admin.v%.ServiceAccounts.Delete' or method_name ilike 'google.iam.admin.v1.ServiceAccounts.Disable')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -122,7 +137,7 @@ query "audit_log_admin_activity_detect_service_account_access_token_generation" 
       gcp_audit_log_admin_activity
     where
       service_name = 'iamcredentials.googleapis.com'
-      and method_name like 'google.iam.credentials.v%.IAMCredentials.GenerateAccessToken'
+      and method_name ilike 'google.iam.credentials.v%.IAMCredentials.GenerateAccessToken'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -137,7 +152,7 @@ query "audit_log_admin_activity_detect_service_account_key_creation" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name like 'google.iam.admin.v%.ServiceAccounts.Keys.Create'
+      and method_name ilike 'google.iam.admin.v%.ServiceAccounts.Keys.Create'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -152,7 +167,27 @@ query "audit_log_admin_activity_detect_workload_identity_pool_provider_creation"
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name like 'google.iam.v%.CreateWorkloadIdentityPoolProvider'
+      and method_name ilike 'google.iam.v%.CreateWorkloadIdentityPoolProvider'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'SetIamPolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
+        where member = 'allAuthenticatedUsers'
+      )
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

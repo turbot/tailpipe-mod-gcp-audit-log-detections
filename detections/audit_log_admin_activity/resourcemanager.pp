@@ -76,7 +76,7 @@ query "audit_log_admin_activity_detect_project_level_iam_policy_change" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name like 'google.cloud.resourcemanager.v%.Projects.SetIamPolicy'
+      and method_name ilike 'google.cloud.resourcemanager.v%.Projects.SetIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -91,7 +91,7 @@ query "audit_log_admin_activity_detect_login_without_mfa" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name like 'google.cloud.identitytoolkit.v%.Authenticate'
+      and method_name ilike 'google.cloud.identitytoolkit.v%.Authenticate'
       and cast(request -> 'mfaVerified' as boolean) = false
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
@@ -107,7 +107,7 @@ query "audit_log_admin_activity_detect_access_shared_resources" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name like 'google.cloud.accesscontextmanager.v%.AccessSharedResource'
+      and method_name ilike 'google.cloud.accesscontextmanager.v%.AccessSharedResource'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -122,7 +122,7 @@ query "audit_log_admin_activity_detect_iam_policy_revoked" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name like 'google.cloud.resourcemanager.v%.Projects.SetIamPolicy'
+      and method_name ilike 'google.cloud.resourcemanager.v%.Projects.SetIamPolicy'
       and json_array_length(response -> 'bindings') = 0
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
