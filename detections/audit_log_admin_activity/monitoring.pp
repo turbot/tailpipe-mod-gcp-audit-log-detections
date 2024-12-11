@@ -21,7 +21,7 @@ benchmark "audit_log_admin_activity_monitoring_detections" {
 
 detection "audit_log_admin_activity_detect_unusual_resource_consumption" {
   title       = "Detect Unusual Resource Consumption"
-  description = "Detect spikes in resource usage, which could indicate malicious activity like mining."
+  description = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_unusual_resource_consumption
 
@@ -37,7 +37,7 @@ query "audit_log_admin_activity_detect_unusual_resource_consumption" {
     from
       gcp_audit_log_admin_activity
     where
-      method_name ilike 'google.monitoring.v%.CreateTimeSeries'
+      method_name ilike 'google.monitoring.v%.createtimeseries'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

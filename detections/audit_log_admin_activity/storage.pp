@@ -3,8 +3,6 @@ locals {
     service = "GCP/Storage"
   })
 
-  audit_log_admin_activity_detect_storage_bucket_changes_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_storage_bucket_enumeration_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_storage_set_iam_policy_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_storage_bucket_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
@@ -24,8 +22,8 @@ benchmark "audit_log_admin_activity_storage_detections" {
 }
 
 detection "audit_log_admin_activity_detect_storage_set_iam_policy" {
-  title       = "Detect Storage Set IAM Policy"
-  description = "Detect changes to storage IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  title       = "Detect Storage Set IAM Policies"
+  description = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_storage_set_iam_policy
 
@@ -36,7 +34,7 @@ detection "audit_log_admin_activity_detect_storage_set_iam_policy" {
 
 detection "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
   title       = "Detect Publicly Accessible Storage Buckets"
-  description = "Detect storage buckets that are publicly accessible."
+  description = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
   severity    = "high"
   query       = query.audit_log_admin_activity_detect_storage_bucket_publicly_accessible
 

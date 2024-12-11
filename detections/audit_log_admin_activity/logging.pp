@@ -24,7 +24,7 @@ benchmark "audit_log_admin_activity_logging_detections" {
 
 detection "audit_log_admin_activity_detect_unauthorized_access_attempts" {
   title       = "Detect Unauthorized Access Attempts"
-  description = "Detect failed or unauthorized access attempts to GCP resources."
+  description = "Detect failed or unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
   severity    = "high"
   query       = query.audit_log_admin_activity_detect_unauthorized_access_attempts
 
@@ -35,7 +35,7 @@ detection "audit_log_admin_activity_detect_unauthorized_access_attempts" {
 
 detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
   title       = "Detect Log Sink Deletion Updates"
-  description = "Detect the deletion of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
+  description = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_log_sink_deletion_updates
 
@@ -46,7 +46,7 @@ detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
 
 detection "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
   title       = "Detect Logging Bucket Deletion Updates"
-  description = "Detect the deletion of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
+  description = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_logging_bucket_deletion_updates
 
@@ -63,7 +63,7 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.ConfigServiceV%.DeleteSink'
+      and method_name ilike 'google.logging.v%.configservicev%.deletesink'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -78,7 +78,7 @@ query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.ConfigServiceV%.DeleteBucket'
+      and method_name ilike 'google.logging.v%.configservicev%.deletebucket'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -92,7 +92,7 @@ query "audit_log_admin_activity_detect_unauthorized_access_attempts" {
     from
       gcp_audit_log_admin_activity
     where
-      method_name ilike 'google.logging.v%.WriteLogEntries'
+      method_name ilike 'google.logging.v%.writelogentries'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

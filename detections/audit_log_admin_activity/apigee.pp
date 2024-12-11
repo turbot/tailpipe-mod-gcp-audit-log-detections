@@ -20,8 +20,14 @@ benchmark "audit_log_admin_activity_apigee_detections" {
 }
 
 detection "audit_log_admin_activity_detect_api_access_to_vulnerable_services" {
-  title       = "API Access to Vulnerable Services"
-  description = "Detect log entries where an API is accessed to a vulnerable service."
+  title       = "Detect API Access to Vulnerable Services"
+  description = "Detect log entries where API is accessed to a vulnerable service."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_api_access_to_vulnerable_services
+  
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1190"
+  })
 }
 
 query "audit_log_admin_activity_detect_api_access_to_vulnerable_services" {
@@ -32,7 +38,7 @@ query "audit_log_admin_activity_detect_api_access_to_vulnerable_services" {
       gcp_audit_log_admin_activity
     where
       service_name = 'apigee.googleapis.com'
-      and (method_name ilike 'google.apigee.v%.AccessResource' or method_name ilike 'google.apigee.v%.AttackService')
+      and (method_name ilike 'google.apigee.v%.accessresource' or method_name ilike 'google.apigee.v%.attackservice')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

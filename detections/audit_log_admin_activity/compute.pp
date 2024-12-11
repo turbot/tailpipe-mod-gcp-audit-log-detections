@@ -38,7 +38,7 @@ benchmark "audit_log_admin_activity_compute_detections" {
 
 detection "audit_log_admin_activity_detect_vpn_tunnel_changes" {
   title       = "Detect VPN Tunnel Changes"
-  description = "Detect changes to VPN tunnels that might compromise secure network communication or indicate unauthorized activity.”"
+  description = "Detect changes to VPN tunnels, ensuring visibility into modifications that could compromise secure network communication or signal unauthorized activity, enabling proactive threat mitigation."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_vpn_tunnel_changes
 
@@ -49,7 +49,7 @@ detection "audit_log_admin_activity_detect_vpn_tunnel_changes" {
 
 detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
   title       = "Detect Firewall Rule Changes"
-  description = "Detect changes to firewall rules that may expose resources to threats."
+  description = "Detect changes to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates
 
@@ -60,7 +60,7 @@ detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_update
 
 detection "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
   title       = "Detect Full Network Traffic Packet Updates"
-  description = "Detect updates to network traffic packet configurations that might reveal unauthorized monitoring or expose resources to threats."
+  description = "Detect updates to full network traffic packet configurations, ensuring awareness of potential unauthorized monitoring activities or configuration changes that could expose resources to security threats."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_full_network_traffic_packet_updates
 
@@ -71,7 +71,7 @@ detection "audit_log_admin_activity_detect_full_network_traffic_packet_updates" 
 
 detection "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
   title       = "Detect Compute Images Set IAM Policy Updates"
-  description = "Detect updates to compute image IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  description = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_images_set_iam_policy_updates
 
@@ -82,7 +82,7 @@ detection "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates
 
 detection "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
   title       = "Detect Compute Disks Set IAM Policy Updates"
-  description = "Detect updates to compute disk IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  description = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates
 
@@ -93,7 +93,7 @@ detection "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates"
 
 detection "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" {
   title       = "Detect Compute Snapshot Set IAM Policy Updates"
-  description = "Detect updates to compute snapshot IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  description = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates
 
@@ -104,7 +104,7 @@ detection "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updat
 
 detection "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates" {
   title       = "Detect Unauthorized SSH Auth OS Login Updates"
-  description = "Detect unauthorized SSH authentication attempts that might indicate unauthorized access attempts."
+  description = "Detect unauthorized SSH authentication OS login updates, providing visibility into potential security breaches and mitigating risks associated with unauthorized access attempts."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates
 
@@ -115,7 +115,7 @@ detection "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_update
 
 detection "audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces" {
   title       = "Detect Compute Instances with Public Network Interfaces"
-  description = "Detect compute instances with public network interfaces that might expose resources to threats."
+  description = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces
 
@@ -125,8 +125,8 @@ detection "audit_log_admin_activity_detect_compute_instances_with_public_network
 }
 
 detection "audit_log_admin_activity_detect_public_ip_address_creation" {
-  title       = "Detect Public IP Address Creation"
-  description = "Detect the creation of public IP addresses that might expose resources to threats."
+  title       = "Detect Public IP Address Creations"
+  description = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_public_ip_address_creation
 
@@ -136,8 +136,8 @@ detection "audit_log_admin_activity_detect_public_ip_address_creation" {
 }
 
 detection "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
-  title       = "Detect VPC Network Shared to External Project"
-  description = "Detect VPC networks shared to external projects that might expose resources to threats."
+  title       = "Detect VPC Networks Shared to External Projects"
+  description = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_vpc_network_shared_to_external_project
 
@@ -169,7 +169,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_changes" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name ilike 'google.cloud.compute.v%.VpnTunnels.Patch' or method_name ilike 'google.cloud.compute.v%.VpnTunnels.Delete')
+      and (method_name ilike 'google.cloud.compute.v%.vpntunnels.patch' or method_name ilike 'google.cloud.compute.v%.vpntunnels.delete')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -184,7 +184,7 @@ query "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Delete' or method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Insert' or method_name ilike 'google.cloud.compute.v%.PacketMirrorings.Patch')
+      and (method_name ilike 'google.cloud.compute.v%.packetmirrorings.delete' or method_name ilike 'google.cloud.compute.v%.packetmirrorings.insert' or method_name ilike 'google.cloud.compute.v%.packetmirrorings.patch')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -199,7 +199,7 @@ query "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.images.setIamPolicy'
+      and method_name ilike 'v%.compute.images.setiampolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -214,7 +214,7 @@ query "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.disks.setIamPolicy'
+      and method_name ilike 'v%.compute.disks.setiampolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -229,7 +229,7 @@ query "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" 
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.snapshots.setIamPolicy'
+      and method_name ilike 'v%.compute.snapshots.setiampolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -295,7 +295,7 @@ query "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.Projects.EnableXpnResource'
+      and method_name ilike 'google.cloud.compute.v%.projects.enablexpnresource'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

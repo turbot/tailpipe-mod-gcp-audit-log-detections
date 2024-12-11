@@ -4,7 +4,7 @@ locals {
   })
 
   audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_appengine_detections" {
@@ -33,8 +33,8 @@ detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_chang
 }
 
 detection "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
-  title       = "Detect App Engine Admin API Execution Enabled"
-  description = "Detect when the App Engine Admin API is enabled."
+  title       = "Detect App Engine Admin API Executions Enabled"
+  description = "Detect when App Engine admin APIs are enabled, ensuring visibility into administrative configurations and monitoring for potential unauthorized changes."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled
 
@@ -51,7 +51,7 @@ query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" 
       gcp_audit_log_admin_activity
     where
       service_name = 'appengine.googleapis.com'
-      and method_name in ('google.appengine.v1.Firewall.CreateIngressRule', 'google.appengine.v1.Firewall.DeleteIngressRule', 'google.appengine.v1.Firewall.UpdateIngressRule')
+      and (method_name ilike 'google.appengine.v%.firewall.createingressrule' or method_name ilike 'google.appengine.v%.firewall.deleteingressrule' or method_name ilike 'google.appengine.v%.firewall.updateingressrule')
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -66,7 +66,7 @@ query "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
       gcp_audit_log_admin_activity
     where
       service_name = 'appengine.googleapis.com'
-      and method_name ilike 'google.appengine.v%.Apps.Patch'
+      and method_name ilike 'google.appengine.v%.apps.patch'
       and cast(request -> 'featureSettings' -> 'adminApiEnabled' as boolean) = true
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by

@@ -64,7 +64,7 @@ query "audit_log_admin_activity_detect_access_policy_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accessPolicies.delete'
+      and method_name ilike 'accesscontextmanager.accesspolicies.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -79,7 +79,7 @@ query "audit_log_admin_activity_detect_access_zone_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accessPolicies.accessZones.delete'
+      and method_name ilike 'accesscontextmanager.accesspolicies.accesszones.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -94,7 +94,7 @@ query "audit_log_admin_activity_detect_access_level_deletion_updates" {
       gcp_audit_log_admin_activity
     where
       service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accessPolicies.accessLevels.delete'
+      and method_name ilike 'accesscontextmanager.accesspolicies.accesslevels.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

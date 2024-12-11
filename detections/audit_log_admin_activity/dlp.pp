@@ -20,8 +20,8 @@ benchmark "audit_log_admin_activity_dlp_detections" {
 }
 
 detection "audit_log_admin_activity_detect_dlp_reidentify_content" {
-  title       = "Detect DLP Reidentify Content"
-  description = "Detect reidentification of content that might expose sensitive information or violate data privacy regulations."
+  title       = "Detect DLP Reidentify Contents"
+  description = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_dlp_reidentify_content
 
@@ -38,7 +38,7 @@ query "audit_log_admin_activity_detect_dlp_reidentify_content" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dlp.googleapis.com'
-      and method_name ilike 'google.privacy.dlp.v%.DlpService.ReidentifyContent'
+      and method_name ilike 'google.privacy.dlp.v%.dlpservice.reidentifycontent'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
