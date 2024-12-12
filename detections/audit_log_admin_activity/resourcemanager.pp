@@ -7,6 +7,7 @@ locals {
   audit_log_admin_activity_detect_access_shared_resources_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_policy_revoked_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_policy_to_enable_script_execution_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_policy_granting_owner_role_sql_columns        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_resourcemanager_detections" {
@@ -19,6 +20,7 @@ benchmark "audit_log_admin_activity_resourcemanager_detections" {
     detection.audit_log_admin_activity_detect_access_shared_resources,
     detection.audit_log_admin_activity_detect_iam_policy_revoked,
     detection.audit_log_admin_activity_detect_iam_policy_to_enable_script_execution,
+    detection.audit_log_admin_activity_detect_iam_policy_granting_owner_role,
   ]
 
   tags = merge(local.audit_log_admin_activity_resourcemanager_detection_common_tags, {
@@ -78,6 +80,17 @@ detection "audit_log_admin_activity_detect_iam_policy_to_enable_script_execution
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1059"
+  })
+}
+
+detection "audit_log_admin_activity_detect_iam_policy_granting_owner_role" {
+  title       = "Detect IAM Policies Granting Owner Role"
+  description = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_iam_policy_granting_owner_role
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
   })
 }
 
@@ -161,5 +174,24 @@ query "audit_log_admin_activity_detect_iam_policy_to_enable_script_execution" {
     order by
       timestamp desc;
   EOQ
+}
 
+query "audit_log_admin_activity_detect_iam_policy_granting_owner_role" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_iam_policy_granting_owner_role_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'cloudresourcemanager.googleapis.com'
+      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
+        where roles = 'roles/owner'
+      )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
 }

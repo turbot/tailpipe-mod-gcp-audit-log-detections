@@ -14,6 +14,8 @@ benchmark "mitre_v151" {
   children = [
     benchmark.mitre_v151_ta0001,
     benchmark.mitre_v151_ta0002,
+    benchmark.mitre_v151_ta0003,
+    benchmark.mitre_v151_ta0005,
   ]
 
   tags = merge(local.mitre_v151_common_tags, {

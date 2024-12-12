@@ -41,7 +41,7 @@ query "audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_
       and method_name ilike 'google.cloud.apigateway.v%.updateapiconfig'
       and exists(
         select *
-        from unnest(cast(json_extract(request -> 'backendConfigs', '$[*].backendUri') as varchar[])) as uri
+        from unnest(cast(json_extract(request -> 'backendConfigs', '$[*].backendUri') as varchar[])) as uri_struct(uri)
         where uri like '%execute-command%'
       )
       ${local.audit_log_admin_activity_detection_where_conditions}
