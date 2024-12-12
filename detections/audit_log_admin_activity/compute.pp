@@ -14,6 +14,7 @@ locals {
   audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_image_logging_disabled_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_image_os_login_disabled_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_compute_detections" {
@@ -33,6 +34,7 @@ benchmark "audit_log_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
     detection.audit_log_admin_activity_detect_compute_image_logging_disabled,
     detection.audit_log_admin_activity_detect_compute_disk_size_small,
+    detection.audit_log_admin_activity_detect_compute_image_os_login_disabled,
   ]
 
   tags = merge(local.audit_log_admin_activity_compute_detection_common_tags, {
@@ -166,6 +168,17 @@ detection "audit_log_admin_activity_detect_compute_disk_size_small" {
   description = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity    = "medium"
   query       = query.audit_log_admin_activity_detect_compute_disk_size_small
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
+  title       = "Detect Compute Image OS Login Disabled"
+  description = "Detect compute image OS login disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity    = "medium"
+  query       = query.audit_log_admin_activity_detect_compute_image_os_login_disabled
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -363,6 +376,27 @@ query "audit_log_admin_activity_detect_compute_disk_size_small" {
         from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
         where json_extract(disk, '$.boot') = 'true'
         and cast(json_extract(disk, '$.initializeParams.diskSizeGb') as integer) < 15
+      )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_compute_image_os_login_disabled_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.instances.insert'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'metadata' -> 'items', '$[*]') as json[])) as item
+        where json_extract(item, '$.key') = 'enable-oslogin'
+        and json_extract(item, '$.value') = 'FALSE'
       )
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
