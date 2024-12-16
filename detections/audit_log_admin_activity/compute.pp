@@ -15,6 +15,7 @@ locals {
   audit_log_admin_activity_detect_compute_image_logging_disabled_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_image_os_login_disabled_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_disable_compute_vpc_flow_logs_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_compute_detections" {
@@ -35,6 +36,7 @@ benchmark "audit_log_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_compute_image_logging_disabled,
     detection.audit_log_admin_activity_detect_compute_disk_size_small,
     detection.audit_log_admin_activity_detect_compute_image_os_login_disabled,
+    detection.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs,
   ]
 
   tags = merge(local.audit_log_admin_activity_compute_detection_common_tags, {
@@ -158,7 +160,7 @@ detection "audit_log_admin_activity_detect_vpc_network_shared_to_external_projec
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1190"
+    mitre_attack_ids = "TA0001:T1190,TA0005:T1548"
   })
 }
 
@@ -195,6 +197,18 @@ detection "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_disable_compute_vpc_flow_logs" {
+  title           = "Detect Disable Compute VPC Flow Logs"
+  description     = "Detect disabling of Compute VPC flow logs, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
   })
 }
 
@@ -411,6 +425,22 @@ query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
         where json_extract(item, '$.key') = 'enable-oslogin'
         and json_extract(item, '$.value') = 'FALSE'
       )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_disable_compute_vpc_flow_logs" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'google.cloud.compute.v%.subnetworks.patch'
+      and request.enableFlowLogs = 'false'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

@@ -14,6 +14,9 @@ locals {
   audit_log_admin_activity_detect_iam_workforce_pool_update_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_federated_identity_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role_sql_columns            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_high_privilege_iam_roles_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_federated_identity_provider_updation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_iam_detections" {
@@ -32,6 +35,9 @@ benchmark "audit_log_admin_activity_iam_detections" {
     detection.audit_log_admin_activity_detect_iam_workforce_pool_update,
     detection.audit_log_admin_activity_detect_iam_federated_identity_provider_creation,
     detection.audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role,
+    detection.audit_log_admin_activity_detect_high_privilege_iam_roles,
+    detection.audit_log_admin_activity_detect_iam_federated_identity_provider_updation,
+    detection.audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role,
   ]
 
   tags = merge(local.audit_log_admin_activity_iam_detection_common_tags, {
@@ -71,7 +77,7 @@ detection "audit_log_admin_activity_detect_service_account_access_token_generati
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1078"
+    mitre_attack_ids = "TA0001:T1078,TA0005:T1548"
   })
 }
 
@@ -107,7 +113,7 @@ detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_auth
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1199,TA0003:T1098"
+    mitre_attack_ids = "TA0001:T1199,TA0003:T1098,TA0005:T1548"
   })
 }
 
@@ -119,7 +125,7 @@ detection "audit_log_admin_activity_detect_iam_service_account_token_creator_rol
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1199,TA0003:T1136"
+    mitre_attack_ids = "TA0001:T1199,TA0003:T1136,TA0005:T1548"
   })
 }
 
@@ -171,6 +177,41 @@ detection "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_
   })
 }
 
+detection "audit_log_admin_activity_detect_high_privilege_iam_roles" {
+  title           = "Detect High Privilege IAM Roles"
+  description     = "Detect the creations of high privilege IAM roles that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_high_privilege_iam_roles
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1548"
+  })
+}
+
+detection "audit_log_admin_activity_detect_iam_federated_identity_provider_updation" {
+  title           = "Detect IAM Federated Identity Provider Updations"
+  description     = "Detect the updations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_federated_identity_provider_updation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0003:T1136"
+  })
+}
+
+detection "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
+  title           = "Detect IAM Policy Removing Logging Admin Role"
+  description     = "Detect the removal of logging admin roles from IAM policies that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
+  })
+}
 /*
  * Queries
  */
@@ -348,6 +389,62 @@ query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
         select *
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
         where roles = 'roles/apigateway.admin'
+      )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_high_privilege_iam_roles" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_high_privilege_iam_roles_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v%.CreateRole'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'role' -> 'includedPermissions', '$[*]') as varchar[])) as permission
+        where permission = 'resourcemanager.projects.setIamPolicy'
+    )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_iam_federated_identity_provider_updation" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_iam_federated_identity_provider_updation_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.v%beta.workforcepools.updateworkforcepoolprovider'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'cloudresourcemanager.googleapis.com'
+      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(protopayload->'request'->'policy'->'bindings', '$[*]') as json[])) as binding_struct(binding)
+        where json_extract(binding, '$.role') in ('roles/logging.admin', 'roles/logging.viewer')
+        and json_array_length(json_extract(binding, '$.members')) = 0
       )
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by

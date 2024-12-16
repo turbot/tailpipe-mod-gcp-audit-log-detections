@@ -42,7 +42,7 @@ detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0005:T1211"
   })
 }
 

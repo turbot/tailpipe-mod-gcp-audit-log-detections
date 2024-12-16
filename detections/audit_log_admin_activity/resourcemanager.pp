@@ -8,6 +8,7 @@ locals {
   audit_log_admin_activity_detect_iam_policy_revoked_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_policy_to_enable_script_execution_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_policy_granting_owner_role_sql_columns        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_org_policy_revoked_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_resourcemanager_detections" {
@@ -21,6 +22,7 @@ benchmark "audit_log_admin_activity_resourcemanager_detections" {
     detection.audit_log_admin_activity_detect_iam_policy_revoked,
     detection.audit_log_admin_activity_detect_iam_policy_to_enable_script_execution,
     detection.audit_log_admin_activity_detect_iam_policy_granting_owner_role,
+    detection.audit_log_admin_activity_detect_org_policy_revoked,
   ]
 
   tags = merge(local.audit_log_admin_activity_resourcemanager_detection_common_tags, {
@@ -36,7 +38,7 @@ detection "audit_log_admin_activity_detect_project_level_iam_policy_change" {
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0005:T1211"
   })
 }
 
@@ -97,6 +99,18 @@ detection "audit_log_admin_activity_detect_iam_policy_granting_owner_role" {
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
+  })
+}
+
+detection "audit_log_admin_activity_detect_org_policy_revoked" {
+  title           = "Detect Org Policies Revoked"
+  description     = "Detect org policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_org_policy_revoked
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
   })
 }
 
@@ -196,6 +210,26 @@ query "audit_log_admin_activity_detect_iam_policy_granting_owner_role" {
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
         where roles = 'roles/owner'
       )
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_org_policy_revoked" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_org_policy_revoked_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'orgpolicy.googleapis.com'
+      and method_name ilike 'google.cloud.orgpolicy.v%.policyservice.setorgpolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'policy' -> 'spec' -> 'rules', '$[*]') as json[])) as rule_struct(rule)
+        where json_extract(rule, '$.values.allowedValues') is not null
+    )
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
