@@ -23,10 +23,11 @@ benchmark "audit_log_admin_activity_logging_detections" {
 }
 
 detection "audit_log_admin_activity_detect_unauthorized_access_attempts" {
-  title       = "Detect Unauthorized Access Attempts"
-  description = "Detect failed or unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
-  severity    = "high"
-  query       = query.audit_log_admin_activity_detect_unauthorized_access_attempts
+  title           = "Detect Unauthorized Access Attempts"
+  description     = "Detect failed or unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
+  severity        = "high"
+  query           = query.audit_log_admin_activity_detect_unauthorized_access_attempts
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0006:T1078"
@@ -34,10 +35,11 @@ detection "audit_log_admin_activity_detect_unauthorized_access_attempts" {
 }
 
 detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
-  title       = "Detect Log Sink Deletion Updates"
-  description = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_log_sink_deletion_updates
+  title           = "Detect Log Sink Deletion Updates"
+  description     = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_log_sink_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -45,10 +47,11 @@ detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
 }
 
 detection "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
-  title       = "Detect Logging Bucket Deletion Updates"
-  description = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_logging_bucket_deletion_updates
+  title           = "Detect Logging Bucket Deletion Updates"
+  description     = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_logging_bucket_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""

@@ -3,8 +3,8 @@ locals {
     service = "GCP/CloudFunctions"
   })
 
-  audit_log_admin_activity_detect_cloudfunctions_publicly_accessible_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloudfunctions_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_cloudfunction_detections" {
@@ -22,10 +22,11 @@ benchmark "audit_log_admin_activity_cloudfunction_detections" {
 }
 
 detection "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
-  title       = "Detect Cloud Functions Publicly Accessible"
-  description = "Detect when Cloud Functions are made publicly accessible, ensuring awareness of potential exposure and mitigating security risks associated with unrestricted access."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible
+  title           = "Detect Cloud Functions Publicly Accessible"
+  description     = "Detect when Cloud Functions are made publicly accessible, ensuring awareness of potential exposure and mitigating security risks associated with unrestricted access."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0002:T1648"
@@ -33,10 +34,11 @@ detection "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
 }
 
 detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
-  title       = "Detect Cloud Functions Operations Delete"
-  description = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_cloudfunctions_operation_delete
+  title           = "Detect Cloud Functions Operations Delete"
+  description     = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_cloudfunctions_operation_delete
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1648"

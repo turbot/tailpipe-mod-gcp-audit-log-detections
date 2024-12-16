@@ -20,10 +20,11 @@ benchmark "audit_log_admin_activity_apigateway_detections" {
 }
 
 detection "audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands" {
-  title       = "Detect ApiGateway Configured to Execute Backend Commands"
-  description = "Detect log entries where an API Gateway is configured to execute backend commands."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands
+  title           = "Detect ApiGateway Configured to Execute Backend Commands"
+  description     = "Detect log entries where an API Gateway is configured to execute backend commands."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1651"

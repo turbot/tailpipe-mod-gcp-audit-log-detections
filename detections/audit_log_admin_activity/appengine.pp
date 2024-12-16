@@ -22,10 +22,11 @@ benchmark "audit_log_admin_activity_appengine_detections" {
 }
 
 detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
-  title       = "Detect App Engine Ingress Firewall Rule Changes"
-  description = "Detect changes to App Engine ingress firewall rules that may expose resources to threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes
+  title           = "Detect App Engine Ingress Firewall Rule Changes"
+  description     = "Detect changes to App Engine ingress firewall rules that may expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -33,10 +34,11 @@ detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_chang
 }
 
 detection "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
-  title       = "Detect App Engine Admin API Executions Enabled"
-  description = "Detect when App Engine admin APIs are enabled, ensuring visibility into administrative configurations and monitoring for potential unauthorized changes."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled
+  title           = "Detect App Engine Admin API Executions Enabled"
+  description     = "Detect when App Engine admin APIs are enabled, ensuring visibility into administrative configurations and monitoring for potential unauthorized changes."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1648"

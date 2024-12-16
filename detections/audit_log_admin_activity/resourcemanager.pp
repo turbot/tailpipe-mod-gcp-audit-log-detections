@@ -29,10 +29,11 @@ benchmark "audit_log_admin_activity_resourcemanager_detections" {
 }
 
 detection "audit_log_admin_activity_detect_project_level_iam_policy_change" {
-  title       = "Detect IAM Policies Set at Project Level"
-  description = "Detect changes to IAM policies at the project level, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_project_level_iam_policy_change
+  title           = "Detect IAM Policies Set at Project Level"
+  description     = "Detect changes to IAM policies at the project level, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_project_level_iam_policy_change
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -40,10 +41,11 @@ detection "audit_log_admin_activity_detect_project_level_iam_policy_change" {
 }
 
 detection "audit_log_admin_activity_detect_login_without_mfa" {
-  title       = "Detect Logins Without MFA"
-  description = "Detect logins without MFA, ensuring visibility into access attempts that might indicate unauthorized activities or weak authentication practices."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_login_without_mfa
+  title           = "Detect Logins Without MFA"
+  description     = "Detect logins without MFA, ensuring visibility into access attempts that might indicate unauthorized activities or weak authentication practices."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_login_without_mfa
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
@@ -51,10 +53,11 @@ detection "audit_log_admin_activity_detect_login_without_mfa" {
 }
 
 detection "audit_log_admin_activity_detect_access_shared_resources" {
-  title       = "Detect Access to Shared Resources"
-  description = "Detect access to shared resources that might indicate unauthorized access attempts or potential misuse of resource sharing configurations."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_access_shared_resources
+  title           = "Detect Access to Shared Resources"
+  description     = "Detect access to shared resources that might indicate unauthorized access attempts or potential misuse of resource sharing configurations."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_access_shared_resources
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
@@ -62,10 +65,11 @@ detection "audit_log_admin_activity_detect_access_shared_resources" {
 }
 
 detection "audit_log_admin_activity_detect_iam_policy_revoked" {
-  title       = "Detect IAM Policies Revoked"
-  description = "Detect IAM policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_policy_revoked
+  title           = "Detect IAM Policies Revoked"
+  description     = "Detect IAM policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_policy_revoked
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
@@ -73,10 +77,11 @@ detection "audit_log_admin_activity_detect_iam_policy_revoked" {
 }
 
 detection "audit_log_admin_activity_detect_iam_policy_to_enable_script_execution" {
-  title       = "Detect IAM Policies to Enable Script Execution"
-  description = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_policy_to_enable_script_execution
+  title           = "Detect IAM Policies to Enable Script Execution"
+  description     = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_policy_to_enable_script_execution
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1059"
@@ -84,10 +89,11 @@ detection "audit_log_admin_activity_detect_iam_policy_to_enable_script_execution
 }
 
 detection "audit_log_admin_activity_detect_iam_policy_granting_owner_role" {
-  title       = "Detect IAM Policies Granting Owner Role"
-  description = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_policy_granting_owner_role
+  title           = "Detect IAM Policies Granting Owner Role"
+  description     = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_policy_granting_owner_role
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1098,TA0003:T1136"

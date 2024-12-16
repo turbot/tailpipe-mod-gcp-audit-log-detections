@@ -20,10 +20,11 @@ benchmark "audit_log_admin_activity_dlp_detections" {
 }
 
 detection "audit_log_admin_activity_detect_dlp_reidentify_content" {
-  title       = "Detect DLP Reidentify Contents"
-  description = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_dlp_reidentify_content
+  title           = "Detect DLP Reidentify Contents"
+  description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_dlp_reidentify_content
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""

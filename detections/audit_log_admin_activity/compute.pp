@@ -43,10 +43,11 @@ benchmark "audit_log_admin_activity_compute_detections" {
 }
 
 detection "audit_log_admin_activity_detect_vpn_tunnel_changes" {
-  title       = "Detect VPN Tunnel Changes"
-  description = "Detect changes to VPN tunnels, ensuring visibility into modifications that could compromise secure network communication or signal unauthorized activity, enabling proactive threat mitigation."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_vpn_tunnel_changes
+  title           = "Detect VPN Tunnel Changes"
+  description     = "Detect changes to VPN tunnels, ensuring visibility into modifications that could compromise secure network communication or signal unauthorized activity, enabling proactive threat mitigation."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_vpn_tunnel_changes
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -54,10 +55,11 @@ detection "audit_log_admin_activity_detect_vpn_tunnel_changes" {
 }
 
 detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
-  title       = "Detect Firewall Rule Changes"
-  description = "Detect changes to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates
+  title           = "Detect Firewall Rule Changes"
+  description     = "Detect changes to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -65,10 +67,11 @@ detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_update
 }
 
 detection "audit_log_admin_activity_detect_full_network_traffic_packet_updates" {
-  title       = "Detect Full Network Traffic Packet Updates"
-  description = "Detect updates to full network traffic packet configurations, ensuring awareness of potential unauthorized monitoring activities or configuration changes that could expose resources to security threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_full_network_traffic_packet_updates
+  title           = "Detect Full Network Traffic Packet Updates"
+  description     = "Detect updates to full network traffic packet configurations, ensuring awareness of potential unauthorized monitoring activities or configuration changes that could expose resources to security threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_full_network_traffic_packet_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -76,10 +79,11 @@ detection "audit_log_admin_activity_detect_full_network_traffic_packet_updates" 
 }
 
 detection "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates" {
-  title       = "Detect Compute Images Set IAM Policy Updates"
-  description = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_images_set_iam_policy_updates
+  title           = "Detect Compute Images Set IAM Policy Updates"
+  description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_images_set_iam_policy_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -87,10 +91,11 @@ detection "audit_log_admin_activity_detect_compute_images_set_iam_policy_updates
 }
 
 detection "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates" {
-  title       = "Detect Compute Disks Set IAM Policy Updates"
-  description = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates
+  title           = "Detect Compute Disks Set IAM Policy Updates"
+  description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -98,10 +103,11 @@ detection "audit_log_admin_activity_detect_compute_disks_set_iam_policy_updates"
 }
 
 detection "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates" {
-  title       = "Detect Compute Snapshot Set IAM Policy Updates"
-  description = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates
+  title           = "Detect Compute Snapshot Set IAM Policy Updates"
+  description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -109,10 +115,11 @@ detection "audit_log_admin_activity_detect_compute_snapshot_set_iam_policy_updat
 }
 
 detection "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates" {
-  title       = "Detect Unauthorized SSH Auth OS Login Updates"
-  description = "Detect unauthorized SSH authentication OS login updates, providing visibility into potential security breaches and mitigating risks associated with unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates
+  title           = "Detect Unauthorized SSH Auth OS Login Updates"
+  description     = "Detect unauthorized SSH authentication OS login updates, providing visibility into potential security breaches and mitigating risks associated with unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -120,10 +127,11 @@ detection "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_login_update
 }
 
 detection "audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces" {
-  title       = "Detect Compute Instances with Public Network Interfaces"
-  description = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces
+  title           = "Detect Compute Instances with Public Network Interfaces"
+  description     = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -131,10 +139,11 @@ detection "audit_log_admin_activity_detect_compute_instances_with_public_network
 }
 
 detection "audit_log_admin_activity_detect_public_ip_address_creation" {
-  title       = "Detect Public IP Address Creations"
-  description = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_public_ip_address_creation
+  title           = "Detect Public IP Address Creations"
+  description     = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_public_ip_address_creation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -142,10 +151,11 @@ detection "audit_log_admin_activity_detect_public_ip_address_creation" {
 }
 
 detection "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
-  title       = "Detect VPC Networks Shared to External Projects"
-  description = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_vpc_network_shared_to_external_project
+  title           = "Detect VPC Networks Shared to External Projects"
+  description     = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_vpc_network_shared_to_external_project
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -153,10 +163,11 @@ detection "audit_log_admin_activity_detect_vpc_network_shared_to_external_projec
 }
 
 detection "audit_log_admin_activity_detect_compute_image_logging_disabled" {
-  title       = "Detect Compute Image Logging Disabled"
-  description = "Detect compute image logging disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_image_logging_disabled
+  title           = "Detect Compute Image Logging Disabled"
+  description     = "Detect compute image logging disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_image_logging_disabled
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -164,10 +175,11 @@ detection "audit_log_admin_activity_detect_compute_image_logging_disabled" {
 }
 
 detection "audit_log_admin_activity_detect_compute_disk_size_small" {
-  title       = "Detect Compute Disk Size Small"
-  description = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_disk_size_small
+  title           = "Detect Compute Disk Size Small"
+  description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_disk_size_small
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -175,10 +187,11 @@ detection "audit_log_admin_activity_detect_compute_disk_size_small" {
 }
 
 detection "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
-  title       = "Detect Compute Image OS Login Disabled"
-  description = "Detect compute image OS login disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_compute_image_os_login_disabled
+  title           = "Detect Compute Image OS Login Disabled"
+  description     = "Detect compute image OS login disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_image_os_login_disabled
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"

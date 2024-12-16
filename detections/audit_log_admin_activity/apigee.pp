@@ -20,11 +20,12 @@ benchmark "audit_log_admin_activity_apigee_detections" {
 }
 
 detection "audit_log_admin_activity_detect_api_access_to_vulnerable_services" {
-  title       = "Detect API Access to Vulnerable Services"
-  description = "Detect log entries where API is accessed to a vulnerable service."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_api_access_to_vulnerable_services
-  
+  title           = "Detect API Access to Vulnerable Services"
+  description     = "Detect log entries where API is accessed to a vulnerable service."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_api_access_to_vulnerable_services
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
   })

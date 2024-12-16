@@ -27,10 +27,11 @@ benchmark "audit_log_admin_activity_artifactregistry_detections" {
 }
 
 detection "audit_log_admin_activity_detect_artifact_registry_overwritten" {
-  title       = "Detect Artifact Registry Overwritten"
-  description = "Detect Artifact Registry overwritten, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_artifact_registry_overwritten
+  title           = "Detect Artifact Registry Overwritten"
+  description     = "Detect Artifact Registry overwritten, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_artifact_registry_overwritten
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
@@ -38,10 +39,11 @@ detection "audit_log_admin_activity_detect_artifact_registry_overwritten" {
 }
 
 detection "audit_log_admin_activity_detect_artifact_registry_publicly_accessible" {
-  title       = "Detect Artifact Registry Publicly Accessible"
-  description = "Detect Artifact Registry publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_artifact_registry_publicly_accessible
+  title           = "Detect Artifact Registry Publicly Accessible"
+  description     = "Detect Artifact Registry publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_artifact_registry_publicly_accessible
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
@@ -49,10 +51,11 @@ detection "audit_log_admin_activity_detect_artifact_registry_publicly_accessible
 }
 
 detection "audit_log_admin_activity_detect_artifact_registry_with_no_layers" {
-  title       = "Detect Artifact Registry with No Layers"
-  description = "Detect Artifact Registry with no layers, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_artifact_registry_with_no_layers
+  title           = "Detect Artifact Registry with No Layers"
+  description     = "Detect Artifact Registry with no layers, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_artifact_registry_with_no_layers
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -71,10 +74,11 @@ detection "audit_log_admin_activity_detect_artifact_registry_artifact_deletion" 
 }
 
 detection "audit_log_admin_activity_detect_encrypted_container_image_pushed" {
-  title       = "Detect Encrypted Container Image Pushed"
-  description = "Detect encrypted container image pushed, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_encrypted_container_image_pushed
+  title           = "Detect Encrypted Container Image Pushed"
+  description     = "Detect encrypted container image pushed, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_encrypted_container_image_pushed
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"

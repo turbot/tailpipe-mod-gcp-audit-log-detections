@@ -22,10 +22,11 @@ benchmark "audit_log_admin_activity_dns_detections" {
 }
 
 detection "audit_log_admin_activity_detect_dns_zone_changes" {
-  title       = "Detect DNS Zone Changes"
-  description = "Detect changes to DNS zones, ensuring visibility into modifications that could disrupt domain configurations, compromise infrastructure, or increase exposure to security threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_dns_zone_changes
+  title           = "Detect DNS Zone Changes"
+  description     = "Detect changes to DNS zones, ensuring visibility into modifications that could disrupt domain configurations, compromise infrastructure, or increase exposure to security threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_dns_zone_changes
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -33,10 +34,11 @@ detection "audit_log_admin_activity_detect_dns_zone_changes" {
 }
 
 detection "audit_log_admin_activity_detect_dns_record_modifications" {
-  title       = "Detect DNS Record Modifications"
-  description = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_dns_record_modifications
+  title           = "Detect DNS Record Modifications"
+  description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_dns_record_modifications
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""

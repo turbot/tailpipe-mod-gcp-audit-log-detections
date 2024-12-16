@@ -26,14 +26,13 @@ locals {
     and (operation is null or operation.last = true)
   EOQ
   // Keep same order as SQL statement for easier readability
-  # cloudtrail_log_detection_default_columns = [
-  #   "timestamp",
-  #   "operation",
-  #   "resource",
-  #   "actor",
-  #   "source_ip",
-  #   "account_id",
-  #   "region",
-  #   "source_id"
-  # ]
+  audit_log_admin_activity_detection_display_columns = [
+    "timestamp",
+    "operation",
+    "resource",
+    "actor",
+    "source_ip",
+    "project",
+    "source_id"
+  ]
 }

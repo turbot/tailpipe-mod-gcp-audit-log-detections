@@ -30,10 +30,11 @@ benchmark "audit_log_admin_activity_kubernetes_detections" {
 }
 
 detection "audit_log_admin_activity_detect_kubernetes_secrets_modification_updates" {
-  title       = "Detect Kubernetes Secrets Modification Updates"
-  description = "Detect changes to Kubernetes secrets, ensuring visibility into modifications that could compromise sensitive information or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_kubernetes_secrets_modification_updates
+  title           = "Detect Kubernetes Secrets Modification Updates"
+  description     = "Detect changes to Kubernetes secrets, ensuring visibility into modifications that could compromise sensitive information or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_kubernetes_secrets_modification_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -41,10 +42,11 @@ detection "audit_log_admin_activity_detect_kubernetes_secrets_modification_updat
 }
 
 detection "audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes" {
-  title       = "Detect Kubernetes Admission Webhook Config Changes"
-  description = "Detect changes to Kubernetes admission webhook configurations, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes
+  title           = "Detect Kubernetes Admission Webhook Config Changes"
+  description     = "Detect changes to Kubernetes admission webhook configurations, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_kubernetes_admission_webhook_config_changes
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -52,10 +54,11 @@ detection "audit_log_admin_activity_detect_kubernetes_admission_webhook_config_c
 }
 
 detection "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
-  title       = "Detect Kubernetes Cronjob Changes"
-  description = "Detect changes to Kubernetes cronjobs, ensuring visibility into modifications that could disrupt scheduled tasks or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_kubernetes_cronjob_changes
+  title           = "Detect Kubernetes Cronjob Changes"
+  description     = "Detect changes to Kubernetes cronjobs, ensuring visibility into modifications that could disrupt scheduled tasks or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_kubernetes_cronjob_changes
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -63,10 +66,11 @@ detection "audit_log_admin_activity_detect_kubernetes_cronjob_changes" {
 }
 
 detection "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" {
-  title       = "Detect Kubernetes Clusters with Public Endpoints"
-  description = "Detect Kubernetes clusters with public endpoints, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint
+  title           = "Detect Kubernetes Clusters with Public Endpoints"
+  description     = "Detect Kubernetes clusters with public endpoints, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T119"
@@ -74,10 +78,11 @@ detection "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoi
 }
 
 detection "audit_log_admin_activity_detect_cloud_scheduler_run_job" {
-  title       = "Detect Cloud Scheduler Run Jobs"
-  description = "Detect when Cloud Scheduler jobs are run, ensuring visibility into scheduled operations and monitoring for unauthorized or unexpected executions."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_cloud_scheduler_run_job
+  title           = "Detect Cloud Scheduler Run Jobs"
+  description     = "Detect when Cloud Scheduler jobs are run, ensuring visibility into scheduled operations and monitoring for unauthorized or unexpected executions."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_cloud_scheduler_run_job
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
@@ -85,10 +90,11 @@ detection "audit_log_admin_activity_detect_cloud_scheduler_run_job" {
 }
 
 detection "audit_log_admin_activity_detect_container_executed" {
-  title       = "Detect Containers Executed"
-  description = "Detect the executions of containers, ensuring visibility into runtime activities that might indicate unauthorized actions or potential security risks."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_container_executed
+  title           = "Detect Containers Executed"
+  description     = "Detect the executions of containers, ensuring visibility into runtime activities that might indicate unauthorized actions or potential security risks."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_container_executed
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1651"

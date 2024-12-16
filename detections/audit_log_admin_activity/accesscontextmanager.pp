@@ -24,10 +24,11 @@ benchmark "audit_log_admin_activity_access_context_manager_detections" {
 }
 
 detection "audit_log_admin_activity_detect_access_policy_deletion_updates" {
-  title       = "Detect Access Policy Deletion Updates"
-  description = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_access_policy_deletion_updates
+  title           = "Detect Access Policy Deletion Updates"
+  description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_access_policy_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -35,10 +36,11 @@ detection "audit_log_admin_activity_detect_access_policy_deletion_updates" {
 }
 
 detection "audit_log_admin_activity_detect_access_zone_deletion_updates" {
-  title       = "Detect Access Zone Deletion Updates"
-  description = "Detect deletions of access zones that might disrupt security configurations or expose resources to threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_access_zone_deletion_updates
+  title           = "Detect Access Zone Deletion Updates"
+  description     = "Detect deletions of access zones that might disrupt security configurations or expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_access_zone_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -46,10 +48,11 @@ detection "audit_log_admin_activity_detect_access_zone_deletion_updates" {
 }
 
 detection "audit_log_admin_activity_detect_access_level_deletion_updates" {
-  title       = "Detect Access Level Deletion Updates"
-  description = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_access_level_deletion_updates
+  title           = "Detect Access Level Deletion Updates"
+  description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_access_level_deletion_updates
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""

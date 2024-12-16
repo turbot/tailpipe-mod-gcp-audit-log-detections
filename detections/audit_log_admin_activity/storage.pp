@@ -22,10 +22,11 @@ benchmark "audit_log_admin_activity_storage_detections" {
 }
 
 detection "audit_log_admin_activity_detect_storage_set_iam_policy" {
-  title       = "Detect Storage Set IAM Policies"
-  description = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_storage_set_iam_policy
+  title           = "Detect Storage Set IAM Policies"
+  description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_storage_set_iam_policy
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = ""
@@ -33,10 +34,11 @@ detection "audit_log_admin_activity_detect_storage_set_iam_policy" {
 }
 
 detection "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
-  title       = "Detect Publicly Accessible Storage Buckets"
-  description = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
-  severity    = "high"
-  query       = query.audit_log_admin_activity_detect_storage_bucket_publicly_accessible
+  title           = "Detect Publicly Accessible Storage Buckets"
+  description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
+  severity        = "high"
+  query           = query.audit_log_admin_activity_detect_storage_bucket_publicly_accessible
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"

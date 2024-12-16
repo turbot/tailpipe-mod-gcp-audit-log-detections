@@ -20,10 +20,11 @@ benchmark "audit_log_admin_activity_monitoring_detections" {
 }
 
 detection "audit_log_admin_activity_detect_unusual_resource_consumption" {
-  title       = "Detect Unusual Resource Consumption"
-  description = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_unusual_resource_consumption
+  title           = "Detect Unusual Resource Consumption"
+  description     = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_unusual_resource_consumption
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1566"

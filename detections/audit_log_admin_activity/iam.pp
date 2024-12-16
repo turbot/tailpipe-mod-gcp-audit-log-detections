@@ -40,10 +40,11 @@ benchmark "audit_log_admin_activity_iam_detections" {
 }
 
 detection "audit_log_admin_activity_detect_service_account_creation" {
-  title       = "Detect Service Account Creations"
-  description = "Detect newly created service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_service_account_creation
+  title           = "Detect Service Account Creations"
+  description     = "Detect newly created service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_service_account_creation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0006:T1078,TA0003:T1136"
@@ -51,10 +52,11 @@ detection "audit_log_admin_activity_detect_service_account_creation" {
 }
 
 detection "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
-  title       = "Detect Service Accounts Disabled or Deleted"
-  description = "Detect disabled or deleted service accounts that might indicate malicious actions or disrupt access to resources."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_service_account_disabled_or_deleted
+  title           = "Detect Service Accounts Disabled or Deleted"
+  description     = "Detect disabled or deleted service accounts that might indicate malicious actions or disrupt access to resources."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_service_account_disabled_or_deleted
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
@@ -62,10 +64,11 @@ detection "audit_log_admin_activity_detect_service_account_disabled_or_deleted" 
 }
 
 detection "audit_log_admin_activity_detect_service_account_access_token_generation" {
-  title       = "Detect Service Account Access Token Generations"
-  description = "Detect the generation of service account access tokens that might indicate unauthorized access attempts or potential data exposures."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_service_account_access_token_generation
+  title           = "Detect Service Account Access Token Generations"
+  description     = "Detect the generation of service account access tokens that might indicate unauthorized access attempts or potential data exposures."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_service_account_access_token_generation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
@@ -73,9 +76,11 @@ detection "audit_log_admin_activity_detect_service_account_access_token_generati
 }
 
 detection "audit_log_admin_activity_detect_service_account_key_creation" {
-  title       = "Detect Service Account Key Creations"
-  description = "Detect the creations of service account keys that might indicate potential misuse or unauthorized access attempts."
-  query       = query.audit_log_admin_activity_detect_service_account_key_creation
+  title           = "Detect Service Account Key Creations"
+  description     = "Detect the creations of service account keys that might indicate potential misuse or unauthorized access attempts."
+  query           = query.audit_log_admin_activity_detect_service_account_key_creation
+  severity        = "medium"
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098,TA0003:T1136"
@@ -83,10 +88,11 @@ detection "audit_log_admin_activity_detect_service_account_key_creation" {
 }
 
 detection "audit_log_admin_activity_detect_workload_identity_pool_provider_creation" {
-  title       = "Detect Workload Identity Pool Provider Creations"
-  description = "Detect the creations of workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_workload_identity_pool_provider_creation
+  title           = "Detect Workload Identity Pool Provider Creations"
+  description     = "Detect the creations of workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_workload_identity_pool_provider_creation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
@@ -94,10 +100,11 @@ detection "audit_log_admin_activity_detect_workload_identity_pool_provider_creat
 }
 
 detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users" {
-  title       = "Detect IAM Roles Granting Access to All Authenticated Users"
-  description = "Detect IAM roles granting access to all authenticated users, ensuring visibility into over-permissioned configurations that could pose security risks."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users
+  title           = "Detect IAM Roles Granting Access to All Authenticated Users"
+  description     = "Detect IAM roles granting access to all authenticated users, ensuring visibility into over-permissioned configurations that could pose security risks."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0003:T1098"
@@ -105,10 +112,11 @@ detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_auth
 }
 
 detection "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
-  title       = "Detect IAM Service Account Token Creator Roles"
-  description = "Detect the assignments of IAM service account token creator roles that might indicate potential misuse or unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_service_account_token_creator_role
+  title           = "Detect IAM Service Account Token Creator Roles"
+  description     = "Detect the assignments of IAM service account token creator roles that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_service_account_token_creator_role
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0003:T1136"
@@ -116,10 +124,11 @@ detection "audit_log_admin_activity_detect_iam_service_account_token_creator_rol
 }
 
 detection "audit_log_admin_activity_detect_organization_iam_policy_change" {
-  title       = "Detect Organization IAM Policy Changes"
-  description = "Detect changes to organization IAM policies that might expose resources to threats or indicate unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_organization_iam_policy_change
+  title           = "Detect Organization IAM Policy Changes"
+  description     = "Detect changes to organization IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_organization_iam_policy_change
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199"
@@ -127,10 +136,11 @@ detection "audit_log_admin_activity_detect_organization_iam_policy_change" {
 }
 
 detection "audit_log_admin_activity_detect_iam_workforce_pool_update" {
-  title       = "Detect IAM Workforce Pool Updates"
-  description = "Detect updates to IAM workforce pools that might indicate potential misuse or unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_workforce_pool_update
+  title           = "Detect IAM Workforce Pool Updates"
+  description     = "Detect updates to IAM workforce pools that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_workforce_pool_update
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1098"
@@ -138,10 +148,11 @@ detection "audit_log_admin_activity_detect_iam_workforce_pool_update" {
 }
 
 detection "audit_log_admin_activity_detect_iam_federated_identity_provider_creation" {
-  title       = "Detect IAM Federated Identity Provider Creations"
-  description = "Detect the creations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_federated_identity_provider_creation
+  title           = "Detect IAM Federated Identity Provider Creations"
+  description     = "Detect the creations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_federated_identity_provider_creation
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
@@ -149,10 +160,11 @@ detection "audit_log_admin_activity_detect_iam_federated_identity_provider_creat
 }
 
 detection "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role" {
-  title       = "Detect IAM Policies Granting Apigateway Admin Roles"
-  description = "Detect IAM policies granting apigateway admin roles that might indicate potential misuse or unauthorized access attempts."
-  severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
+  title           = "Detect IAM Policies Granting Apigateway Admin Roles"
+  description     = "Detect IAM policies granting apigateway admin roles that might indicate potential misuse or unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
+  display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
