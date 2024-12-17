@@ -2,9 +2,9 @@ locals {
   audit_log_admin_activity_logging_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     service = "GCP/Logging"
   })
-  audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_log_sink_deletion_updates_sql_columns       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_logging_bucket_deletion_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_unauthorized_access_attempts_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_log_sink_deletion_updates_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_logging_bucket_deletions_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_logging_detections" {
@@ -14,7 +14,7 @@ benchmark "audit_log_admin_activity_logging_detections" {
   children = [
     detection.audit_log_admin_activity_detect_unauthorized_access_attempts,
     detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
-    detection.audit_log_admin_activity_detect_logging_bucket_deletion_updates,
+    detection.audit_log_admin_activity_detect_logging_bucket_deletions,
   ]
 
   tags = merge(local.audit_log_admin_activity_logging_detection_common_tags, {
@@ -35,7 +35,7 @@ detection "audit_log_admin_activity_detect_unauthorized_access_attempts" {
 }
 
 detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
-  title           = "Detect Log Sink Deletion Updates"
+  title           = "Detect Log Sink Deletions"
   description     = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_log_sink_deletion_updates
@@ -46,15 +46,15 @@ detection "audit_log_admin_activity_detect_log_sink_deletion_updates" {
   })
 }
 
-detection "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
-  title           = "Detect Logging Bucket Deletion Updates"
+detection "audit_log_admin_activity_detect_logging_bucket_deletions" {
+  title           = "Detect Logging Bucket Deletions"
   description     = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_logging_bucket_deletion_updates
+  query           = query.audit_log_admin_activity_detect_logging_bucket_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0004:T1078"
   })
 }
 
@@ -73,10 +73,10 @@ query "audit_log_admin_activity_detect_log_sink_deletion_updates" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_logging_bucket_deletion_updates" {
+query "audit_log_admin_activity_detect_logging_bucket_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_logging_bucket_deletion_updates_sql_columns}
+      ${local.audit_log_admin_activity_detect_logging_bucket_deletions_sql_columns}
     from
       gcp_audit_log_admin_activity
     where

@@ -3,9 +3,9 @@ locals {
     service = "GCP/AccessContextManager"
   })
 
-  audit_log_admin_activity_detect_access_policy_deletion_updates_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_access_zone_deletion_updates_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_access_level_deletion_updates_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_access_policy_deletions_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_access_zone_deletions_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_access_level_deletions_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_log_admin_activity_access_context_manager_detections" {
@@ -13,9 +13,9 @@ benchmark "audit_log_admin_activity_access_context_manager_detections" {
   description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Access Context Manager Logs."
   type        = "detection"
   children = [
-    detection.audit_log_admin_activity_detect_access_policy_deletion_updates,
-    detection.audit_log_admin_activity_detect_access_zone_deletion_updates,
-    detection.audit_log_admin_activity_detect_access_level_deletion_updates,
+    detection.audit_log_admin_activity_detect_access_policy_deletions,
+    detection.audit_log_admin_activity_detect_access_zone_deletions,
+    detection.audit_log_admin_activity_detect_access_level_deletions,
   ]
 
   tags = merge(local.audit_log_admin_activity_access_context_manager_detection_common_tags, {
@@ -23,46 +23,46 @@ benchmark "audit_log_admin_activity_access_context_manager_detections" {
   })
 }
 
-detection "audit_log_admin_activity_detect_access_policy_deletion_updates" {
-  title           = "Detect Access Policy Deletion Updates"
+detection "audit_log_admin_activity_detect_access_policy_deletions" {
+  title           = "Detect Access Policy Deletions"
   description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_access_policy_deletion_updates
+  query           = query.audit_log_admin_activity_detect_access_policy_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
 
-detection "audit_log_admin_activity_detect_access_zone_deletion_updates" {
-  title           = "Detect Access Zone Deletion Updates"
+detection "audit_log_admin_activity_detect_access_zone_deletions" {
+  title           = "Detect Access Zone Deletions"
   description     = "Detect deletions of access zones that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_access_zone_deletion_updates
+  query           = query.audit_log_admin_activity_detect_access_zone_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
 
-detection "audit_log_admin_activity_detect_access_level_deletion_updates" {
-  title           = "Detect Access Level Deletion Updates"
+detection "audit_log_admin_activity_detect_access_level_deletions" {
+  title           = "Detect Access Level Deletions"
   description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_access_level_deletion_updates
+  query           = query.audit_log_admin_activity_detect_access_level_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = ""
+    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
 
-query "audit_log_admin_activity_detect_access_policy_deletion_updates" {
+query "audit_log_admin_activity_detect_access_policy_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_access_policy_deletion_updates_sql_columns}
+      ${local.audit_log_admin_activity_detect_access_policy_deletions_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
@@ -74,10 +74,10 @@ query "audit_log_admin_activity_detect_access_policy_deletion_updates" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_access_zone_deletion_updates" {
+query "audit_log_admin_activity_detect_access_zone_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_access_zone_deletion_updates_sql_columns}
+      ${local.audit_log_admin_activity_detect_access_zone_deletions_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
@@ -89,10 +89,10 @@ query "audit_log_admin_activity_detect_access_zone_deletion_updates" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_access_level_deletion_updates" {
+query "audit_log_admin_activity_detect_access_level_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_access_level_deletion_updates_sql_columns}
+      ${local.audit_log_admin_activity_detect_access_level_deletions_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
