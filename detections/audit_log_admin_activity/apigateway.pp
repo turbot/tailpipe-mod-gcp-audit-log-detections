@@ -1,14 +1,14 @@
 locals {
   audit_log_admin_activity_apigateway_detection_common_tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    service = "GCP/ApiGateway"
+    service = "GCP/APIGateway"
   })
 
   audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_admin_activity_apigateway_detections" {
-  title       = "ApiGateway Detections"
-  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for ApiGateway events."
+  title       = "API Gateway Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for API Gateway events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands
@@ -20,7 +20,7 @@ benchmark "audit_logs_admin_activity_apigateway_detections" {
 }
 
 detection "audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands" {
-  title           = "Detect ApiGateway Configured to Execute Backend Commands"
+  title           = "Detect API Gateway Configured to Execute Backend Commands"
   description     = "Detect log entries where an API Gateway is configured to execute backend commands."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands
@@ -30,7 +30,7 @@ detection "audit_log_admin_activity_detect_apigateway_configured_to_execute_back
     mitre_attack_ids = "TA0002:T1651"
   })
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands" {
   sql = <<-EOQ
     select

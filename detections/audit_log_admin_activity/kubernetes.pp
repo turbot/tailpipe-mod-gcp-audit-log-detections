@@ -247,7 +247,7 @@ query "audit_log_admin_activity_detect_kubernetes_cronjob_modifications" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint" {
   sql = <<-EOQ
     select

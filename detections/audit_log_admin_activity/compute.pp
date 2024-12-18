@@ -344,7 +344,7 @@ query "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins" {
       timestamp desc;
   EOQ
 }
-// TODO: Need to test this query
+// testing needed
 query "audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces" {
   sql = <<-EOQ
     select
@@ -365,7 +365,7 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_public_ip_address_creation" {
   sql = <<-EOQ
     select
@@ -396,7 +396,7 @@ query "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_compute_image_logging_disabled" {
   sql = <<-EOQ
     select
@@ -417,7 +417,7 @@ query "audit_log_admin_activity_detect_compute_image_logging_disabled" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_compute_disk_size_small" {
   sql = <<-EOQ
     select
@@ -438,7 +438,7 @@ query "audit_log_admin_activity_detect_compute_disk_size_small" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
   sql = <<-EOQ
     select
@@ -459,7 +459,7 @@ query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_disable_compute_vpc_flow_logs" {
   sql = <<-EOQ
     select

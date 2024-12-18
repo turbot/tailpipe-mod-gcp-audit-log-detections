@@ -11,7 +11,8 @@ benchmark "mitre_v151_ta0001_t1078" {
   children = [
     detection.audit_log_admin_activity_detect_service_account_access_token_generation,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
-    detection.audit_log_admin_activity_detect_service_account_disabled_or_deleted,
+    detection.audit_log_admin_activity_detect_service_account_deletions,
+    detection.audit_log_admin_activity_detect_disabled_service_account,
     detection.audit_log_admin_activity_detect_login_without_mfa,
     detection.audit_log_admin_activity_detect_access_shared_resources,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,

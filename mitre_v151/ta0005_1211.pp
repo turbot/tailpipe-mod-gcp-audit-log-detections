@@ -13,7 +13,7 @@ benchmark "mitre_v151_ta0005_t1211" {
     detection.audit_log_admin_activity_detect_project_level_iam_policy_change,
     detection.audit_log_admin_activity_detect_org_policy_revoked,
     detection.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs,
-    detection.audit_log_admin_activity_detect_disable_security_command_center,
+    detection.audit_log_admin_activity_detect_disabled_security_command_center,
     detection.audit_log_admin_activity_detect_api_monitoring_disabled,
     detection.audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role,
   ]

@@ -4,7 +4,8 @@ locals {
   })
 
   audit_log_admin_activity_detect_service_account_creation_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_disabled_or_deleted_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_deletions_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_disabled_service_account_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns              = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -26,7 +27,8 @@ benchmark "audit_logs_admin_activity_iam_detections" {
   children = [
     detection.audit_log_admin_activity_detect_service_account_creation,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
-    detection.audit_log_admin_activity_detect_service_account_disabled_or_deleted,
+    detection.audit_log_admin_activity_detect_service_account_deletions,
+    detection.audit_log_admin_activity_detect_disabled_service_account,
     detection.audit_log_admin_activity_detect_service_account_access_token_generation,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
@@ -57,11 +59,23 @@ detection "audit_log_admin_activity_detect_service_account_creation" {
   })
 }
 
-detection "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
-  title           = "Detect IAM Service Accounts Disabled or Deleted"
-  description     = "Detect disabled or deleted IAM service accounts that might indicate malicious actions or disrupt access to resources."
+detection "audit_log_admin_activity_detect_service_account_deletions" {
+  title           = "Detect IAM Service Accounts Deletions"
+  description     = "Detect deleted IAM service accounts that might indicate malicious actions or disrupt access to resources."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_service_account_disabled_or_deleted
+  query           = query.audit_log_admin_activity_detect_service_account_deletions
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
+  })
+}
+
+detection "audit_log_admin_activity_detect_disabled_service_account" {
+  title           = "Detect Disabled IAM Service Accounts"
+  description     = "Detect disabled IAM service accounts that might indicate unauthorized access attempts or potential data exposures."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_disabled_service_account
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -231,15 +245,30 @@ query "audit_log_admin_activity_detect_service_account_creation" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
+query "audit_log_admin_activity_detect_disabled_service_account" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_service_account_disabled_or_deleted_sql_columns}
+      ${local.audit_log_admin_activity_detect_disabled_service_account_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and (method_name ilike 'google.iam.admin.v%.serviceaccounts.delete' or method_name ilike 'google.iam.admin.v1.serviceaccounts.disable')
+      and method_name ilike 'google.iam.admin.v1.serviceaccounts.disable'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_service_account_deletions" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_service_account_deletions_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v%.serviceaccounts.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -290,7 +319,7 @@ query "audit_log_admin_activity_detect_workload_identity_pool_provider_creation"
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users" {
   sql = <<-EOQ
     select
@@ -310,7 +339,7 @@ query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenti
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
   sql = <<-EOQ
     select
@@ -354,7 +383,7 @@ query "audit_log_admin_activity_detect_iam_workforce_pool_update" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.v%beta.WorkforcePools.UpdateWorkforcePool'
+      and method_name ilike 'google.iam.v%beta.workforcepools.updateworkforcepool'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -375,7 +404,7 @@ query "audit_log_admin_activity_detect_iam_federated_identity_provider_creation"
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role" {
   sql = <<-EOQ
     select
@@ -395,7 +424,7 @@ query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_high_privilege_iam_roles" {
   sql = <<-EOQ
     select
@@ -430,7 +459,7 @@ query "audit_log_admin_activity_detect_iam_federated_identity_provider_updation"
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
   sql = <<-EOQ
     select

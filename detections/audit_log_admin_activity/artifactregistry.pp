@@ -84,7 +84,7 @@ detection "audit_log_admin_activity_detect_encrypted_container_image_pushed" {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_artifact_registry_overwritten" {
   sql = <<-EOQ
     select
@@ -104,7 +104,7 @@ query "audit_log_admin_activity_detect_artifact_registry_overwritten" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_artifact_registry_publicly_accessible" {
   sql = <<-EOQ
     select
@@ -124,7 +124,7 @@ query "audit_log_admin_activity_detect_artifact_registry_publicly_accessible" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_artifact_registry_with_no_layers" {
   sql = <<-EOQ
     select
@@ -158,7 +158,7 @@ query "audit_log_admin_activity_detect_artifact_registry_artifact_deletion" {
       timestamp desc;
   EOQ
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_encrypted_container_image_pushed" {
   sql = <<-EOQ
     select

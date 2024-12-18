@@ -44,7 +44,7 @@ detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
-
+// testing needed
 query "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
     select 

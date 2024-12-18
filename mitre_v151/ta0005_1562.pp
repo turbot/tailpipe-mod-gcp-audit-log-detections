@@ -15,6 +15,9 @@ benchmark "mitre_v151_ta0005_t1562" {
     detection.audit_log_admin_activity_detect_encrypted_container_image_pushed,
     detection.audit_log_admin_activity_detect_artifact_registry_artifact_deletion,
     detection.audit_log_admin_activity_detect_compute_image_os_login_disabled,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions,
   ]
 
   tags = local.mitre_v151_ta0005_t1562_common_tags

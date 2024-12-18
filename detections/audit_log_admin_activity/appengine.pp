@@ -3,8 +3,10 @@ locals {
     service = "GCP/AppEngine"
   })
 
-  audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_admin_activity_appengine_detections" {
@@ -12,7 +14,9 @@ benchmark "audit_logs_admin_activity_appengine_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for App Engine events."
   type        = "detection"
   children = [
-    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications,
+    detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions,
     detection.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled,
   ]
 
@@ -21,11 +25,35 @@ benchmark "audit_logs_admin_activity_appengine_detections" {
   })
 }
 
-detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
-  title           = "Detect App Engine Ingress Firewall Rule Changes"
-  description     = "Detect changes to App Engine ingress firewall rules that may expose resources to threats."
+detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations" {
+  title           = "Detect App Engine Ingress Firewall Rule Creations"
+  description     = "Detect creations to App Engine ingress firewall rules that may expose resources to threats."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes
+  query           = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications" {
+  title           = "Detect App Engine Ingress Firewall Rule Modifications"
+  description     = "Detect modifications to App Engine ingress firewall rules that may expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions" {
+  title           = "Detect App Engine Ingress Firewall Rule Deletions"
+  description     = "Detect deletions to App Engine ingress firewall rules that may expose resources to threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_appengine_detection_common_tags, {
@@ -45,21 +73,51 @@ detection "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled
   })
 }
 
-query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes" {
+query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes_sql_columns}
+      ${local.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_creations_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
       service_name = 'appengine.googleapis.com'
-      and (method_name ilike 'google.appengine.v%.firewall.createingressrule' or method_name ilike 'google.appengine.v%.firewall.deleteingressrule' or method_name ilike 'google.appengine.v%.firewall.updateingressrule')
+      and method_name ilike 'google.appengine.v%.firewall.createingressrule'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
 
+query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_modifications_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'appengine.googleapis.com'
+      and method_name ilike 'google.appengine.v%.firewall.updateingressrule'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_deletions_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'appengine.googleapis.com'
+      and method_name ilike 'google.appengine.v%.firewall.deleteingressrule'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+// testing needed
 query "audit_log_admin_activity_detect_appengine_admin_api_execution_enabled" {
   sql = <<-EOQ
     select
