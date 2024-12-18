@@ -47,7 +47,7 @@ benchmark "audit_logs_admin_activity_compute_detections" {
 }
 
 detection "audit_log_admin_activity_detect_vpn_tunnel_deletions" {
-  title           = "Detect VPN Tunnel Deletions"
+  title           = "Detect Compute VPN Tunnel Deletions"
   description     = "Detect deletions of VPN tunnels, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_vpn_tunnel_deletions
@@ -59,7 +59,7 @@ detection "audit_log_admin_activity_detect_vpn_tunnel_deletions" {
 }
 
 detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
-  title           = "Detect Firewall Rule Changes"
+  title           = "Detect Compute Firewall Rule Changes"
   description     = "Detect changes to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates
@@ -71,7 +71,7 @@ detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_update
 }
 
 detection "audit_log_admin_activity_detect_full_network_traffic_packet_deletions" {
-  title           = "Detect Full Network Traffic Packet Deletions"
+  title           = "Detect Compute Full Network Traffic Packet Deletions"
   description     = "Detect deletions of full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_full_network_traffic_packet_deletions
@@ -83,7 +83,7 @@ detection "audit_log_admin_activity_detect_full_network_traffic_packet_deletions
 }
 
 detection "audit_log_admin_activity_detect_full_network_traffic_packet_modifications" {
-  title           = "Detect Full Network Traffic Packet Modifications"
+  title           = "Detect Compute Full Network Traffic Packet Modifications"
   description     = "Detect modifications to full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_full_network_traffic_packet_modifications

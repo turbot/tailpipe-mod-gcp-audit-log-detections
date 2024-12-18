@@ -46,8 +46,8 @@ benchmark "audit_logs_admin_activity_iam_detections" {
 }
 
 detection "audit_log_admin_activity_detect_service_account_creation" {
-  title           = "Detect Service Account Creations"
-  description     = "Detect newly created service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
+  title           = "Detect IAM Service Account Creations"
+  description     = "Detect newly created IAM service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_service_account_creation
   display_columns = local.audit_log_admin_activity_detection_display_columns
@@ -58,8 +58,8 @@ detection "audit_log_admin_activity_detect_service_account_creation" {
 }
 
 detection "audit_log_admin_activity_detect_service_account_disabled_or_deleted" {
-  title           = "Detect Service Accounts Disabled or Deleted"
-  description     = "Detect disabled or deleted service accounts that might indicate malicious actions or disrupt access to resources."
+  title           = "Detect IAM Service Accounts Disabled or Deleted"
+  description     = "Detect disabled or deleted IAM service accounts that might indicate malicious actions or disrupt access to resources."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_service_account_disabled_or_deleted
   display_columns = local.audit_log_admin_activity_detection_display_columns
@@ -70,8 +70,8 @@ detection "audit_log_admin_activity_detect_service_account_disabled_or_deleted" 
 }
 
 detection "audit_log_admin_activity_detect_service_account_access_token_generation" {
-  title           = "Detect Service Account Access Token Generations"
-  description     = "Detect the generation of service account access tokens that might indicate unauthorized access attempts or potential data exposures."
+  title           = "Detect IAM Service Account Access Token Generations"
+  description     = "Detect the generation of IAM service account access tokens that might indicate unauthorized access attempts or potential data exposures."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_service_account_access_token_generation
   display_columns = local.audit_log_admin_activity_detection_display_columns
@@ -82,8 +82,8 @@ detection "audit_log_admin_activity_detect_service_account_access_token_generati
 }
 
 detection "audit_log_admin_activity_detect_service_account_key_creation" {
-  title           = "Detect Service Account Key Creations"
-  description     = "Detect the creations of service account keys that might indicate potential misuse or unauthorized access attempts."
+  title           = "Detect IAM Service Account Key Creations"
+  description     = "Detect the creations of IAM service account keys that might indicate potential misuse or unauthorized access attempts."
   query           = query.audit_log_admin_activity_detect_service_account_key_creation
   severity        = "medium"
   display_columns = local.audit_log_admin_activity_detection_display_columns
@@ -94,8 +94,8 @@ detection "audit_log_admin_activity_detect_service_account_key_creation" {
 }
 
 detection "audit_log_admin_activity_detect_workload_identity_pool_provider_creation" {
-  title           = "Detect Workload Identity Pool Provider Creations"
-  description     = "Detect the creations of workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
+  title           = "Detect IAM Workload Identity Pool Provider Creations"
+  description     = "Detect the creations of IAM workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_workload_identity_pool_provider_creation
   display_columns = local.audit_log_admin_activity_detection_display_columns
