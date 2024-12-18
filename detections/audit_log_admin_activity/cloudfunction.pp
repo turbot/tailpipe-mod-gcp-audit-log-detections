@@ -7,9 +7,9 @@ locals {
   audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_cloudfunction_detections" {
-  title       = "Admin Activity Cloudfunction Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Cloudfunction Logs."
+benchmark "audit_logs_admin_activity_cloudfunction_detections" {
+  title       = "Cloudfunction Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Cloudfunction events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,

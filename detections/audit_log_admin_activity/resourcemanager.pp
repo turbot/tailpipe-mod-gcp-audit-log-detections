@@ -11,9 +11,9 @@ locals {
   audit_log_admin_activity_detect_org_policy_revoked_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_resourcemanager_detections" {
-  title       = "Admin Activity Resource Manager Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Resource Manager Logs."
+benchmark "audit_logs_admin_activity_resourcemanager_detections" {
+  title       = "Resource Manager Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Resource Manager events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_project_level_iam_policy_change,

@@ -3,7 +3,7 @@ locals {
     service = "GCP/Kubernetes"
   })
 
-  audit_log_admin_activity_detect_kubernetes_secrets_deletions                                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE__", "resource_name")
+  audit_log_admin_activity_detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_secrets_modified_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_creations_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_replaced_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -12,11 +12,12 @@ locals {
   audit_log_admin_activity_detect_kubernetes_cluster_with_public_endpoint_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_cloud_scheduler_run_job_sql_columns                           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_container_executed_sql_columns                                = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_kubernetes_cronjob_modifications_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_kubernetes_detections" {
-  title       = "Admin Activity Kubernetes Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Kubernetes Logs."
+benchmark "audit_logs_admin_activity_kubernetes_detections" {
+  title       = "Kubernetes Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Kubernetes events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_kubernetes_secrets_deletions,

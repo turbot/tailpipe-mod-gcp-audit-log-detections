@@ -8,9 +8,9 @@ locals {
   audit_log_admin_activity_detect_dns_record_modifications_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_dns_detections" {
-  title       = "Admin Activity DNS Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity DNS Logs."
+benchmark "audit_logs_admin_activity_dns_detections" {
+  title       = "DNS Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DNS events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_dns_zone_deletions,

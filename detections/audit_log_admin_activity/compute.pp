@@ -6,7 +6,7 @@ locals {
   audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_full_network_traffic_packet_deletions_sql_columns            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_full_network_traffic_packet_modifications_sql_columns        = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_compute_images_set_iam_policy_sql_columns                                                                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_images_set_iam_policy_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disks_set_iam_policy_sql_columns                     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_snapshots_set_iam_policy_sql_columns                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -19,9 +19,9 @@ locals {
   audit_log_admin_activity_detect_disable_compute_vpc_flow_logs_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_compute_detections" {
-  title       = "Admin Activity Compute Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Compute Logs."
+benchmark "audit_logs_admin_activity_compute_detections" {
+  title       = "Compute Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Compute events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates,
@@ -289,7 +289,7 @@ query "audit_log_admin_activity_detect_full_network_traffic_packet_modifications
 query "audit_log_admin_activity_detect_compute_images_set_iam_policy" {
   sql = <<-EOQ
     select
-      ${local._updates_sql_columns}
+      ${local.audit_log_admin_activity_detect_compute_images_set_iam_policy_sql_columns}
     from
       gcp_audit_log_admin_activity
     where

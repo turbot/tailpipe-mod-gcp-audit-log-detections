@@ -6,9 +6,9 @@ locals {
   audit_log_admin_activity_detect_disable_security_command_center_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_securitycenter_detections" {
-  title       = "Admin Activity Security Center Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Security Center Logs."
+benchmark "audit_logs_admin_activity_securitycenter_detections" {
+  title       = "Security Center Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Security Center events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_disable_security_command_center,

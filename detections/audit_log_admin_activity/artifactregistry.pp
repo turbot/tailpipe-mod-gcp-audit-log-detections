@@ -9,9 +9,9 @@ locals {
   audit_log_admin_activity_detect_encrypted_container_image_pushed_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_artifactregistry_detections" {
-  title       = "Admin Activity Artifact Registry Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Artifact Registry Logs."
+benchmark "audit_logs_admin_activity_artifactregistry_detections" {
+  title       = "Artifact Registry Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Artifact Registry events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_artifact_registry_overwritten,

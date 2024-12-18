@@ -6,9 +6,9 @@ locals {
   audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_apigateway_detections" {
-  title       = "Admin Activity ApiGateway Logs"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity ApiGateway Logs."
+benchmark "audit_logs_admin_activity_apigateway_detections" {
+  title       = "ApiGateway Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for ApiGateway events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands

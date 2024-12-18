@@ -19,9 +19,9 @@ locals {
   audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_iam_detections" {
-  title       = "Admin Activity IAM Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity IAM Logs."
+benchmark "audit_logs_admin_activity_iam_detections" {
+  title       = "IAM Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for IAM events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_service_account_creation,

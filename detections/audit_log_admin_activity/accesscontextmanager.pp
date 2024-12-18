@@ -8,9 +8,9 @@ locals {
   audit_log_admin_activity_detect_access_level_deletions_sql_columns  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_access_context_manager_detections" {
-  title       = "Admin Activity Access Context Manager Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Access Context Manager Logs."
+benchmark "audit_logs_admin_activity_access_context_manager_detections" {
+  title       = "Access Context Manager Detections"
+  description = "This detection benchmark contains recommendations when scanning Admin Activity audit logs for Access Context Manager events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_access_policy_deletions,

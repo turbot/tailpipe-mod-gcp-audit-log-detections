@@ -7,9 +7,9 @@ locals {
   audit_log_admin_activity_detect_appengine_admin_api_execution_enabled_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_appengine_detections" {
-  title       = "Admin Activity App Engine Logs Detections"
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity App Engine Logs."
+benchmark "audit_logs_admin_activity_appengine_detections" {
+  title       = "App Engine Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for App Engine events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_appengine_ingress_firewall_rule_changes,

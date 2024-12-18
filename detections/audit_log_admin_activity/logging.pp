@@ -7,9 +7,9 @@ locals {
   audit_log_admin_activity_detect_logging_bucket_deletions_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_admin_activity_logging_detections" {
-  title       = "Admin Activity Logging Logs Detections" // TODO: Should this be "Admin Activity Logging Detections"?
-  description = "This detection benchmark contains recommendations when scanning GCP Admin Activity Logging Logs."
+benchmark "audit_logs_admin_activity_logging_detections" {
+  title       = "Logging Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Logging events."
   type        = "detection"
   children = [
     detection.audit_log_admin_activity_detect_unauthorized_access_attempts,
