@@ -442,7 +442,7 @@ query "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
       and method_name ilike 'google.iam.admin.v%.setiampolicy'
       and exists (
         select *
-        from unnest(cast(json_extract(protopayload->'request'->'policy'->'bindings', '$[*]') as json[])) as binding_struct(binding)
+        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*]') as json[])) as binding_struct(binding)
         where json_extract(binding, '$.role') in ('roles/logging.admin', 'roles/logging.viewer')
         and json_array_length(json_extract(binding, '$.members')) = 0
       )

@@ -3,7 +3,7 @@ locals {
     service = "GCP/Kubernetes"
   })
 
-  audit_log_admin_activity_detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE__", "resource_name")
+  audit_log_admin_activity_detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_secrets_modified_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_creations_sql_columns     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_kubernetes_admission_webhook_config_replaced_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")

@@ -67,7 +67,7 @@ query "audit_log_admin_activity_detect_api_monitoring_disabled" {
       gcp_audit_log_admin_activity
     where
       service_name = 'monitoring.googleapis.com'
-      method_name ilike 'google.monitoring.v%.metricService.deletemetricdescriptor'
+      and method_name ilike 'google.monitoring.v%.metricService.deletemetricdescriptor'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
