@@ -23,7 +23,7 @@ locals {
 
   audit_log_admin_activity_detection_where_conditions = <<-EOQ
     and severity != 'Error'
-    and (operation is null or operation.last = true)
+    -- and (operation is null or operation.last = true)
   EOQ
   // Keep same order as SQL statement for easier readability
   audit_log_admin_activity_detection_display_columns = [

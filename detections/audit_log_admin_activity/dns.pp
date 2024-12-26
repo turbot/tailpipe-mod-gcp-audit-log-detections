@@ -15,7 +15,8 @@ benchmark "audit_logs_admin_activity_dns_detections" {
   children = [
     detection.audit_log_admin_activity_detect_dns_zone_deletions,
     detection.audit_log_admin_activity_detect_dns_zone_modifications,
-    detection.audit_log_admin_activity_detect_dns_record_modifications
+    detection.audit_log_admin_activity_detect_dns_record_modifications,
+    detection.audit_log_admin_activity_detect_dns_record_deletions
   ]
 
   tags = merge(local.audit_log_admin_activity_dns_detection_common_tags, {
@@ -59,6 +60,18 @@ detection "audit_log_admin_activity_detect_dns_record_modifications" {
   })
 }
 
+detection "audit_log_admin_activity_detect_dns_record_deletions" {
+  title           = "Detect DNS Record Deletions"
+  description     = "Detect deletions of DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_dns_record_deletions
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0004:T1078"
+  })
+}
+
 query "audit_log_admin_activity_detect_dns_zone_deletions" {
   sql = <<-EOQ
     select
@@ -67,7 +80,7 @@ query "audit_log_admin_activity_detect_dns_zone_deletions" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dns.googleapis.com'
-      and method_name = 'dns.managedzones.delete'
+      and method_name ilike 'dns.managedzones.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -82,7 +95,7 @@ query "audit_log_admin_activity_detect_dns_zone_modifications" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dns.googleapis.com'
-      and method_name = 'dns.managedzones.patch'
+      and method_name ilike 'dns.managedzones.patch'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -97,7 +110,22 @@ query "audit_log_admin_activity_detect_dns_record_modifications" {
       gcp_audit_log_admin_activity
     where
       service_name = 'dns.googleapis.com'
-      and method_name ilike 'google.cloud.dns.v%.changeresourcerecordset'
+      and method_name ilike 'dns.resourcerecordsets.patch'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_dns_record_deletions" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_dns_record_modifications_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'dns.googleapis.com'
+      and method_name ilike 'dns.resourceeecordsets.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

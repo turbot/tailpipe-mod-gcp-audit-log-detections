@@ -9,7 +9,6 @@ locals {
   audit_log_admin_activity_detect_compute_images_set_iam_policy_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disks_set_iam_policy_sql_columns                     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_snapshots_set_iam_policy_sql_columns                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -31,7 +30,6 @@ benchmark "audit_logs_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_compute_images_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_disks_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_snapshots_set_iam_policy,
-    detection.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins,
     detection.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces,
     detection.audit_log_admin_activity_detect_public_ip_address_creation,
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
@@ -123,18 +121,6 @@ detection "audit_log_admin_activity_detect_compute_snapshots_set_iam_policy" {
   description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_compute_snapshots_set_iam_policy
-  display_columns = local.audit_log_admin_activity_detection_display_columns
-
-  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0004:T1078"
-  })
-}
-
-detection "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins" {
-  title           = "Detect Unauthorized SSH Auth OS Logins"
-  description     = "Detect unauthorized SSH authentication OS logins, providing visibility into potential security breaches and mitigating risks associated with unauthorized access attempts."
-  severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -331,20 +317,6 @@ query "audit_log_admin_activity_detect_compute_snapshots_set_iam_policy" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins" {
-  sql = <<-EOQ
-    select
-      ${local.audit_log_admin_activity_detect_unauthorized_ssh_auth_os_logins_sql_columns}
-    from
-      gcp_audit_log_admin_activity
-    where
-      method_name = 'compute.instances.osLogin.authenticate'
-      ${local.audit_log_admin_activity_detection_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-// testing needed
 query "audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces" {
   sql = <<-EOQ
     select
@@ -353,19 +325,20 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and (method_name ilike 'v%.compute.instances.insert' or method_name ilike 'v%.compute.instances.update')
-      and request.resource.networkInterfaces.accessConfigs.natIP is not null
+      and (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
         select *
-        from unnest(cast(json_extract(request -> 'networkinterfaces', '$[*].accessconfigs[*].type') as varchar[])) as access_type
-        where access_type = 'one_to_one_nat'
+        from unnest(
+        cast(json_extract(request, '$.networkInterfaces[*].accessConfigs[*].name') as json[])
+        ) as access_type
+        where (access_type::varchar ilike '%nat%' or access_type::varchar ilike '%external%')
       )
     order by
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_public_ip_address_creation" {
   sql = <<-EOQ
     select
@@ -375,7 +348,7 @@ query "audit_log_admin_activity_detect_public_ip_address_creation" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.addresses.insert'
-      and cast(json_extract(request, '$.addressType') as varchar) = 'EXTERNAL'
+      and request.networkTier is not null
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -390,7 +363,7 @@ query "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.projects.enablexpnresource'
+      and method_name ilike 'googleapis.cloud.compute.v%.projects.enablexpnresource'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -405,7 +378,7 @@ query "audit_log_admin_activity_detect_compute_image_logging_disabled" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.instances.insert'
+      and method_name ilike '%.compute.instances.insert'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'metadata' -> 'items', '$[*]') as json[])) as item
@@ -426,7 +399,7 @@ query "audit_log_admin_activity_detect_compute_disk_size_small" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.instances.insert'
+      and method_name ilike '%.compute.instances.insert'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
@@ -447,7 +420,7 @@ query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.instances.insert'
+      and method_name ilike '%.compute.instances.insert'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'metadata' -> 'items', '$[*]') as json[])) as item

@@ -53,7 +53,7 @@ query "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudfunctions.googleapis.com'
-      and method_name ilike 'google.cloud.functions.v%.setiampolicy'
+      and method_name ilike 'setiampolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
         select *

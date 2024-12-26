@@ -253,7 +253,7 @@ query "audit_log_admin_activity_detect_disabled_service_account" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v1.serviceaccounts.disable'
+      and method_name ilike 'google.iam.admin.v%.disableserviceaccount'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -268,7 +268,7 @@ query "audit_log_admin_activity_detect_service_account_deletions" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.serviceaccounts.delete'
+      and method_name ilike 'google.iam.admin.v%.deleteserviceaccount'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -283,7 +283,7 @@ query "audit_log_admin_activity_detect_service_account_access_token_generation" 
       gcp_audit_log_admin_activity
     where
       service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'google.iam.credentials.v%.iamcredentials.generateaccesstoken'
+      and method_name ilike 'generateaccesstoken'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -298,7 +298,7 @@ query "audit_log_admin_activity_detect_service_account_key_creation" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.serviceaccounts.keys.create'
+      and method_name ilike 'google.iam.admin.v%.createserviceaccountkey'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -348,7 +348,7 @@ query "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.v%.setiampolicy'
+      and method_name ilike 'setiampolicy'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
@@ -368,7 +368,8 @@ query "audit_log_admin_activity_detect_organization_iam_policy_change" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'google.cloud.resourcemanager.v%.organizations.setiampolicy'
+      and method_name ilike 'setiampolicy'
+      and authorization_info.permission = 'resourcemanager.organizations.setIamPolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -413,7 +414,7 @@ query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and method_name ilike 'setiampolicy'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
@@ -433,7 +434,7 @@ query "audit_log_admin_activity_detect_high_privilege_iam_roles" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.CreateRole'
+      and method_name ilike 'google.iam.admin.v%.createrole'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'role' -> 'includedPermissions', '$[*]') as varchar[])) as permission
@@ -468,7 +469,7 @@ query "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and method_name ilike 'setiampolicy'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*]') as json[])) as binding_struct(binding)

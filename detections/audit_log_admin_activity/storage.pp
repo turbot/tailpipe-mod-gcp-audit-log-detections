@@ -59,7 +59,7 @@ query "audit_log_admin_activity_detect_storage_set_iam_policy" {
       timestamp desc;
   EOQ
 }
-// TO DO: Created resource to test in parker-aaa but logs doesnot show up
+// redo when serviceData column is added to table gcp_audit_log_admin_activity
 query "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
   sql = <<-EOQ
     select 
@@ -72,8 +72,8 @@ query "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
         select *
-        from unnest(cast(json_extract(request -> 'defaultobjectacl', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
-        where member = 'allusers'
+        from unnest(cast(json_extract(request -> 'serviceData' -> 'policyDelta' -> 'bindingDeltas', '$[*]') as json[])) as binding_struct(binding)
+        where json_extract(binding, '$.member') = 'allUsers'
       )
     order by
       timestamp desc;

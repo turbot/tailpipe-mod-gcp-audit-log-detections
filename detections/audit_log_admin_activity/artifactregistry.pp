@@ -5,7 +5,8 @@ locals {
 
   audit_log_admin_activity_detect_artifact_registry_overwritten_sql_columns         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_artifact_registry_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_artifact_registry_artifact_deletion_sql_columns   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_artifact_registry_package_deletion_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_artifact_registry_repository_deletion_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_encrypted_container_image_pushed_sql_columns      = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -17,7 +18,8 @@ benchmark "audit_logs_admin_activity_artifactregistry_detections" {
     detection.audit_log_admin_activity_detect_artifact_registry_overwritten,
     detection.audit_log_admin_activity_detect_artifact_registry_publicly_accessible,
     detection.audit_log_admin_activity_detect_artifact_registry_with_no_layers,
-    detection.audit_log_admin_activity_detect_artifact_registry_artifact_deletion,
+    detection.audit_log_admin_activity_detect_artifact_registry_package_deletion,
+    detection.audit_log_admin_activity_detect_artifact_registry_repository_deletion,
     detection.audit_log_admin_activity_detect_encrypted_container_image_pushed,
   ]
 
@@ -62,11 +64,23 @@ detection "audit_log_admin_activity_detect_artifact_registry_with_no_layers" {
   })
 }
 
-detection "audit_log_admin_activity_detect_artifact_registry_artifact_deletion" {
-  title       = "Detect Artifact Registry Artifact Deletion"
-  description = "Detect Artifact Registry artifact deletion, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+detection "audit_log_admin_activity_detect_artifact_registry_repository_deletion" {
+  title           = "Detect Artifact Registry Repository Deletion"
+  description     = "Detect Artifact Registry repository deletion, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_artifact_registry_repository_deletion
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
+}
+
+detection "audit_log_admin_activity_detect_artifact_registry_package_deletion" {
+  title       = "Detect Artifact Registry Package Deletion"
+  description = "Detect Artifact Registry package deletion, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity    = "medium"
-  query       = query.audit_log_admin_activity_detect_artifact_registry_artifact_deletion
+  query       = query.audit_log_admin_activity_detect_artifact_registry_package_deletion
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -144,15 +158,30 @@ query "audit_log_admin_activity_detect_artifact_registry_with_no_layers" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_artifact_registry_artifact_deletion" {
+query "audit_log_admin_activity_detect_artifact_registry_package_deletion" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_artifact_registry_artifact_deletion_sql_columns}
+      ${local.audit_log_admin_activity_detect_artifact_registry_package_deletion_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
       service_name = 'artifactregistry.googleapis.com'
-      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleteartifact'
+      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deletepackage'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_artifact_registry_repository_deletion" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_artifact_registry_repository_deletion_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'artifactregistry.googleapis.com'
+      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleterepository'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
