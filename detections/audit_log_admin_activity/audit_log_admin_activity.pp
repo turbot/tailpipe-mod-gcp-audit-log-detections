@@ -26,6 +26,7 @@ benchmark "audit_logs_admin_activity_detections" {
     benchmark.audit_logs_admin_activity_apigateway_detections,
     benchmark.audit_logs_admin_activity_artifactregistry_detections,
     benchmark.audit_logs_admin_activity_security_command_center_detections,
+    benchmark.audit_logs_admin_activity_keymanagement_detections,
   ]
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
