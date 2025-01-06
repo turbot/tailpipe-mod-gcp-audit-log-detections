@@ -95,7 +95,7 @@ query "audit_log_admin_activity_detect_unauthorized_access_attempts" {
     from
       gcp_audit_log_admin_activity
     where
-      method_name ilike 'google.logging.v%.loggingserviceV%.writelogentries'
+      method_name ilike 'google.logging.v%.loggingserviceV%.writelogentriesrequest'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

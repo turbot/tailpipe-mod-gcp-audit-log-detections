@@ -57,8 +57,8 @@ detection "audit_log_admin_activity_detect_vpn_tunnel_deletions" {
 }
 
 detection "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
-  title           = "Detect Compute Firewall Rule Changes"
-  description     = "Detect changes to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
+  title           = "Detect Compute Firewall Rule Deletion Updates"
+  description     = "Detect updates to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates
   display_columns = local.audit_log_admin_activity_detection_display_columns
@@ -211,7 +211,7 @@ detection "audit_log_admin_activity_detect_disable_compute_vpc_flow_logs" {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
-
+// tested
 query "audit_log_admin_activity_detect_compute_firewall_rule_deletion_updates" {
   sql = <<-EOQ
     select
@@ -235,7 +235,7 @@ query "audit_log_admin_activity_detect_vpn_tunnel_deletions" {
       gcp_audit_log_admin_activity
     where
       service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.vpntunnels.delete'
+      and method_name ilike 'v%.compute.vpntunnels.delete'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -415,7 +415,7 @@ query "audit_log_admin_activity_detect_compute_disk_size_small" {
 query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_compute_image_os_login_disabled_sql_columns}
+      *
     from
       gcp_audit_log_admin_activity
     where

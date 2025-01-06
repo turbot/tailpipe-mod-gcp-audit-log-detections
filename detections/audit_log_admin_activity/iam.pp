@@ -319,27 +319,23 @@ query "audit_log_admin_activity_detect_workload_identity_pool_provider_creation"
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns}
+      *
     from
       gcp_audit_log_admin_activity
     where
-      service_name = 'iam.googleapis.com'
+      service_name = 'cloudresourcemanager.googleapis.com'
       and method_name ilike 'setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
-        where member = 'allAuthenticatedUsers'
-      )
+      and json_extract(cast(request as json), '$.policy.bindings[*].members')::varchar like '%allAuthenticatedUsers%'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
   sql = <<-EOQ
     select
@@ -348,12 +344,8 @@ query "audit_log_admin_activity_detect_iam_service_account_token_creator_role" {
       gcp_audit_log_admin_activity
     where
       service_name = 'iam.googleapis.com'
-      and method_name ilike 'setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
-        where roles = 'roles/iam.serviceAccountTokenCreator'
-      )
+      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and json_extract(cast(request as json), '$.policy.bindings[*].role')::varchar like '%roles/iam.serviceAccountTokenCreator%'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -369,7 +361,7 @@ query "audit_log_admin_activity_detect_organization_iam_policy_change" {
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name ilike 'setiampolicy'
-      and authorization_info.permission = 'resourcemanager.organizations.setIamPolicy'
+      and authorization_info::varchar like '%"permission":"resourcemanager.projects.setIamPolicy"%'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -405,7 +397,7 @@ query "audit_log_admin_activity_detect_iam_federated_identity_provider_creation"
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role" {
   sql = <<-EOQ
     select
@@ -415,17 +407,13 @@ query "audit_log_admin_activity_detect_iam_policy_granting_apigateway_admin_role
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name ilike 'setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
-        where roles = 'roles/apigateway.admin'
-      )
+      and json_extract(cast(request as json), '$.policy.bindings[*].role')::varchar like '%roles/apigateway.admin%'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_high_privilege_iam_roles" {
   sql = <<-EOQ
     select
@@ -435,11 +423,7 @@ query "audit_log_admin_activity_detect_high_privilege_iam_roles" {
     where
       service_name = 'iam.googleapis.com'
       and method_name ilike 'google.iam.admin.v%.createrole'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'role' -> 'includedPermissions', '$[*]') as varchar[])) as permission
-        where permission = 'resourcemanager.projects.setIamPolicy'
-    )
+      and cast(json_extract(request, '$.role.included_permissions[*]') as varchar) like '%resourcemanager.projects.setIamPolicy%'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
@@ -460,7 +444,7 @@ query "audit_log_admin_activity_detect_iam_federated_identity_provider_updation"
       timestamp desc;
   EOQ
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role" {
   sql = <<-EOQ
     select

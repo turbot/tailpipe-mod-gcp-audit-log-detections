@@ -59,10 +59,10 @@ query "audit_log_admin_activity_detect_storage_set_iam_policy" {
       timestamp desc;
   EOQ
 }
-// redo when serviceData column is added to table gcp_audit_log_admin_activity
+
 query "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
   sql = <<-EOQ
-    select 
+    select
       ${local.audit_log_admin_activity_detect_storage_bucket_publicly_accessible_sql_columns}
     from 
       gcp_audit_log_admin_activity
@@ -70,11 +70,9 @@ query "audit_log_admin_activity_detect_storage_bucket_publicly_accessible" {
       service_name = 'storage.googleapis.com'
       and method_name = 'storage.setIamPermissions'
       ${local.audit_log_admin_activity_detection_where_conditions}
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'serviceData' -> 'policyDelta' -> 'bindingDeltas', '$[*]') as json[])) as binding_struct(binding)
-        where json_extract(binding, '$.member') = 'allUsers'
-      )
+      and service_data is not null
+      and json_extract(service_data, '$.policyDelta.bindingDeltas') != 'null'
+      and service_data like '%"member":"allUsers"%'
     order by
       timestamp desc;
   EOQ

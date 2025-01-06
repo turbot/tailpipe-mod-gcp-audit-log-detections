@@ -44,7 +44,7 @@ detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
-// testing needed
+
 query "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
     select 
@@ -53,12 +53,12 @@ query "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudfunctions.googleapis.com'
-      and method_name ilike 'setiampolicy'
+      and lower(method_name) = 'setiampolicy'
       ${local.audit_log_admin_activity_detection_where_conditions}
       and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
-        where member = 'allAuthenticatedUsers' or member = 'allUsers'
+        select 1
+        from unnest(json_extract(request, '$.policy.bindings[*].members[*]')::varchar[]) as t(member)
+        where trim(both '"' from member) = 'allAuthenticatedUsers' or trim(both '"' from member) = 'allUsers'
       )
     order by
       timestamp desc;
@@ -73,7 +73,7 @@ query "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
       gcp_audit_log_admin_activity
     where
       service_name = 'cloudfunctions.googleapis.com'
-      and method_name ilike 'google.cloud.functions.v%.cloudfunctionsservice.deletefunction'
+      and method_name ilike 'google.cloud.functions.v%.functionservice.deletefunction'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;
