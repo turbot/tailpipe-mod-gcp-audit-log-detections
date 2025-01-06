@@ -59,6 +59,7 @@ run_test "Service Account Key Creation" "$create_key_command"
 
 # 3. Grant Token Creator Role Test
 grant_token_creator_command="
+sleep 10 && \
 gcloud projects add-iam-policy-binding $PROJECT_ID \
     --member=serviceAccount:$SERVICE_ACCOUNT_EMAIL \
     --role=roles/iam.serviceAccountTokenCreator"
