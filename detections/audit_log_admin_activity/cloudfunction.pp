@@ -5,6 +5,8 @@ locals {
 
   audit_log_admin_activity_detect_cloudfunctions_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+
 }
 
 benchmark "audit_logs_admin_activity_cloudfunction_detections" {
@@ -14,6 +16,7 @@ benchmark "audit_logs_admin_activity_cloudfunction_detections" {
   children = [
     detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,
     detection.audit_log_admin_activity_detect_cloudfunctions_operation_delete,
+    detection.audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information,
   ]
 
   tags = merge(local.audit_log_admin_activity_cloudfunction_detection_common_tags, {
@@ -33,6 +36,18 @@ detection "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
   })
 }
 
+detection "audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information" {
+  title           = "Detect Environment Variables with Sensitive Information"
+  description     = "Detect for deployment or updates to serverless resources with sensitive information in environment variables."
+  severity        = "high"
+  query           = query.audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0001:T1199,TA0002:T1648"
+  })
+}
+
 detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
   title           = "Detect Cloud Functions Operations Delete"
   description     = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
@@ -44,6 +59,25 @@ detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
+
+// Query need to be verify/tested
+query "audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information" {
+  sql = <<-EOQ
+    select 
+      ${local.audit_log_admin_activity_detect_cloudfunctions_environment_variables_with_sensitive_information_sql_columns}
+    from 
+      gcp_audit_log_admin_activity
+    where
+      service_name in ('cloudfunctions.googleapis.com', 'run.googleapis.com')
+      and method_name ilike 'google.cloud.run.v1.Services.CreateFunction' or method_name ilike 'google.cloud.run.v1.Services.UpdateFunction' or method_name ilike 'google.cloud.run.v1.Services.CreateService' or method_name ilike 'google.cloud.run.v1.Services.UpdateService'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+      and json_extract(request, '$.environment') is not null
+    order by
+      timestamp desc;
+  EOQ
+}
+
+
 // testing needed
 query "audit_log_admin_activity_detect_cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
