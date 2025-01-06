@@ -44,7 +44,7 @@ detection "audit_log_admin_activity_detect_cloudfunctions_environment_variables_
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1199,TA0002:T1648"
+    mitre_attack_ids = "TA0002:T1648"
   })
 }
 
