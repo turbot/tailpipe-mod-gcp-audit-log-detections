@@ -16,6 +16,7 @@ benchmark "mitre_v151_ta0005_t1211" {
     detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
     detection.audit_log_admin_activity_detect_org_policy_revoked,
     detection.audit_log_admin_activity_detect_project_level_iam_policy_change,
+    
   ]
 
   tags = local.mitre_v151_ta0005_t1211_common_tags

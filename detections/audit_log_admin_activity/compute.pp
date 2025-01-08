@@ -12,9 +12,7 @@ locals {
   audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_compute_image_logging_disabled_sql_columns                   = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_compute_image_os_login_disabled_sql_columns                  = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_disable_compute_vpc_flow_logs_sql_columns                    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -33,9 +31,7 @@ benchmark "audit_logs_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces,
     detection.audit_log_admin_activity_detect_public_ip_address_creation,
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
-    detection.audit_log_admin_activity_detect_compute_image_logging_disabled,
     detection.audit_log_admin_activity_detect_compute_disk_size_small,
-    detection.audit_log_admin_activity_detect_compute_image_os_login_disabled,
     detection.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs,
   ]
 
@@ -164,35 +160,11 @@ detection "audit_log_admin_activity_detect_vpc_network_shared_to_external_projec
   })
 }
 
-detection "audit_log_admin_activity_detect_compute_image_logging_disabled" {
-  title           = "Detect Compute Image Logging Disabled"
-  description     = "Detect compute image logging disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_compute_image_logging_disabled
-  display_columns = local.audit_log_admin_activity_detection_display_columns
-
-  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
-}
-
 detection "audit_log_admin_activity_detect_compute_disk_size_small" {
   title           = "Detect Compute Disk Size Small"
   description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_compute_disk_size_small
-  display_columns = local.audit_log_admin_activity_detection_display_columns
-
-  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
-}
-
-detection "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
-  title           = "Detect Compute Image OS Login Disabled"
-  description     = "Detect compute image OS login disabled, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_compute_image_os_login_disabled
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -369,27 +341,7 @@ query "audit_log_admin_activity_detect_vpc_network_shared_to_external_project" {
       timestamp desc;
   EOQ
 }
-// testing needed
-query "audit_log_admin_activity_detect_compute_image_logging_disabled" {
-  sql = <<-EOQ
-    select
-      ${local.audit_log_admin_activity_detect_compute_image_logging_disabled_sql_columns}
-    from
-      gcp_audit_log_admin_activity
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike '%.compute.instances.insert'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'metadata' -> 'items', '$[*]') as json[])) as item
-        where json_extract(item, '$.key') = 'google-logging-enabled'
-        and json_extract(item, '$.value') = 'FALSE'
-      )
-      ${local.audit_log_admin_activity_detection_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
+
 // testing needed
 query "audit_log_admin_activity_detect_compute_disk_size_small" {
   sql = <<-EOQ
@@ -411,27 +363,7 @@ query "audit_log_admin_activity_detect_compute_disk_size_small" {
       timestamp desc;
   EOQ
 }
-// testing needed
-query "audit_log_admin_activity_detect_compute_image_os_login_disabled" {
-  sql = <<-EOQ
-    select
-      *
-    from
-      gcp_audit_log_admin_activity
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike '%.compute.instances.insert'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'metadata' -> 'items', '$[*]') as json[])) as item
-        where json_extract(item, '$.key') = 'enable-oslogin'
-        and json_extract(item, '$.value') = 'FALSE'
-      )
-      ${local.audit_log_admin_activity_detection_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
+
 // testing needed
 query "audit_log_admin_activity_detect_disable_compute_vpc_flow_logs" {
   sql = <<-EOQ
