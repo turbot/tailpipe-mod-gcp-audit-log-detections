@@ -6,7 +6,6 @@ locals {
   audit_log_admin_activity_detect_service_account_creation_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_deletions_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_disabled_service_account_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns              = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -29,7 +28,6 @@ benchmark "audit_logs_admin_activity_iam_detections" {
     detection.audit_log_admin_activity_detect_service_account_key_creation,
     detection.audit_log_admin_activity_detect_service_account_deletions,
     detection.audit_log_admin_activity_detect_disabled_service_account,
-    detection.audit_log_admin_activity_detect_service_account_access_token_generation,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
     detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
@@ -80,18 +78,6 @@ detection "audit_log_admin_activity_detect_disabled_service_account" {
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
-  })
-}
-
-detection "audit_log_admin_activity_detect_service_account_access_token_generation" {
-  title           = "Detect IAM Service Account Access Token Generations"
-  description     = "Detect the generation of IAM service account access tokens that might indicate unauthorized access attempts or potential data exposures."
-  severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_service_account_access_token_generation
-  display_columns = local.audit_log_admin_activity_detection_display_columns
-
-  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
-    mitre_attack_ids = "TA0001:T1078,TA0005:T1548"
   })
 }
 
@@ -269,21 +255,6 @@ query "audit_log_admin_activity_detect_service_account_deletions" {
     where
       service_name = 'iam.googleapis.com'
       and method_name ilike 'google.iam.admin.v%.deleteserviceaccount'
-      ${local.audit_log_admin_activity_detection_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "audit_log_admin_activity_detect_service_account_access_token_generation" {
-  sql = <<-EOQ
-    select
-      ${local.audit_log_admin_activity_detect_service_account_access_token_generation_sql_columns}
-    from
-      gcp_audit_log_admin_activity
-    where
-      service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'generateaccesstoken'
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

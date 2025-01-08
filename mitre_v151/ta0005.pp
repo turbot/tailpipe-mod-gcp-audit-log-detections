@@ -12,6 +12,7 @@ benchmark "mitre_v151_ta0005" {
     benchmark.mitre_v151_ta0005_t1562,
     benchmark.mitre_v151_ta0005_t1548,
     benchmark.mitre_v151_ta0005_t1211,
+    benchmark.mitre_v151_ta0005_t1078,
   ]
 
   tags = merge(local.mitre_v151_ta0005_common_tags, {

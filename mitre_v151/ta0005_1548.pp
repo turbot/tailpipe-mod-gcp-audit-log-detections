@@ -13,7 +13,7 @@ benchmark "mitre_v151_ta0005_t1548" {
     detection.audit_log_admin_activity_detect_iam_federated_identity_provider_updation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
     detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
-    detection.audit_log_admin_activity_detect_service_account_access_token_generation,
+    audit_log_data_access_detect_service_account_access_token_generation,
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
   ]
 

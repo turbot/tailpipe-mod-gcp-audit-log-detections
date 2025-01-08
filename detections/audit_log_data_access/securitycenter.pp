@@ -13,7 +13,7 @@ locals {
 
 benchmark "audit_log_data_access_security_command_center_detections" {
   title       = "Security Command Center Detections"
-  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Security Center events."
+  description = "This benchmark contains recommendations when scanning Data Acess audit logs for Security Center events."
   type        = "detection"
   children = [
     detection.audit_log_data_access_security_command_center_delete_notification_config,
@@ -33,7 +33,7 @@ detection "audit_log_data_access_security_command_center_delete_notification_con
   description     = "Detect deletions of Security Command Center notification configurations that might disrupt security configurations or expose resources to threats."
   severity        = "high"
   query           = query.audit_log_data_access_security_command_center_delete_notification_config
-  display_columns = local.audit_log_admin_activity_detection_display_columns
+  display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -45,7 +45,7 @@ detection "audit_log_data_access_security_command_center_calculate_virtual_machi
   description     = "Detect calculations of Security Command Center virtual machine threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_log_data_access_security_command_center_calculate_virtual_machine_threat_detection_settings
-  display_columns = local.audit_log_admin_activity_detection_display_columns
+  display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -57,7 +57,7 @@ detection "audit_log_data_access_security_command_center_calculate_event_threat_
   description     = "Detect calculations of Security Command Center event threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_log_data_access_security_command_center_calculate_event_threat_detection_settings
-  display_columns = local.audit_log_admin_activity_detection_display_columns
+  display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
@@ -69,7 +69,7 @@ detection "audit_log_data_access_security_command_center_calculate_container_thr
   description     = "Detect calculations of Security Command Center container threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_log_data_access_security_command_center_calculate_container_threat_detection_settings
-  display_columns = local.audit_log_admin_activity_detection_display_columns
+  display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
@@ -81,7 +81,7 @@ detection "audit_log_data_access_security_command_center_calculate_security_heal
   description     = "Detect calculations of Security Command Center security health threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_log_data_access_security_command_center_calculate_security_health_threat_detection_settings
-  display_columns = local.audit_log_admin_activity_detection_display_columns
+  display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
