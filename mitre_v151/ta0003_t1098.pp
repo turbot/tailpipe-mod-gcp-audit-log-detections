@@ -16,7 +16,7 @@ benchmark "mitre_v151_ta0003_t1098" {
     detection.audit_log_admin_activity_detect_iam_workforce_pool_update,
     detection.audit_log_admin_activity_detect_service_account_deletions,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
-    detection.audit_log_data_access_detect_cloudsql_user_deletion,
+    detection.audit_log_data_access_detect_cloudsql_user_deletions,
   ]
 
   tags = local.mitre_v151_ta0003_t1098_common_tags

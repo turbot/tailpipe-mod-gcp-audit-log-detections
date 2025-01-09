@@ -3,7 +3,7 @@ locals {
     service = "GCP/SecurityCommandCenter"
   })
 
-  audit_log_data_access_security_command_center_delete_notification_config_sql_columns                          = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_security_command_center_delete_notification_configs_sql_columns                         = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_data_access_security_command_center_calculate_virtual_machine_threat_detection_settings_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_data_access_security_command_center_calculate_event_threat_detection_settings_sql_columns           = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_data_access_security_command_center_calculate_container_threat_detection_settings_sql_columns       = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -16,7 +16,7 @@ benchmark "audit_logs_data_access_security_command_center_detections" {
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for Security Center events."
   type        = "detection"
   children = [
-    detection.audit_log_data_access_security_command_center_delete_notification_config,
+    detection.audit_log_data_access_security_command_center_delete_notification_configs,
     detection.audit_log_data_access_security_command_center_calculate_virtual_machine_threat_detection_settings,
     detection.audit_log_data_access_security_command_center_calculate_event_threat_detection_settings,
     detection.audit_log_data_access_security_command_center_calculate_container_threat_detection_settings,
@@ -28,11 +28,11 @@ benchmark "audit_logs_data_access_security_command_center_detections" {
   })
 }
 
-detection "audit_log_data_access_security_command_center_delete_notification_config" {
-  title           = "Detect Security Command Center Delete Notification Config"
+detection "audit_log_data_access_security_command_center_delete_notification_configs" {
+  title           = "Detect Security Command Center Delete Notification Configs"
   description     = "Detect deletions of Security Command Center notification configurations that might disrupt security configurations or expose resources to threats."
   severity        = "high"
-  query           = query.audit_log_data_access_security_command_center_delete_notification_config
+  query           = query.audit_log_data_access_security_command_center_delete_notification_configs
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -88,10 +88,10 @@ detection "audit_log_data_access_security_command_center_calculate_security_heal
   })
 }
 
-query "audit_log_data_access_security_command_center_delete_notification_config" {
+query "audit_log_data_access_security_command_center_delete_notification_configs" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_security_command_center_delete_notification_config_sql_columns}
+      ${local.audit_log_data_access_security_command_center_delete_notification_configs_sql_columns}
     from
       gcp_audit_log_data_access
     where

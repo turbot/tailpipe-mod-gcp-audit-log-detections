@@ -2,10 +2,10 @@ locals {
   audit_log_data_access_iam_detection_common_tags = merge(local.audit_log_data_access_detection_common_tags, {
     service = "GCP/IAM"
   })
-  audit_log_data_access_detect_service_account_access_token_generation_sql_columns        = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_single_account_login_failure_sql_columns                   = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_failed_service_account_access_token_generation_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_service_account_signblob_failure_sql_columns               = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_iam_service_account_access_token_generations_sql_columns        = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_single_account_login_failures_sql_columns                       = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_failed_iam_service_account_access_token_generations_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_service_account_signblob_failures_sql_columns                   = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_data_access_iam_detections" {
@@ -13,10 +13,10 @@ benchmark "audit_logs_data_access_iam_detections" {
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for IAM events."
   type        = "detection"
   children = [
-    detection.audit_log_data_access_detect_single_account_login_failure,
-    detection.audit_log_data_access_detect_service_account_access_token_generation,
-    detection.audit_log_data_access_detect_failed_service_account_access_token_generation,
-    detection.audit_log_data_access_detect_service_account_signblob_failure,
+    detection.audit_log_data_access_detect_single_account_login_failures,
+    detection.audit_log_data_access_detect_iam_service_account_access_token_generations,
+    detection.audit_log_data_access_detect_failed_iam_service_account_access_token_generations,
+    detection.audit_log_data_access_detect_service_account_signblob_failures,
   ]
 
   tags = merge(local.audit_log_data_access_iam_detection_common_tags, {
@@ -24,11 +24,11 @@ benchmark "audit_logs_data_access_iam_detections" {
   })
 }
 
-detection "audit_log_data_access_detect_service_account_access_token_generation" {
+detection "audit_log_data_access_detect_iam_service_account_access_token_generations" {
   title           = "Detect IAM Service Account Access Token Generations"
   description     = "Detect the generation of IAM service account access tokens that might indicate unauthorized access attempts or potential data exposures."
   severity        = "medium"
-  query           = query.audit_log_data_access_detect_service_account_access_token_generation
+  query           = query.audit_log_data_access_detect_iam_service_account_access_token_generations
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -36,11 +36,11 @@ detection "audit_log_data_access_detect_service_account_access_token_generation"
   })
 }
 
-detection "audit_log_data_access_detect_failed_service_account_access_token_generation" {
-  title           = "Detect Failed Attempts of IAM Service Account Access Token Generations"
-  description     = "Detect "
+detection "audit_log_data_access_detect_failed_iam_service_account_access_token_generations" {
+  title           = "Detect Failed IAM Service Account Access Token Generations"
+  description     = "Detect failed attempts to generate IAM service account access tokens, which may indicate unauthorized access attempts or misconfigurations leading to operational issues."
   severity        = "medium"
-  query           = query.audit_log_data_access_detect_failed_service_account_access_token_generation
+  query           = query.audit_log_data_access_detect_failed_iam_service_account_access_token_generations
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -48,11 +48,11 @@ detection "audit_log_data_access_detect_failed_service_account_access_token_gene
   })
 }
 
-detection "audit_log_data_access_detect_single_account_login_failure" {
+detection "audit_log_data_access_detect_single_account_login_failures" {
   title           = "Detect Single Account Multiple Login Failures"
-  description     = "Detect single user account has failed login attempt. This may indicate brute force attempt or compromised credential."
+  description     = "Detect multiple failed login attempts for a single user account, which may indicate brute force attempts or compromised credentials."
   severity        = "low"
-  query           = query.audit_log_data_access_detect_single_account_login_failure
+  query           = query.audit_log_data_access_detect_single_account_login_failures
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -60,11 +60,11 @@ detection "audit_log_data_access_detect_single_account_login_failure" {
   })
 }
 
-detection "audit_log_data_access_detect_service_account_signblob_failure" {
-  title           = "Detect Failed SignBlob Operations for Service Accounts"
-  description     = "Detect failed attempts to sign binary blobs using service account credentials. Failed SignBlob operations may indicate unauthorized attempts to create signed content or potential service account compromise attempts. This detection helps identify potential abuse of service account signing capabilities."
+detection "audit_log_data_access_detect_service_account_signblob_failures" {
+  title           = "Detect Service Account SignBlob Failures"
+  description     = "Detect failed attempts to sign binary blobs using service account credentials, which may indicate unauthorized attempts or potential service account compromise."
   severity        = "medium"
-  query           = query.audit_log_data_access_detect_service_account_signblob_failure
+  query           = query.audit_log_data_access_detect_service_account_signblob_failures
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -72,10 +72,10 @@ detection "audit_log_data_access_detect_service_account_signblob_failure" {
   })
 }
 
-query "audit_log_data_access_detect_single_account_login_failure" {
+query "audit_log_data_access_detect_single_account_login_failures" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_single_account_login_failure_sql_columns}
+      ${local.audit_log_data_access_detect_single_account_login_failures_sql_columns}
     from
       gcp_audit_log_data_access
     where
@@ -87,10 +87,10 @@ query "audit_log_data_access_detect_single_account_login_failure" {
   EOQ
 }
 
-query "audit_log_data_access_detect_service_account_signblob_failure" {
+query "audit_log_data_access_detect_service_account_signblob_failures" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_service_account_signblob_failure_sql_columns}
+      ${local.audit_log_data_access_detect_service_account_signblob_failures_sql_columns}
     from
       gcp_audit_log_data_access
     where
@@ -102,10 +102,10 @@ query "audit_log_data_access_detect_service_account_signblob_failure" {
   EOQ
 }
 
-query "audit_log_data_access_detect_service_account_access_token_generation" {
+query "audit_log_data_access_detect_iam_service_account_access_token_generations" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_service_account_access_token_generation_sql_columns}
+      ${local.audit_log_data_access_detect_iam_service_account_access_token_generations_sql_columns}
     from
       gcp_audit_log_data_access
     where
@@ -117,10 +117,10 @@ query "audit_log_data_access_detect_service_account_access_token_generation" {
   EOQ
 }
 
-query "audit_log_data_access_detect_failed_service_account_access_token_generation" {
+query "audit_log_data_access_detect_failed_iam_service_account_access_token_generations" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_failed_service_account_access_token_generation_sql_columns}
+      ${local.audit_log_data_access_detect_failed_iam_service_account_access_token_generations_sql_columns}
     from
       gcp_audit_log_data_access
     where

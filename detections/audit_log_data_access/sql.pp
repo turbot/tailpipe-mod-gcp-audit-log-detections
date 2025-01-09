@@ -2,8 +2,8 @@ locals {
   audit_log_data_access_sql_detection_common_tags = merge(local.audit_log_data_access_detection_common_tags, {
     service = "GCP/SQL"
   })
-  audit_log_data_access_detect_cloudsql_login_failure_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
-  audit_log_data_access_detect_cloudsql_user_deletion_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
+  audit_log_data_access_detect_cloudsql_login_failures_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
+  audit_log_data_access_detect_cloudsql_user_deletions_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
 }
 
 benchmark "audit_logs_data_access_sql_detections" {
@@ -11,7 +11,7 @@ benchmark "audit_logs_data_access_sql_detections" {
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for SQL events."
   type        = "detection"
   children = [
-    detection.audit_log_data_access_detect_cloudsql_login_failure
+    detection.audit_log_data_access_detect_cloudsql_login_failures
   ]
 
   tags = merge(local.audit_log_data_access_sql_detection_common_tags, {
@@ -19,11 +19,11 @@ benchmark "audit_logs_data_access_sql_detections" {
   })
 }
 
-detection "audit_log_data_access_detect_cloudsql_login_failure" {
-  title           = "Detect Failed Cloud SQL Instance Login Attempts"
+detection "audit_log_data_access_detect_cloudsql_login_failures" {
+  title           = "Detect Cloud SQL Login Failures"
   description     = "Detect failed login attempts to Cloud SQL instances. Multiple failed logins may indicate unauthorized access attempts, misconfigured applications, or potential brute force attacks targeting database instances. This detection helps identify potential security threats to database resources."
   severity        = "medium"
-  query           = query.audit_log_data_access_detect_cloudsql_login_failure
+  query           = query.audit_log_data_access_detect_cloudsql_login_failures
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -31,11 +31,11 @@ detection "audit_log_data_access_detect_cloudsql_login_failure" {
   })
 }
 
-detection "audit_log_data_access_detect_cloudsql_user_deletion" {
-  title           = "Detect Cloud SQL User Deletion"
+detection "audit_log_data_access_detect_cloudsql_user_deletions" {
+  title           = "Detect Cloud SQL User Deletions"
   description     = "Detect successful deletion of users from Cloud SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
   severity        = "medium"
-  query           = query.audit_log_data_access_detect_cloudsql_user_deletion
+  query           = query.audit_log_data_access_detect_cloudsql_user_deletions
   display_columns = local.audit_log_data_access_detection_display_columns
 
   tags = merge(local.audit_log_data_access_detection_common_tags, {
@@ -43,10 +43,10 @@ detection "audit_log_data_access_detect_cloudsql_user_deletion" {
   })
 }
 
-query "audit_log_data_access_detect_cloudsql_login_failure" {
+query "audit_log_data_access_detect_cloudsql_login_failures" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_cloudsql_login_failure_sql_columns}
+      ${local.audit_log_data_access_detect_cloudsql_login_failures_sql_columns}
     from
       gcp_audit_log_data_access
     where
@@ -58,10 +58,10 @@ query "audit_log_data_access_detect_cloudsql_login_failure" {
   EOQ
 }
 
-query "audit_log_data_access_detect_cloudsql_user_deletion" {
+query "audit_log_data_access_detect_cloudsql_user_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_data_access_detect_cloudsql_user_deletion_sql_columns}
+      ${local.audit_log_data_access_detect_cloudsql_user_deletions_sql_columns}
     from
       gcp_audit_log_data_access
     where

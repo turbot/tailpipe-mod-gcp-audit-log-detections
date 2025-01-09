@@ -16,7 +16,7 @@ benchmark "mitre_v151_ta0001_t1078" {
     detection.audit_log_admin_activity_detect_service_account_deletions,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
-    detection.audit_log_data_access_detect_service_account_access_token_generation,
+    detection.audit_log_data_access_detect_iam_service_account_access_token_generations,
   ]
 
   tags = local.mitre_v151_ta0001_t1078_common_tags
