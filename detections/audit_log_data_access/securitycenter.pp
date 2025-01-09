@@ -11,7 +11,7 @@ locals {
 
 }
 
-benchmark "audit_log_data_access_security_command_center_detections" {
+benchmark "audit_logs_data_access_security_command_center_detections" {
   title       = "Security Command Center Detections"
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for Security Center events."
   type        = "detection"

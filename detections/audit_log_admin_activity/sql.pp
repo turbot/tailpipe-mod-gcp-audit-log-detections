@@ -19,8 +19,8 @@ benchmark "audit_log_admin_activity_sql_detections" {
 }
 
 detection "audit_log_admin_activity_detect_cloudsql_ssl_certificate_deletions" {
-  title           = "Detect Cloud SQL User Deletion"
-  description     = "Detect successful deletion of users from Cloud SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
+  title           = "Detect Cloud SQL SSL Certificate Deletions"
+  description     = "Detect Cloud SQL SSL certificate deletions that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_log_admin_activity_detect_cloudsql_ssl_certificate_deletions
   display_columns = local.audit_log_admin_activity_detection_display_columns

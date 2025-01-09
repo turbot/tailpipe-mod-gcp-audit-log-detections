@@ -5,7 +5,7 @@ locals {
   audit_log_data_access_detect_cloudsql_login_failure_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
 }
 
-benchmark "audit_log_data_access_sql_detections" {
+benchmark "audit_logs_data_access_sql_detections" {
   title       = "SQL Detections"
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for SQL events."
   type        = "detection"

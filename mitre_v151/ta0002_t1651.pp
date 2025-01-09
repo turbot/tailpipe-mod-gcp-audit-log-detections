@@ -12,7 +12,7 @@ benchmark "mitre_v151_ta0002_t1651" {
     detection.audit_log_admin_activity_detect_apigateway_configured_to_execute_backend_commands,
     detection.audit_log_admin_activity_detect_cloud_scheduler_run_job,
     detection.audit_log_admin_activity_detect_container_executed,
-    audit_log_data_access_detect_service_account_access_token_generation
+    detection.audit_log_data_access_detect_service_account_access_token_generation
   ]
 
   tags = local.mitre_v151_ta0002_t1651_common_tags

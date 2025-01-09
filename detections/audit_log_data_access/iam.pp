@@ -2,13 +2,13 @@ locals {
   audit_log_data_access_iam_detection_common_tags = merge(local.audit_log_data_access_detection_common_tags, {
     service = "GCP/IAM"
   })
-  audit_log_data_access_detect_service_account_access_token_generation_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_single_account_login_failure_sql_columns            = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_failed_service_account_access_token_generation      = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_data_access_detect_service_account_signblob_failure                    = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_service_account_access_token_generation_sql_columns        = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_single_account_login_failure_sql_columns                   = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_failed_service_account_access_token_generation_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_data_access_detect_service_account_signblob_failure_sql_columns               = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_log_data_access_iam_detections" {
+benchmark "audit_logs_data_access_iam_detections" {
   title       = "IAM Detections"
   description = "This benchmark contains recommendations when scanning Data Acess audit logs for IAM events."
   type        = "detection"
@@ -38,7 +38,7 @@ detection "audit_log_data_access_detect_service_account_access_token_generation"
 
 detection "audit_log_data_access_detect_failed_service_account_access_token_generation" {
   title           = "Detect Failed Attempts of IAM Service Account Access Token Generations"
-  description     = "Detect failed attempts to generate IAM service account access tokens. Multiple failures may indicate brute force attempts, misconfigured applications, or potential credential theft attempts."
+  description     = "Detect "
   severity        = "medium"
   query           = query.audit_log_data_access_detect_failed_service_account_access_token_generation
   display_columns = local.audit_log_data_access_detection_display_columns
