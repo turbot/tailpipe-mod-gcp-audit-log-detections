@@ -10,6 +10,7 @@ locals {
   audit_log_admin_activity_detect_compute_disks_set_iam_policy_sql_columns                     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_snapshots_set_iam_policy_sql_columns                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -29,6 +30,7 @@ benchmark "audit_logs_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_compute_disks_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_snapshots_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces,
+    detection.audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications,
     detection.audit_log_admin_activity_detect_public_ip_address_creation,
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
     detection.audit_log_admin_activity_detect_compute_disk_size_small,
@@ -133,6 +135,18 @@ detection "audit_log_admin_activity_detect_compute_instances_with_public_network
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
+  })
+}
+
+detection "audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications" {
+  title           = "Detect Compute Instances Metadata Modifications"
+  description     = "Detect modifications to metadata of Compute Engine instances, such as startup scripts that deface hosted services."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1491"
   })
 }
 
@@ -306,6 +320,23 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
         ) as access_type
         where (access_type::varchar ilike '%nat%' or access_type::varchar ilike '%external%')
       )
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_compute_instances_metadata_startup_script_modifications_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'compute.googleapis.com'
+      and (method_name ilike 'v1.compute.instances.setMetadata')
+      ${local.audit_log_admin_activity_detection_where_conditions}
+      and (json_extract_string(request, '$.Metadata Keys Added') = '["startup-script"]'
+        OR json_extract_string(request, '$.Metadata Keys Modified') = '["startup-script"]' OR json_extract_string(request, '$.Metadata Keys Deleted') = '["startup-script"]')
     order by
       timestamp desc;
   EOQ

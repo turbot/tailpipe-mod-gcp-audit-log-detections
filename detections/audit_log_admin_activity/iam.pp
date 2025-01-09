@@ -7,8 +7,10 @@ locals {
   audit_log_admin_activity_detect_service_account_deletions_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_disabled_service_account_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_service_account_key_deletion_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_iam_roles_permissions_revoke_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_service_account_token_creator_role_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_organization_iam_policy_change_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_workforce_pool_update_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -26,10 +28,12 @@ benchmark "audit_logs_admin_activity_iam_detections" {
   children = [
     detection.audit_log_admin_activity_detect_service_account_creation,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
+    detection.audit_log_admin_activity_detect_service_account_key_deletion,
     detection.audit_log_admin_activity_detect_service_account_deletions,
     detection.audit_log_admin_activity_detect_disabled_service_account,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
+    detection.audit_log_admin_activity_detect_iam_roles_permissions_revoke,
     detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
     detection.audit_log_admin_activity_detect_organization_iam_policy_change,
     detection.audit_log_admin_activity_detect_iam_workforce_pool_update,
@@ -93,6 +97,18 @@ detection "audit_log_admin_activity_detect_service_account_key_creation" {
   })
 }
 
+detection "audit_log_admin_activity_detect_service_account_key_deletion" {
+  title           = "Detect IAM Service Account Key Deletions"
+  description     = "Detect the deletions of IAM service account keys that might indicate potential misuse or unauthorized access attempts."
+  query           = query.audit_log_admin_activity_detect_service_account_key_deletion
+  severity        = "medium"
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
+  })
+}
+
 detection "audit_log_admin_activity_detect_workload_identity_pool_provider_creation" {
   title           = "Detect IAM Workload Identity Pool Provider Creations"
   description     = "Detect the creations of IAM workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
@@ -114,6 +130,18 @@ detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_auth
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0003:T1098,TA0005:T1548"
+  })
+}
+
+detection "audit_log_admin_activity_detect_iam_roles_permissions_revoke" {
+  title           = "Detect IAM Roles Permission Revocation"
+  description     = "Detect IAM roles permissions are revoked, which could disrupt operations, restrict access, or indicate malicious activity in the environment."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_iam_roles_permissions_revoke
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
   })
 }
 
@@ -276,6 +304,21 @@ query "audit_log_admin_activity_detect_service_account_key_creation" {
   EOQ
 }
 
+query "audit_log_admin_activity_detect_service_account_key_deletion" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_admin_activity_detect_service_account_key_deletion_sql_columns}
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v1.DeleteServiceAccountKey'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
 query "audit_log_admin_activity_detect_workload_identity_pool_provider_creation" {
   sql = <<-EOQ
     select
@@ -301,6 +344,22 @@ query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenti
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name ilike 'setiampolicy'
       and json_extract(cast(request as json), '$.policy.bindings[*].members')::varchar like '%allAuthenticatedUsers%'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_iam_roles_permissions_revoke" {
+  sql = <<-EOQ
+    select
+      *
+    from
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v1.UpdateRole'
+      and json_extract(cast(service_data as json), '$.permissionDelta.removedPermissions') is not null
       ${local.audit_log_admin_activity_detection_where_conditions}
     order by
       timestamp desc;

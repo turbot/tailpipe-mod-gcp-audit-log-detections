@@ -5,6 +5,7 @@ locals {
 
   audit_log_admin_activity_detect_cloudfunctions_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloudfunctions_function_code_modifications_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_admin_activity_cloudfunction_detections" {
@@ -14,6 +15,7 @@ benchmark "audit_logs_admin_activity_cloudfunction_detections" {
   children = [
     detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,
     detection.audit_log_admin_activity_detect_cloudfunctions_operation_delete,
+    detection.audit_log_admin_activity_detect_cloudfunctions_function_code_modifications,
   ]
 
   tags = merge(local.audit_log_admin_activity_cloudfunction_detection_common_tags, {
@@ -42,6 +44,18 @@ detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1648"
+  })
+}
+
+detection "audit_log_admin_activity_detect_cloudfunctions_function_code_modifications" {
+  title           = "Detect Cloud Functions Code Modification"
+  description     = "Detects changes to the code or configuration of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
+  severity        = "medium"
+  query           = query.audit_log_admin_activity_detect_cloudfunctions_function_code_modifications
+  display_columns = local.audit_log_admin_activity_detection_display_columns
+
+  tags = merge(local.audit_log_admin_activity_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
   })
 }
 
@@ -75,6 +89,22 @@ query "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
       service_name = 'cloudfunctions.googleapis.com'
       and method_name ilike 'google.cloud.functions.v%.functionservice.deletefunction'
       ${local.audit_log_admin_activity_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_admin_activity_detect_cloudfunctions_function_code_modifications" {
+  sql = <<-EOQ
+    select 
+      ${local.audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns}
+    from 
+      gcp_audit_log_admin_activity
+    where
+      service_name = 'cloudfunctions.googleapis.com'
+      and method_name ilike 'google.cloud.functions.v%.FunctionService.UpdateFunction'
+      ${local.audit_log_admin_activity_detection_where_conditions}
+      and json_extract(request, '$.function.build_config') is not null
     order by
       timestamp desc;
   EOQ
