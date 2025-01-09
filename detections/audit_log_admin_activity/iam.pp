@@ -7,10 +7,10 @@ locals {
   audit_log_admin_activity_detect_service_account_deletions_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_disabled_service_account_sql_columns                             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_service_account_key_creation_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_service_account_key_deletion_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_admin_activity_detect_service_account_key_deletions_sql_columns                         = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_log_admin_activity_detect_iam_roles_permissions_revoke_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_admin_activity_detect_iam_roles_permission_revocations_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_service_account_token_creator_role_sql_columns               = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_organization_iam_policy_change_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_iam_workforce_pool_update_sql_columns                            = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -28,12 +28,12 @@ benchmark "audit_logs_admin_activity_iam_detections" {
   children = [
     detection.audit_log_admin_activity_detect_service_account_creation,
     detection.audit_log_admin_activity_detect_service_account_key_creation,
-    detection.audit_log_admin_activity_detect_service_account_key_deletion,
+    detection.audit_logs_admin_activity_detect_service_account_key_deletions,
     detection.audit_log_admin_activity_detect_service_account_deletions,
     detection.audit_log_admin_activity_detect_disabled_service_account,
     detection.audit_log_admin_activity_detect_workload_identity_pool_provider_creation,
     detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.audit_log_admin_activity_detect_iam_roles_permissions_revoke,
+    detection.audit_logs_admin_activity_detect_iam_roles_permission_revocations,
     detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
     detection.audit_log_admin_activity_detect_organization_iam_policy_change,
     detection.audit_log_admin_activity_detect_iam_workforce_pool_update,
@@ -97,10 +97,10 @@ detection "audit_log_admin_activity_detect_service_account_key_creation" {
   })
 }
 
-detection "audit_log_admin_activity_detect_service_account_key_deletion" {
+detection "audit_logs_admin_activity_detect_service_account_key_deletions" {
   title           = "Detect IAM Service Account Key Deletions"
-  description     = "Detect the deletions of IAM service account keys that might indicate potential misuse or unauthorized access attempts."
-  query           = query.audit_log_admin_activity_detect_service_account_key_deletion
+  description     = "Detect deletions of IAM service account keys to check for potential misuse or unauthorized access attempts, which could disrupt services, erase evidence of malicious activity, or impact operational continuity."
+  query           = query.audit_logs_admin_activity_detect_service_account_key_deletions
   severity        = "medium"
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
@@ -133,11 +133,11 @@ detection "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_auth
   })
 }
 
-detection "audit_log_admin_activity_detect_iam_roles_permissions_revoke" {
-  title           = "Detect IAM Roles Permission Revocation"
-  description     = "Detect IAM roles permissions are revoked, which could disrupt operations, restrict access, or indicate malicious activity in the environment."
+detection "audit_logs_admin_activity_detect_iam_roles_permission_revocations" {
+  title           = "Detect IAM Roles Permission Revocations"
+  description     = "Detect when IAM role permissions are revoked to check for disruptions to operations, restricted access to resources, or potential malicious activity that could impact the environment’s functionality or security."
   severity        = "medium"
-  query           = query.audit_log_admin_activity_detect_iam_roles_permissions_revoke
+  query           = query.audit_logs_admin_activity_detect_iam_roles_permission_revocations
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -304,10 +304,10 @@ query "audit_log_admin_activity_detect_service_account_key_creation" {
   EOQ
 }
 
-query "audit_log_admin_activity_detect_service_account_key_deletion" {
+query "audit_logs_admin_activity_detect_service_account_key_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_log_admin_activity_detect_service_account_key_deletion_sql_columns}
+      ${local.audit_logs_admin_activity_detect_service_account_key_deletions_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
@@ -350,10 +350,10 @@ query "audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenti
   EOQ
 }
 
-query "audit_log_admin_activity_detect_iam_roles_permissions_revoke" {
+query "audit_logs_admin_activity_detect_iam_roles_permission_revocations" {
   sql = <<-EOQ
     select
-      *
+      ${local.audit_logs_admin_activity_detect_iam_roles_permission_revocations_sql_columns}
     from
       gcp_audit_log_admin_activity
     where
