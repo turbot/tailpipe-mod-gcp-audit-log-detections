@@ -3,6 +3,7 @@ locals {
     service = "GCP/SQL"
   })
   audit_log_data_access_detect_cloudsql_login_failure_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
+  audit_log_data_access_detect_cloudsql_user_deletion_sql_columns = replace(local.audit_log_data_access_detection_sql_columns, "__RESOURCE_sql__", "resource_name")
 }
 
 benchmark "audit_logs_data_access_sql_detections" {

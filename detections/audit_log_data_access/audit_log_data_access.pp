@@ -10,7 +10,6 @@ benchmark "audit_logs_data_access_detections" {
   description = "This detection benchmark contains recommendations when scanning GCP Data Access Audit Logs."
   type        = "detection"
   children = [
-    benchmark.audit_logs_data_access_security_command_center_detections,
     benchmark.audit_logs_data_access_iam_detections,
     benchmark.audit_logs_data_access_security_command_center_detections,
     benchmark.audit_logs_data_access_sql_detections,
