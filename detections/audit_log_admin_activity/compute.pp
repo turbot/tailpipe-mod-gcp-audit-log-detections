@@ -10,7 +10,7 @@ locals {
   audit_log_admin_activity_detect_compute_disks_set_iam_policy_sql_columns                     = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_snapshots_set_iam_policy_sql_columns                 = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -30,7 +30,7 @@ benchmark "audit_logs_admin_activity_compute_detections" {
     detection.audit_log_admin_activity_detect_compute_disks_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_snapshots_set_iam_policy,
     detection.audit_log_admin_activity_detect_compute_instances_with_public_network_interfaces,
-    detection.audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications,
+    detection.audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications,
     detection.audit_log_admin_activity_detect_public_ip_address_creation,
     detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
     detection.audit_log_admin_activity_detect_compute_disk_size_small,
@@ -138,11 +138,11 @@ detection "audit_log_admin_activity_detect_compute_instances_with_public_network
   })
 }
 
-detection "audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications" {
+detection "audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications" {
   title           = "Detect Compute Instances with Metadata Startup Script Modifications"
   description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
   severity        = "medium"
-  query           = query.audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications
+  query           = query.audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -325,10 +325,10 @@ query "audit_log_admin_activity_detect_compute_instances_with_public_network_int
   EOQ
 }
 
-query "audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications" {
+query "audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns}
+      ${local.audit_log_admin_activity_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns}
     from
       gcp_audit_log_admin_activity
     where

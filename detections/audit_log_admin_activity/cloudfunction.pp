@@ -5,7 +5,7 @@ locals {
 
   audit_log_admin_activity_detect_cloudfunctions_publicly_accessible_sql_columns = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_admin_activity_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_admin_activity_detect_cloudfunctions_function_code_modifications_sql_columns    = replace(local.audit_log_admin_activity_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_admin_activity_cloudfunction_detections" {
@@ -15,7 +15,7 @@ benchmark "audit_logs_admin_activity_cloudfunction_detections" {
   children = [
     detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,
     detection.audit_log_admin_activity_detect_cloudfunctions_operation_delete,
-    detection.audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications,
+    detection.audit_log_admin_activity_detect_cloudfunctions_function_code_modifications,
   ]
 
   tags = merge(local.audit_log_admin_activity_cloudfunction_detection_common_tags, {
@@ -47,11 +47,11 @@ detection "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
   })
 }
 
-detection "audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications" {
+detection "audit_log_admin_activity_detect_cloudfunctions_function_code_modifications" {
   title           = "Detect Cloud Functions Code Modification"
   description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
   severity        = "medium"
-  query           = query.audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications
+  query           = query.audit_log_admin_activity_detect_cloudfunctions_function_code_modifications
   display_columns = local.audit_log_admin_activity_detection_display_columns
 
   tags = merge(local.audit_log_admin_activity_detection_common_tags, {
@@ -94,10 +94,10 @@ query "audit_log_admin_activity_detect_cloudfunctions_operation_delete" {
   EOQ
 }
 
-query "audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications" {
+query "audit_log_admin_activity_detect_cloudfunctions_function_code_modifications" {
   sql = <<-EOQ
     select 
-      ${local.audit_logs_admin_activity_detect_cloudfunctions_function_code_modifications_sql_columns}
+      ${local.audit_log_admin_activity_detect_cloudfunctions_function_code_modifications_sql_columns}
     from 
       gcp_audit_log_admin_activity
     where
