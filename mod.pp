@@ -1,6 +1,6 @@
-mod "gcp_detections" {
+mod "gcp_audit_log_detections" {
   # hub metadata
-  title         = "GCP Detections"
+  title         = "GCP Audit Log Detections"
   description   = "Search your GCP logs for high risk actions using Tailpipe."
   color         = "#ea4335"
   #documentation = file("./docs/index.md")
@@ -9,7 +9,7 @@ mod "gcp_detections" {
   database      = var.database
 
   opengraph {
-    title       = "Tailpipe Mod for GCP Detections"
+    title       = "Tailpipe Mod for GCP Audit Log Detections"
     description = "Search your GCP logs for high risk actions using Tailpipe."
     #image       = "/images/mods/turbot/gcp-social-graphic.png"
   }
