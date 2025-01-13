@@ -9,9 +9,9 @@ benchmark "mitre_v151_ta0002_t1648" {
   type          = "detection"
   documentation = file("./mitre_v151/docs/ta0002_t1648.md")
   children = [
-    detection.audit_log_admin_activity_detect_appengine_admin_api_execution_enabled,
-    detection.audit_log_admin_activity_detect_cloudfunctions_operation_delete,
-    detection.audit_log_admin_activity_detect_cloudfunctions_publicly_accessible,
+    detection.audit_logs_detect_appengine_admin_api_execution_enabled,
+    detection.audit_logs_detect_cloudfunctions_operation_delete,
+    detection.audit_logs_detect_cloudfunctions_publicly_accessible,
   ]
 
   tags = local.mitre_v151_ta0002_t1648_common_tags

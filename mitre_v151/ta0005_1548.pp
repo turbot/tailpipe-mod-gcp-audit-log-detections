@@ -9,12 +9,12 @@ benchmark "mitre_v151_ta0005_t1548" {
   type          = "detection"
   documentation = file("./mitre_v151/docs/ta0005_t1548.md")
   children = [
-    detection.audit_log_admin_activity_detect_high_privilege_iam_roles,
-    detection.audit_log_admin_activity_detect_iam_federated_identity_provider_updation,
-    detection.audit_log_admin_activity_detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.audit_log_admin_activity_detect_iam_service_account_token_creator_role,
-    detection.audit_log_admin_activity_detect_vpc_network_shared_to_external_project,
-    detection.audit_log_data_access_detect_iam_service_account_access_token_generations,
+    detection.audit_logs_detect_high_privilege_iam_roles,
+    detection.audit_logs_detect_iam_federated_identity_provider_updation,
+    detection.audit_logs_detect_iam_roles_granting_access_to_all_authenticated_users,
+    detection.audit_logs_detect_iam_service_account_token_creator_role,
+    detection.audit_logs_detect_vpc_network_shared_to_external_project,
+    detection.audit_logs_detect_iam_service_account_access_token_generations,
   ]
 
   tags = local.mitre_v151_ta0005_t1548_common_tags

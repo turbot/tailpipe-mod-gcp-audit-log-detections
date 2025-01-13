@@ -9,14 +9,14 @@ benchmark "mitre_v151_ta0005_t1211" {
   type          = "detection"
   documentation = file("./mitre_v151/docs/ta0005_t1211.md")
   children = [
-    detection.audit_log_admin_activity_detect_api_monitoring_disabled,
-    detection.audit_log_admin_activity_detect_api_monitoring_policy_deleted,
-    detection.audit_log_admin_activity_detect_disable_compute_vpc_flow_logs,
-    detection.audit_log_admin_activity_detect_iam_policy_removing_logging_admin_role,
-    detection.audit_log_admin_activity_detect_log_sink_deletion_updates,
-    detection.audit_log_admin_activity_detect_org_policy_revoked,
-    detection.audit_log_admin_activity_detect_project_level_iam_policy_change,
-    
+    detection.audit_logs_detect_api_monitoring_disabled,
+    detection.audit_logs_detect_api_monitoring_policy_deleted,
+    detection.audit_logs_detect_disable_compute_vpc_flow_logs,
+    detection.audit_logs_detect_iam_policy_removing_logging_admin_role,
+    detection.audit_logs_detect_log_sink_deletion_updates,
+    detection.audit_logs_detect_org_policy_revoked,
+    detection.audit_logs_detect_project_level_iam_policy_change,
+
   ]
 
   tags = local.mitre_v151_ta0005_t1211_common_tags
