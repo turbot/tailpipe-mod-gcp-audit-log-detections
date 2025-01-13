@@ -2,7 +2,7 @@ mod "gcp_detections" {
   # hub metadata
   title         = "GCP Detections"
   description   = "Search your GCP logs for high risk actions using Tailpipe."
-  color         = "#FF9900"
+  color         = "#ea4335"
   #documentation = file("./docs/index.md")
   #icon          = "/images/mods/turbot/gcp.svg"
   categories    = ["dashboard", "detections", "gcp", "public cloud"]
