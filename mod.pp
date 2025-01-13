@@ -5,7 +5,7 @@ mod "gcp_detections" {
   color         = "#FF9900"
   #documentation = file("./docs/index.md")
   #icon          = "/images/mods/turbot/gcp.svg"
-  categories    = ["gcp", "security"]
+  categories    = ["dashboard", "detections", "gcp", "public cloud"]
   database      = var.database
 
   opengraph {
