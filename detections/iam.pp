@@ -21,6 +21,8 @@ locals {
   audit_logs_detect_single_account_login_failures_sql_columns                        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_logs_detect_failed_iam_service_account_access_token_generations_sql_columns  = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_logs_detect_service_account_signblob_failures_sql_columns                    = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_detect_service_account_key_deletions_sql_columns                         = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_detect_iam_roles_permission_revocations_sql_columns                      = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_iam_detections" {
@@ -46,6 +48,8 @@ benchmark "audit_logs_iam_detections" {
     detection.audit_logs_detect_iam_service_account_access_token_generations,
     detection.audit_logs_detect_failed_iam_service_account_access_token_generations,
     detection.audit_logs_detect_service_account_signblob_failures,
+    detection.audit_log_detect_service_account_key_deletions,
+    detection.audit_log_detect_iam_roles_permission_revocations,
   ]
 
   tags = merge(local.audit_log_iam_detection_common_tags, {
@@ -269,9 +273,64 @@ detection "audit_logs_detect_service_account_signblob_failures" {
   })
 }
 
+detection "audit_log_detect_service_account_key_deletions" {
+  title           = "Detect IAM Service Account Key Deletions"
+  description     = "Detect deletions of IAM service account keys to check for potential misuse or unauthorized access attempts, which could disrupt services, erase evidence of malicious activity, or impact operational continuity."
+  query           = query.audit_log_detect_service_account_key_deletions
+  severity        = "medium"
+  display_columns = local.audit_log_detection_display_columns
+
+  tags = merge(local.audit_log_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
+  })
+}
+
+detection "audit_log_detect_iam_roles_permission_revocations" {
+  title           = "Detect IAM Roles Permission Revocations"
+  description     = "Detect when IAM role permissions are revoked to check for disruptions to operations, restricted access to resources, or potential malicious activity that could impact the environment’s functionality or security."
+  severity        = "medium"
+  query           = query.audit_log_detect_iam_roles_permission_revocations
+  display_columns = local.audit_log_detection_display_columns
+
+  tags = merge(local.audit_log_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
+  })
+}
+
 /*
  * Queries
  */
+
+query "audit_log_detect_service_account_key_deletions" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_detect_service_account_key_deletions_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v1.DeleteServiceAccountKey'
+      ${local.audit_log_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "audit_log_detect_iam_roles_permission_revocations" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_detect_iam_roles_permission_revocations_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'iam.googleapis.com'
+      and method_name ilike 'google.iam.admin.v1.UpdateRole'
+      and json_extract(cast(service_data as json), '$.permissionDelta.removedPermissions') is not null
+      ${local.audit_log_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
 
 query "audit_logs_detect_service_account_creation" {
   sql = <<-EOQ

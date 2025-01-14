@@ -3,8 +3,9 @@ locals {
     service = "GCP/CloudFunctions"
   })
 
-  audit_logs_detect_cloudfunctions_publicly_accessible_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_cloudfunctions_operation_delete_sql_columns    = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_cloudfunctions_publicly_accessible_sql_columns        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_cloudfunctions_operation_delete_sql_columns           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_detect_cloudfunctions_function_code_modifications_sql_columns = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_cloudfunction_detections" {
@@ -43,6 +44,35 @@ detection "audit_logs_detect_cloudfunctions_operation_delete" {
   tags = merge(local.audit_logs_detection_common_tags, {
     mitre_attack_ids = "TA0002:T1648"
   })
+}
+
+detection "audit_log_detect_cloudfunctions_function_code_modifications" {
+  title           = "Detect Cloud Functions Code Modification"
+  description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
+  severity        = "medium"
+  query           = query.audit_log_detect_cloudfunctions_function_code_modifications
+  display_columns = local.audit_log_detection_display_columns
+
+  tags = merge(local.audit_log_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1531"
+  })
+}
+
+
+query "audit_log_detect_cloudfunctions_function_code_modifications" {
+  sql = <<-EOQ
+    select 
+      ${local.audit_log_detect_cloudfunctions_function_code_modifications_sql_columns}
+    from 
+      gcp_audit_log
+    where
+      service_name = 'cloudfunctions.googleapis.com'
+      and method_name ilike 'google.cloud.functions.v%.functionservice.updatefunction'
+      and json_extract(request, '$.function.build_config') is not null
+      ${local.audit_log_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
 }
 
 query "audit_logs_detect_cloudfunctions_publicly_accessible" {

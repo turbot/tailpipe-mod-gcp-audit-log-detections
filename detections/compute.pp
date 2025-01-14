@@ -2,18 +2,19 @@ locals {
   audit_log_compute_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
     service = "GCP/Compute"
   })
-  audit_logs_detect_vpn_tunnel_deletions_sql_columns                             = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_firewall_rule_deletion_updates_sql_columns           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_full_network_traffic_packet_deletions_sql_columns            = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_full_network_traffic_packet_modifications_sql_columns        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_images_set_iam_policy_sql_columns                    = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_disks_set_iam_policy_sql_columns                     = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_snapshots_set_iam_policy_sql_columns                 = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_instances_with_public_network_interfaces_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_public_ip_address_creation_sql_columns                       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_vpc_network_shared_to_external_project_sql_columns           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_disk_size_small_sql_columns                          = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_disable_compute_vpc_flow_logs_sql_columns                    = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_vpn_tunnel_deletions_sql_columns                                        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_firewall_rule_deletion_updates_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_full_network_traffic_packet_deletions_sql_columns                       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_full_network_traffic_packet_modifications_sql_columns                   = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_images_set_iam_policy_sql_columns                               = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_disks_set_iam_policy_sql_columns                                = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_snapshots_set_iam_policy_sql_columns                            = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_instances_with_public_network_interfaces_sql_columns            = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_public_ip_address_creation_sql_columns                                  = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_vpc_network_shared_to_external_project_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_disk_size_small_sql_columns                                     = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_disable_compute_vpc_flow_logs_sql_columns                               = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_log_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_compute_detections" {
@@ -33,6 +34,7 @@ benchmark "audit_logs_compute_detections" {
     detection.audit_logs_detect_vpc_network_shared_to_external_project,
     detection.audit_logs_detect_compute_disk_size_small,
     detection.audit_logs_detect_disable_compute_vpc_flow_logs,
+    detection.audit_log_detect_compute_instances_with_metadata_startup_script_modifications,
   ]
 
   tags = merge(local.audit_log_compute_detection_common_tags, {
@@ -183,6 +185,36 @@ detection "audit_logs_detect_disable_compute_vpc_flow_logs" {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
+
+detection "audit_log_detect_compute_instances_with_metadata_startup_script_modifications" {
+  title           = "Detect Compute Instances with Metadata Startup Script Modifications"
+  description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
+  severity        = "medium"
+  query           = query.audit_log_detect_compute_instances_with_metadata_startup_script_modifications
+  display_columns = local.audit_log_detection_display_columns
+
+  tags = merge(local.audit_log_detection_common_tags, {
+    mitre_attack_ids = "TA0040:T1491"
+  })
+}
+
+query "audit_log_detect_compute_instances_with_metadata_startup_script_modifications" {
+  sql = <<-EOQ
+    select
+      ${local.audit_log_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and (method_name ilike 'v1.compute.instances.setMetadata')
+      and (json_extract_string(request, '$.Metadata Keys Added') = '["startup-script"]'
+        OR json_extract_string(request, '$.Metadata Keys Modified') = '["startup-script"]' OR json_extract_string(request, '$.Metadata Keys Deleted') = '["startup-script"]')
+      ${local.audit_log_detection_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
 // tested
 query "audit_logs_detect_compute_firewall_rule_deletion_updates" {
   sql = <<-EOQ
