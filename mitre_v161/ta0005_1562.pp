@@ -5,7 +5,7 @@ locals {
 }
 
 benchmark "mitre_v161_ta0005_t1562" {
-  title         = "T1525 Impair Defenses"
+  title         = "T1562 Impair Defenses"
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0005_t1562.md")
   children = [
