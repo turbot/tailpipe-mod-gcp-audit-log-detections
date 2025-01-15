@@ -14,7 +14,7 @@ benchmark "dlp_detections" {
     detection.detect_dlp_reidentify_content,
   ]
 
-  tags = merge(local.audit_log_dlp_detection_common_tags, {
+  tags = merge(local.dlp_common_tags, {
     type = "Benchmark"
   })
 }

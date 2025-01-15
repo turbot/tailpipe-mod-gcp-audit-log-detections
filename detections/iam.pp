@@ -21,8 +21,8 @@ locals {
   detect_single_account_login_failures_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_failed_iam_service_account_access_token_generations_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_service_account_signblob_failures_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_service_account_key_deletions_sql_columns                        = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_roles_permission_revocations_sql_columns                     = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_service_account_key_deletions_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_roles_permission_revocations_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "iam_detections" {
@@ -278,7 +278,7 @@ detection "detect_service_account_key_deletions" {
   description     = "Detect deletions of IAM service account keys to check for potential misuse or unauthorized access attempts, which could disrupt services, erase evidence of malicious activity, or impact operational continuity."
   query           = query.detect_service_account_key_deletions
   severity        = "medium"
-  display_columns = local.audit_log_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
@@ -290,7 +290,7 @@ detection "detect_iam_roles_permission_revocations" {
   description     = "Detect when IAM role permissions are revoked to check for disruptions to operations, restricted access to resources, or potential malicious activity that could impact the environment’s functionality or security."
   severity        = "medium"
   query           = query.detect_iam_roles_permission_revocations
-  display_columns = local.audit_log_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0040:T1531"

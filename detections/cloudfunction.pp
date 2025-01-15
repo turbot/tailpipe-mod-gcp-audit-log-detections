@@ -5,7 +5,7 @@ locals {
 
   detect_cloudfunctions_publicly_accessible_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_cloudfunctions_operation_delete_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloudfunctions_function_code_modifications_sql_columns = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_cloudfunctions_function_code_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "cloudfunction_detections" {
@@ -51,7 +51,7 @@ detection "detect_cloudfunctions_function_code_modifications" {
   description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
   severity        = "medium"
   query           = query.detect_cloudfunctions_function_code_modifications
-  display_columns = local.audit_log_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
     mitre_attack_ids = "TA0040:T1531"

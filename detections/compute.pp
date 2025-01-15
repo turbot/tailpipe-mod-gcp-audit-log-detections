@@ -14,7 +14,7 @@ locals {
   detect_vpc_network_shared_to_external_project_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_compute_disk_size_small_sql_columns                                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_disable_compute_vpc_flow_logs_sql_columns                                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "compute_detections" {
@@ -37,7 +37,7 @@ benchmark "compute_detections" {
     detection.detect_compute_instances_with_metadata_startup_script_modifications,
   ]
 
-  tags = merge(local.audit_log_compute_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     type = "Benchmark"
   })
 }
@@ -191,7 +191,7 @@ detection "detect_compute_instances_with_metadata_startup_script_modifications" 
   description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
   severity        = "medium"
   query           = query.detect_compute_instances_with_metadata_startup_script_modifications
-  display_columns = local.audit_log_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0040:T1491"
