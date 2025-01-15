@@ -1,5 +1,5 @@
 locals {
-  audit_log_apigee_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  apigee_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Apigee"
   })
 
@@ -14,7 +14,7 @@ benchmark "audit_logs_apigee_detections" {
     detection.audit_logs_detect_api_access_to_vulnerable_services
   ]
 
-  tags = merge(local.audit_log_apigee_detection_common_tags, {
+  tags = merge(local.apigee_common_tags, {
     type = "Benchmark"
   })
 }
@@ -26,7 +26,7 @@ detection "audit_logs_detect_api_access_to_vulnerable_services" {
   query           = query.audit_logs_detect_api_access_to_vulnerable_services
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.apigee_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
   })
 }

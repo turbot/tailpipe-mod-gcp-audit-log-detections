@@ -1,5 +1,5 @@
 locals {
-  audit_log_artifactregistry_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  artifactregistry_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ArtifactRegistry"
   })
 
@@ -23,7 +23,7 @@ benchmark "audit_logs_artifactregistry_detections" {
     detection.audit_logs_detect_encrypted_container_image_pushed,
   ]
 
-  tags = merge(local.audit_log_artifactregistry_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     type = "Benchmark"
   })
 }
@@ -35,7 +35,7 @@ detection "audit_logs_detect_artifact_registry_overwritten" {
   query           = query.audit_logs_detect_artifact_registry_overwritten
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
   })
 }
@@ -47,7 +47,7 @@ detection "audit_logs_detect_artifact_registry_publicly_accessible" {
   query           = query.audit_logs_detect_artifact_registry_publicly_accessible
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
   })
 }
@@ -59,7 +59,7 @@ detection "audit_logs_detect_artifact_registry_with_no_layers" {
   query           = query.audit_logs_detect_artifact_registry_with_no_layers
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -71,7 +71,7 @@ detection "audit_logs_detect_artifact_registry_repository_deletion" {
   query           = query.audit_logs_detect_artifact_registry_repository_deletion
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -82,7 +82,7 @@ detection "audit_logs_detect_artifact_registry_package_deletion" {
   severity    = "medium"
   query       = query.audit_logs_detect_artifact_registry_package_deletion
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -94,7 +94,7 @@ detection "audit_logs_detect_encrypted_container_image_pushed" {
   query           = query.audit_logs_detect_encrypted_container_image_pushed
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }

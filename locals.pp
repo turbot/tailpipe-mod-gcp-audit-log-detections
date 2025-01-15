@@ -1,6 +1,6 @@
 // Benchmarks and controls for specific services should override the "service" tag
 locals {
-  gcp_detections_common_tags = {
+  gcp_audit_log_detections_common_tags = {
     category = "Detection"
     plugin   = "gcp"
     service  = "GCP"

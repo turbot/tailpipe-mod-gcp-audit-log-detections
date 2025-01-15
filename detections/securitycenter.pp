@@ -1,5 +1,5 @@
 locals {
-  audit_logs_security_command_center_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  security_command_center_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/SecurityCommandCenter"
   })
 
@@ -23,7 +23,7 @@ benchmark "audit_logs_security_command_center_detections" {
     detection.audit_logs_security_command_center_calculate_security_health_threat_detection_settings
   ]
 
-  tags = merge(local.audit_logs_security_command_center_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     type = "Benchmark"
   })
 }
@@ -35,7 +35,7 @@ detection "audit_logs_security_command_center_delete_notification_configs" {
   query           = query.audit_logs_security_command_center_delete_notification_configs
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -47,7 +47,7 @@ detection "audit_logs_security_command_center_calculate_virtual_machine_threat_d
   query           = query.audit_logs_security_command_center_calculate_virtual_machine_threat_detection_settings
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -59,7 +59,7 @@ detection "audit_logs_security_command_center_calculate_event_threat_detection_s
   query           = query.audit_logs_security_command_center_calculate_event_threat_detection_settings
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
   })
 }
@@ -71,7 +71,7 @@ detection "audit_logs_security_command_center_calculate_container_threat_detecti
   query           = query.audit_logs_security_command_center_calculate_container_threat_detection_settings
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
   })
 }
@@ -83,7 +83,7 @@ detection "audit_logs_security_command_center_calculate_security_health_threat_d
   query           = query.audit_logs_security_command_center_calculate_security_health_threat_detection_settings
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }

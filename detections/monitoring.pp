@@ -1,5 +1,5 @@
 locals {
-  audit_log_monitoring_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  monitoring_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Monitoring"
   })
 
@@ -18,7 +18,7 @@ benchmark "audit_logs_monitoring_detections" {
     detection.audit_logs_detect_api_monitoring_policy_deleted,
   ]
 
-  tags = merge(local.audit_log_monitoring_detection_common_tags, {
+  tags = merge(local.monitoring_common_tags, {
     type = "Benchmark"
   })
 }
@@ -30,7 +30,7 @@ detection "audit_logs_detect_unusual_resource_consumption" {
   query           = query.audit_logs_detect_unusual_resource_consumption
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1566"
   })
 }
@@ -42,7 +42,7 @@ detection "audit_logs_detect_api_monitoring_disabled" {
   query           = query.audit_logs_detect_api_monitoring_disabled
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -54,7 +54,7 @@ detection "audit_logs_detect_api_monitoring_policy_deleted" {
   query           = query.audit_logs_detect_api_monitoring_policy_deleted
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }

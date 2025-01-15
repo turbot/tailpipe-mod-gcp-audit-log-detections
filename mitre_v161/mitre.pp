@@ -1,5 +1,5 @@
 locals {
-  mitre_v161_common_tags = merge(local.gcp_detections_common_tags, {
+  mitre_v161_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     mitre         = "true"
     mitre_version = "v16.1"
   })

@@ -1,5 +1,5 @@
 locals {
-  audit_log_storage_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  storage_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Storage"
   })
 
@@ -16,7 +16,7 @@ benchmark "audit_logs_storage_detections" {
     detection.audit_logs_detect_storage_bucket_publicly_accessible,
   ]
 
-  tags = merge(local.audit_log_storage_detection_common_tags, {
+  tags = merge(local.storage_common_tags, {
     type = "Benchmark"
   })
 }
@@ -28,7 +28,7 @@ detection "audit_logs_detect_storage_set_iam_policy" {
   query           = query.audit_logs_detect_storage_set_iam_policy
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.storage_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -40,7 +40,7 @@ detection "audit_logs_detect_storage_bucket_publicly_accessible" {
   query           = query.audit_logs_detect_storage_bucket_publicly_accessible
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.storage_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
   })
 }

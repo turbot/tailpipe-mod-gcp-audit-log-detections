@@ -1,5 +1,5 @@
 locals {
-  audit_log_cloudfunction_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  cloudfunction_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/CloudFunctions"
   })
 
@@ -17,7 +17,7 @@ benchmark "audit_logs_cloudfunction_detections" {
     detection.audit_logs_detect_cloudfunctions_operation_delete,
   ]
 
-  tags = merge(local.audit_log_cloudfunction_detection_common_tags, {
+  tags = merge(local.cloudfunction_common_tags, {
     type = "Benchmark"
   })
 }
@@ -29,7 +29,7 @@ detection "audit_logs_detect_cloudfunctions_publicly_accessible" {
   query           = query.audit_logs_detect_cloudfunctions_publicly_accessible
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.cloudfunction_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0002:T1648"
   })
 }
@@ -41,7 +41,7 @@ detection "audit_logs_detect_cloudfunctions_operation_delete" {
   query           = query.audit_logs_detect_cloudfunctions_operation_delete
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.cloudfunction_common_tags, {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
@@ -53,7 +53,7 @@ detection "audit_log_detect_cloudfunctions_function_code_modifications" {
   query           = query.audit_log_detect_cloudfunctions_function_code_modifications
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.cloudfunction_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
   })
 }

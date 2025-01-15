@@ -1,5 +1,5 @@
 locals {
-  audit_log_dns_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  dns_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/DNS"
   })
 
@@ -19,7 +19,7 @@ benchmark "audit_logs_dns_detections" {
     detection.audit_logs_detect_dns_record_deletions
   ]
 
-  tags = merge(local.audit_log_dns_detection_common_tags, {
+  tags = merge(local.dns_common_tags, {
     type = "Benchmark"
   })
 }
@@ -31,7 +31,7 @@ detection "audit_logs_detect_dns_zone_deletions" {
   query           = query.audit_logs_detect_dns_zone_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -43,7 +43,7 @@ detection "audit_logs_detect_dns_zone_modifications" {
   query           = query.audit_logs_detect_dns_zone_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -55,7 +55,7 @@ detection "audit_logs_detect_dns_record_modifications" {
   query           = query.audit_logs_detect_dns_record_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -67,7 +67,7 @@ detection "audit_logs_detect_dns_record_deletions" {
   query           = query.audit_logs_detect_dns_record_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }

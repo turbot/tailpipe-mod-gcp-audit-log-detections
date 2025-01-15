@@ -1,5 +1,5 @@
 locals {
-  audit_log_compute_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  compute_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Compute"
   })
   audit_logs_detect_vpn_tunnel_deletions_sql_columns                                        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -49,7 +49,7 @@ detection "audit_logs_detect_vpn_tunnel_deletions" {
   query           = query.audit_logs_detect_vpn_tunnel_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
@@ -61,7 +61,7 @@ detection "audit_logs_detect_compute_firewall_rule_deletion_updates" {
   query           = query.audit_logs_detect_compute_firewall_rule_deletion_updates
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -73,7 +73,7 @@ detection "audit_logs_detect_full_network_traffic_packet_deletions" {
   query           = query.audit_logs_detect_full_network_traffic_packet_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
@@ -85,7 +85,7 @@ detection "audit_logs_detect_full_network_traffic_packet_modifications" {
   query           = query.audit_logs_detect_full_network_traffic_packet_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
@@ -97,7 +97,7 @@ detection "audit_logs_detect_compute_images_set_iam_policy" {
   query           = query.audit_logs_detect_compute_images_set_iam_policy
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -109,7 +109,7 @@ detection "audit_logs_detect_compute_disks_set_iam_policy" {
   query           = query.audit_logs_detect_compute_disks_set_iam_policy
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -121,7 +121,7 @@ detection "audit_logs_detect_compute_snapshots_set_iam_policy" {
   query           = query.audit_logs_detect_compute_snapshots_set_iam_policy
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -133,7 +133,7 @@ detection "audit_logs_detect_compute_instances_with_public_network_interfaces" {
   query           = query.audit_logs_detect_compute_instances_with_public_network_interfaces
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
   })
 }
@@ -145,7 +145,7 @@ detection "audit_logs_detect_public_ip_address_creation" {
   query           = query.audit_logs_detect_public_ip_address_creation
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
   })
 }
@@ -157,7 +157,7 @@ detection "audit_logs_detect_vpc_network_shared_to_external_project" {
   query           = query.audit_logs_detect_vpc_network_shared_to_external_project
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0005:T1548"
   })
 }
@@ -169,7 +169,7 @@ detection "audit_logs_detect_compute_disk_size_small" {
   query           = query.audit_logs_detect_compute_disk_size_small
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -181,7 +181,7 @@ detection "audit_logs_detect_disable_compute_vpc_flow_logs" {
   query           = query.audit_logs_detect_disable_compute_vpc_flow_logs
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -193,7 +193,7 @@ detection "audit_log_detect_compute_instances_with_metadata_startup_script_modif
   query           = query.audit_log_detect_compute_instances_with_metadata_startup_script_modifications
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0040:T1491"
   })
 }

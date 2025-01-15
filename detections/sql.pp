@@ -1,5 +1,5 @@
 locals {
-  audit_log_sql_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  sql_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/SQL"
   })
   audit_logs_detect_cloudsql_ssl_certificate_deletions_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -17,7 +17,7 @@ benchmark "audit_logs_sql_detections" {
     detection.audit_logs_detect_cloudsql_user_deletions,
   ]
 
-  tags = merge(local.audit_log_sql_detection_common_tags, {
+  tags = merge(local.sql_common_tags, {
     type = "Benchmark"
   })
 }
@@ -29,7 +29,7 @@ detection "audit_logs_detect_cloudsql_ssl_certificate_deletions" {
   query           = query.audit_logs_detect_cloudsql_ssl_certificate_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.sql_common_tags, {
     mitre_attack_ids = "TA0003:T1098"
   })
 }
@@ -41,7 +41,7 @@ detection "audit_logs_detect_cloudsql_login_failures" {
   query           = query.audit_logs_detect_cloudsql_login_failures
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.sql_common_tags, {
     mitre_attack_ids = "TA0006:T1110"
   })
 }
@@ -53,7 +53,7 @@ detection "audit_logs_detect_cloudsql_user_deletions" {
   query           = query.audit_logs_detect_cloudsql_user_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.sql_common_tags, {
     mitre_attack_ids = "TA0003:T1098"
   })
 }

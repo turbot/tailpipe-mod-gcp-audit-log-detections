@@ -1,5 +1,5 @@
 locals {
-  audit_log_apigateway_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  apigateway_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/APIGateway"
   })
 
@@ -14,7 +14,7 @@ benchmark "audit_logs_apigateway_detections" {
     detection.audit_logs_detect_apigateway_configured_to_execute_backend_commands
   ]
 
-  tags = merge(local.audit_log_apigateway_detection_common_tags, {
+  tags = merge(local.apigateway_common_tags, {
     type = "Benchmark"
   })
 }
@@ -26,7 +26,7 @@ detection "audit_logs_detect_apigateway_configured_to_execute_backend_commands" 
   query           = query.audit_logs_detect_apigateway_configured_to_execute_backend_commands
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.apigateway_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
   })
 }

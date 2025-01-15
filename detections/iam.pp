@@ -1,5 +1,5 @@
 locals {
-  audit_log_iam_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  iam_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/IAM"
   })
 
@@ -52,7 +52,7 @@ benchmark "audit_logs_iam_detections" {
     detection.audit_log_detect_iam_roles_permission_revocations,
   ]
 
-  tags = merge(local.audit_log_iam_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     type = "Benchmark"
   })
 }
@@ -64,7 +64,7 @@ detection "audit_logs_detect_service_account_creation" {
   query           = query.audit_logs_detect_service_account_creation
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0006:T1078,TA0003:T1136"
   })
 }
@@ -76,7 +76,7 @@ detection "audit_logs_detect_service_account_deletions" {
   query           = query.audit_logs_detect_service_account_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
   })
 }
@@ -88,7 +88,7 @@ detection "audit_logs_detect_disabled_service_account" {
   query           = query.audit_logs_detect_disabled_service_account
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
   })
 }
@@ -100,7 +100,7 @@ detection "audit_logs_detect_service_account_key_creation" {
   severity        = "medium"
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0003:T1098,TA0003:T1136"
   })
 }
@@ -112,7 +112,7 @@ detection "audit_logs_detect_workload_identity_pool_provider_creation" {
   query           = query.audit_logs_detect_workload_identity_pool_provider_creation
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
   })
 }
@@ -124,7 +124,7 @@ detection "audit_logs_detect_iam_roles_granting_access_to_all_authenticated_user
   query           = query.audit_logs_detect_iam_roles_granting_access_to_all_authenticated_users
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0003:T1098,TA0005:T1548"
   })
 }
@@ -136,7 +136,7 @@ detection "audit_logs_detect_iam_service_account_token_creator_role" {
   query           = query.audit_logs_detect_iam_service_account_token_creator_role
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1199,TA0003:T1136,TA0005:T1548"
   })
 }
@@ -148,7 +148,7 @@ detection "audit_logs_detect_organization_iam_policy_change" {
   query           = query.audit_logs_detect_organization_iam_policy_change
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1199"
   })
 }
@@ -160,7 +160,7 @@ detection "audit_logs_detect_iam_workforce_pool_update" {
   query           = query.audit_logs_detect_iam_workforce_pool_update
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0003:T1098"
   })
 }
@@ -172,7 +172,7 @@ detection "audit_logs_detect_iam_federated_identity_provider_creation" {
   query           = query.audit_logs_detect_iam_federated_identity_provider_creation
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
   })
 }
@@ -184,7 +184,7 @@ detection "audit_logs_detect_iam_policy_granting_apigateway_admin_role" {
   query           = query.audit_logs_detect_iam_policy_granting_apigateway_admin_role
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
   })
 }
@@ -196,7 +196,7 @@ detection "audit_logs_detect_high_privilege_iam_roles" {
   query           = query.audit_logs_detect_high_privilege_iam_roles
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0005:T1548"
   })
 }
@@ -208,7 +208,7 @@ detection "audit_logs_detect_iam_federated_identity_provider_updation" {
   query           = query.audit_logs_detect_iam_federated_identity_provider_updation
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
   })
 }
@@ -220,7 +220,7 @@ detection "audit_logs_detect_iam_policy_removing_logging_admin_role" {
   query           = query.audit_logs_detect_iam_policy_removing_logging_admin_role
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -232,7 +232,7 @@ detection "audit_logs_detect_iam_service_account_access_token_generations" {
   query           = query.audit_logs_detect_iam_service_account_access_token_generations
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0005:T1548"
   })
 }
@@ -244,7 +244,7 @@ detection "audit_logs_detect_failed_iam_service_account_access_token_generations
   query           = query.audit_logs_detect_failed_iam_service_account_access_token_generations
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0006:T1110"
   })
 }
@@ -256,7 +256,7 @@ detection "audit_logs_detect_single_account_login_failures" {
   query           = query.audit_logs_detect_single_account_login_failures
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0006:T1110"
   })
 }
@@ -268,7 +268,7 @@ detection "audit_logs_detect_service_account_signblob_failures" {
   query           = query.audit_logs_detect_service_account_signblob_failures
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0006:T1552"
   })
 }
@@ -280,7 +280,7 @@ detection "audit_log_detect_service_account_key_deletions" {
   severity        = "medium"
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
   })
 }
@@ -292,7 +292,7 @@ detection "audit_log_detect_iam_roles_permission_revocations" {
   query           = query.audit_log_detect_iam_roles_permission_revocations
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
   })
 }

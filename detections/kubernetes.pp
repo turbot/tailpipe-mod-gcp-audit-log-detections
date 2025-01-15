@@ -1,5 +1,5 @@
 locals {
-  audit_log_kubernetes_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  kubernetes_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Kubernetes"
   })
 
@@ -30,7 +30,7 @@ benchmark "audit_logs_kubernetes_detections" {
     detection.audit_logs_detect_cloud_scheduler_run_job,
   ]
 
-  tags = merge(local.audit_log_kubernetes_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     type = "Benchmark"
   })
 }
@@ -42,7 +42,7 @@ detection "audit_logs_detect_kubernetes_secrets_deletions" {
   query           = query.audit_logs_detect_kubernetes_secrets_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -54,7 +54,7 @@ detection "audit_logs_detect_kubernetes_cronjob_deletions" {
   query           = query.audit_logs_detect_kubernetes_cronjob_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -66,7 +66,7 @@ detection "audit_logs_detect_kubernetes_cronjob_modifications" {
   query           = query.audit_logs_detect_kubernetes_cronjob_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -78,7 +78,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_creations" {
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_creations
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -90,7 +90,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_replaced" {
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_replaced
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -102,7 +102,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_modifications" 
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }
@@ -114,7 +114,7 @@ detection "audit_logs_detect_kubernetes_cluster_with_public_endpoint" {
   query           = query.audit_logs_detect_kubernetes_cluster_with_public_endpoint
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0001:T119"
   })
 }
@@ -126,7 +126,7 @@ detection "audit_logs_detect_cloud_scheduler_run_job" {
   query           = query.audit_logs_detect_cloud_scheduler_run_job
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
   })
 }
@@ -138,7 +138,7 @@ detection "audit_logs_detect_container_executed" {
   query           = query.audit_logs_detect_container_executed
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
   })
 }

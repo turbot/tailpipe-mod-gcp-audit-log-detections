@@ -1,5 +1,5 @@
 locals {
-  audit_log_appengine_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  appengine_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/AppEngine"
   })
 
@@ -20,7 +20,7 @@ benchmark "audit_logs_appengine_detections" {
     detection.audit_logs_detect_appengine_admin_api_execution_enabled,
   ]
 
-  tags = merge(local.audit_log_appengine_detection_common_tags, {
+  tags = merge(local.appengine_common_tags, {
     type = "Benchmark"
   })
 }
@@ -32,7 +32,7 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_creations" {
   query           = query.audit_logs_detect_appengine_ingress_firewall_rule_creations
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_log_appengine_detection_common_tags, {
+  tags = merge(local.appengine_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -44,7 +44,7 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_modifications" {
   query           = query.audit_logs_detect_appengine_ingress_firewall_rule_modifications
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_log_appengine_detection_common_tags, {
+  tags = merge(local.appengine_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -56,7 +56,7 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_deletions" {
   query           = query.audit_logs_detect_appengine_ingress_firewall_rule_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_log_appengine_detection_common_tags, {
+  tags = merge(local.appengine_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -68,7 +68,7 @@ detection "audit_logs_detect_appengine_admin_api_execution_enabled" {
   query           = query.audit_logs_detect_appengine_admin_api_execution_enabled
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_log_appengine_detection_common_tags, {
+  tags = merge(local.appengine_common_tags, {
     mitre_attack_ids = "TA0002:T1648"
   })
 }

@@ -1,5 +1,5 @@
 locals {
-  audit_log_dlp_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  dlp_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/DLP"
   })
 
@@ -26,7 +26,7 @@ detection "audit_logs_detect_dlp_reidentify_content" {
   query           = query.audit_logs_detect_dlp_reidentify_content
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.dlp_common_tags, {
     mitre_attack_ids = "TA0009:T1119"
   })
 }

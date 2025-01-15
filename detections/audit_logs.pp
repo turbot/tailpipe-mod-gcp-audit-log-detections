@@ -1,10 +1,3 @@
-locals {
-  audit_logs_detection_common_tags = merge(local.gcp_detections_common_tags, {
-    service = "GCP/AuditLogs"
-  })
-
-}
-
 benchmark "audit_log_detections" {
   title       = "Audit Log Detections"
   description = "This detection benchmark contains recommendations when scanning Audit logs."
@@ -29,7 +22,7 @@ benchmark "audit_log_detections" {
     benchmark.audit_logs_storage_detections,
   ]
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.gcp_audit_log_detections_common_tags, {
     type = "Benchmark"
   })
 }

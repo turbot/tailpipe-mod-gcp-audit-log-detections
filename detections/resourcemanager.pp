@@ -1,5 +1,5 @@
 locals {
-  audit_log_resourcemanager_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  resourcemanager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ResourceManager"
   })
   audit_logs_detect_project_level_iam_policy_change_sql_columns       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -25,7 +25,7 @@ benchmark "audit_logs_resourcemanager_detections" {
     detection.audit_logs_detect_org_policy_revoked,
   ]
 
-  tags = merge(local.audit_log_resourcemanager_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     type = "Benchmark"
   })
 }
@@ -37,7 +37,7 @@ detection "audit_logs_detect_project_level_iam_policy_change" {
   query           = query.audit_logs_detect_project_level_iam_policy_change
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -49,7 +49,7 @@ detection "audit_logs_detect_login_without_mfa" {
   query           = query.audit_logs_detect_login_without_mfa
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
   })
 }
@@ -61,7 +61,7 @@ detection "audit_logs_detect_access_shared_resources" {
   query           = query.audit_logs_detect_access_shared_resources
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
   })
 }
@@ -73,7 +73,7 @@ detection "audit_logs_detect_iam_policy_revoked" {
   query           = query.audit_logs_detect_iam_policy_revoked
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
   })
 }
@@ -85,7 +85,7 @@ detection "audit_logs_detect_iam_policy_to_enable_script_execution" {
   query           = query.audit_logs_detect_iam_policy_to_enable_script_execution
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0002:T1059"
   })
 }
@@ -97,7 +97,7 @@ detection "audit_logs_detect_iam_policy_granting_owner_role" {
   query           = query.audit_logs_detect_iam_policy_granting_owner_role
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
   })
 }
@@ -109,7 +109,7 @@ detection "audit_logs_detect_org_policy_revoked" {
   query           = query.audit_logs_detect_org_policy_revoked
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }

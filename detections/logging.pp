@@ -1,5 +1,5 @@
 locals {
-  audit_log_logging_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  logging_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Logging"
   })
   audit_logs_detect_unauthorized_access_attempts_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -17,7 +17,7 @@ benchmark "audit_logs_logging_detections" {
     detection.audit_logs_detect_logging_bucket_deletions,
   ]
 
-  tags = merge(local.audit_log_logging_detection_common_tags, {
+  tags = merge(local.logging_common_tags, {
     type = "Benchmark"
   })
 }
@@ -29,7 +29,7 @@ detection "audit_logs_detect_unauthorized_access_attempts" {
   query           = query.audit_logs_detect_unauthorized_access_attempts
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.logging_common_tags, {
     mitre_attack_ids = "TA0006:T1078"
   })
 }
@@ -41,7 +41,7 @@ detection "audit_logs_detect_log_sink_deletion_updates" {
   query           = query.audit_logs_detect_log_sink_deletion_updates
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.logging_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
 }
@@ -53,7 +53,7 @@ detection "audit_logs_detect_logging_bucket_deletions" {
   query           = query.audit_logs_detect_logging_bucket_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.logging_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
 }

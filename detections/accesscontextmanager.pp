@@ -1,5 +1,5 @@
 locals {
-  audit_log_access_context_manager_detection_common_tags = merge(local.audit_logs_detection_common_tags, {
+  access_context_manager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/AccessContextManager"
   })
 
@@ -18,7 +18,7 @@ benchmark "audit_logs_access_context_manager_detections" {
     detection.audit_logs_detect_access_level_deletions,
   ]
 
-  tags = merge(local.audit_log_access_context_manager_detection_common_tags, {
+  tags = merge(local.access_context_manager_common_tags, {
     type = "Benchmark"
   })
 }
@@ -30,7 +30,7 @@ detection "audit_logs_detect_access_policy_deletions" {
   query           = query.audit_logs_detect_access_policy_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.access_context_manager_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
@@ -42,7 +42,7 @@ detection "audit_logs_detect_access_zone_deletions" {
   query           = query.audit_logs_detect_access_zone_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.access_context_manager_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
@@ -54,7 +54,7 @@ detection "audit_logs_detect_access_level_deletions" {
   query           = query.audit_logs_detect_access_level_deletions
   display_columns = local.audit_logs_detection_display_columns
 
-  tags = merge(local.audit_logs_detection_common_tags, {
+  tags = merge(local.access_context_manager_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
   })
 }
