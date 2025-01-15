@@ -2,27 +2,27 @@ locals {
   resourcemanager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ResourceManager"
   })
-  audit_logs_detect_project_level_iam_policy_change_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_login_without_mfa_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_access_shared_resources_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_iam_policy_revoked_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_iam_policy_to_enable_script_execution_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_iam_policy_granting_owner_role_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_org_policy_revoked_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_project_level_iam_policy_change_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_login_without_mfa_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_access_shared_resources_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_policy_revoked_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_policy_to_enable_script_execution_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_policy_granting_owner_role_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_org_policy_revoked_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_resourcemanager_detections" {
+benchmark "resourcemanager_detections" {
   title       = "Resource Manager Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Resource Manager events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_project_level_iam_policy_change,
-    detection.audit_logs_detect_login_without_mfa,
-    detection.audit_logs_detect_access_shared_resources,
-    detection.audit_logs_detect_iam_policy_revoked,
-    detection.audit_logs_detect_iam_policy_to_enable_script_execution,
-    detection.audit_logs_detect_iam_policy_granting_owner_role,
-    detection.audit_logs_detect_org_policy_revoked,
+    detection.detect_project_level_iam_policy_change,
+    detection.detect_login_without_mfa,
+    detection.detect_access_shared_resources,
+    detection.detect_iam_policy_revoked,
+    detection.detect_iam_policy_to_enable_script_execution,
+    detection.detect_iam_policy_granting_owner_role,
+    detection.detect_org_policy_revoked,
   ]
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -30,11 +30,11 @@ benchmark "audit_logs_resourcemanager_detections" {
   })
 }
 
-detection "audit_logs_detect_project_level_iam_policy_change" {
+detection "detect_project_level_iam_policy_change" {
   title           = "Detect IAM Policies Set at Project Level"
   description     = "Detect changes to IAM policies at the project level, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
-  query           = query.audit_logs_detect_project_level_iam_policy_change
+  query           = query.detect_project_level_iam_policy_change
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -42,11 +42,11 @@ detection "audit_logs_detect_project_level_iam_policy_change" {
   })
 }
 
-detection "audit_logs_detect_login_without_mfa" {
+detection "detect_login_without_mfa" {
   title           = "Detect Logins Without MFA"
   description     = "Detect logins without MFA, ensuring visibility into access attempts that might indicate unauthorized activities or weak authentication practices."
   severity        = "medium"
-  query           = query.audit_logs_detect_login_without_mfa
+  query           = query.detect_login_without_mfa
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -54,11 +54,11 @@ detection "audit_logs_detect_login_without_mfa" {
   })
 }
 
-detection "audit_logs_detect_access_shared_resources" {
+detection "detect_access_shared_resources" {
   title           = "Detect Access to Shared Resources"
   description     = "Detect access to shared resources that might indicate unauthorized access attempts or potential misuse of resource sharing configurations."
   severity        = "medium"
-  query           = query.audit_logs_detect_access_shared_resources
+  query           = query.detect_access_shared_resources
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -66,11 +66,11 @@ detection "audit_logs_detect_access_shared_resources" {
   })
 }
 
-detection "audit_logs_detect_iam_policy_revoked" {
+detection "detect_iam_policy_revoked" {
   title           = "Detect IAM Policies Revoked"
   description     = "Detect IAM policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
   severity        = "medium"
-  query           = query.audit_logs_detect_iam_policy_revoked
+  query           = query.detect_iam_policy_revoked
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -78,11 +78,11 @@ detection "audit_logs_detect_iam_policy_revoked" {
   })
 }
 
-detection "audit_logs_detect_iam_policy_to_enable_script_execution" {
+detection "detect_iam_policy_to_enable_script_execution" {
   title           = "Detect IAM Policies to Enable Script Execution"
   description     = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
-  query           = query.audit_logs_detect_iam_policy_to_enable_script_execution
+  query           = query.detect_iam_policy_to_enable_script_execution
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -90,11 +90,11 @@ detection "audit_logs_detect_iam_policy_to_enable_script_execution" {
   })
 }
 
-detection "audit_logs_detect_iam_policy_granting_owner_role" {
+detection "detect_iam_policy_granting_owner_role" {
   title           = "Detect IAM Policies Granting Owner Role"
   description     = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
-  query           = query.audit_logs_detect_iam_policy_granting_owner_role
+  query           = query.detect_iam_policy_granting_owner_role
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -102,11 +102,11 @@ detection "audit_logs_detect_iam_policy_granting_owner_role" {
   })
 }
 
-detection "audit_logs_detect_org_policy_revoked" {
+detection "detect_org_policy_revoked" {
   title           = "Detect Org Policies Revoked"
   description     = "Detect org policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
   severity        = "medium"
-  query           = query.audit_logs_detect_org_policy_revoked
+  query           = query.detect_org_policy_revoked
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -114,10 +114,10 @@ detection "audit_logs_detect_org_policy_revoked" {
   })
 }
 
-query "audit_logs_detect_project_level_iam_policy_change" {
+query "detect_project_level_iam_policy_change" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_project_level_iam_policy_change_sql_columns}
+      ${local.detect_project_level_iam_policy_change_sql_columns}
     from
       gcp_audit_log
     where
@@ -129,10 +129,10 @@ query "audit_logs_detect_project_level_iam_policy_change" {
   EOQ
 }
 
-query "audit_logs_detect_login_without_mfa" {
+query "detect_login_without_mfa" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_login_without_mfa_sql_columns}
+      ${local.detect_login_without_mfa_sql_columns}
     from
       gcp_audit_log
     where
@@ -145,10 +145,10 @@ query "audit_logs_detect_login_without_mfa" {
   EOQ
 }
 
-query "audit_logs_detect_access_shared_resources" {
+query "detect_access_shared_resources" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_access_shared_resources_sql_columns}
+      ${local.detect_access_shared_resources_sql_columns}
     from
       gcp_audit_log
     where
@@ -160,10 +160,10 @@ query "audit_logs_detect_access_shared_resources" {
   EOQ
 }
 // TO DO: need to test
-query "audit_logs_detect_iam_policy_revoked" {
+query "detect_iam_policy_revoked" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_iam_policy_revoked_sql_columns}
+      ${local.detect_iam_policy_revoked_sql_columns}
     from
       gcp_audit_log
     where
@@ -176,10 +176,10 @@ query "audit_logs_detect_iam_policy_revoked" {
   EOQ
 }
 
-query "audit_logs_detect_iam_policy_to_enable_script_execution" {
+query "detect_iam_policy_to_enable_script_execution" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_iam_policy_to_enable_script_execution_sql_columns}
+      ${local.detect_iam_policy_to_enable_script_execution_sql_columns}
     from
       gcp_audit_log
     where
@@ -196,10 +196,10 @@ query "audit_logs_detect_iam_policy_to_enable_script_execution" {
   EOQ
 }
 
-query "audit_logs_detect_iam_policy_granting_owner_role" {
+query "detect_iam_policy_granting_owner_role" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_iam_policy_granting_owner_role_sql_columns}
+      ${local.detect_iam_policy_granting_owner_role_sql_columns}
     from
       gcp_audit_log
     where
@@ -216,10 +216,10 @@ query "audit_logs_detect_iam_policy_granting_owner_role" {
   EOQ
 }
 
-query "audit_logs_detect_org_policy_revoked" {
+query "detect_org_policy_revoked" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_org_policy_revoked_sql_columns}
+      ${local.detect_org_policy_revoked_sql_columns}
     from
       gcp_audit_log
     where

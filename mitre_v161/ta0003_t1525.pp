@@ -9,8 +9,8 @@ benchmark "mitre_v161_ta0003_t1525" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0003_t1525.md")
   children = [
-    detection.audit_logs_detect_artifact_registry_overwritten,
-    detection.audit_logs_detect_artifact_registry_publicly_accessible,
+    detection.detect_artifact_registry_overwritten,
+    detection.detect_artifact_registry_publicly_accessible,
   ]
 
   tags = local.mitre_v161_ta0003_t1525_common_tags

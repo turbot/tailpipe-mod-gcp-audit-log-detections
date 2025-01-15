@@ -3,21 +3,21 @@ locals {
     service = "GCP/AppEngine"
   })
 
-  audit_logs_detect_appengine_admin_api_execution_enabled_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_appengine_ingress_firewall_rule_deletions_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_appengine_ingress_firewall_rule_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_appengine_ingress_firewall_rule_creations_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_appengine_admin_api_execution_enabled_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_appengine_ingress_firewall_rule_deletions_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_appengine_ingress_firewall_rule_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_appengine_ingress_firewall_rule_creations_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_appengine_detections" {
+benchmark "appengine_detections" {
   title       = "App Engine Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for App Engine events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_appengine_ingress_firewall_rule_creations,
-    detection.audit_logs_detect_appengine_ingress_firewall_rule_modifications,
-    detection.audit_logs_detect_appengine_ingress_firewall_rule_deletions,
-    detection.audit_logs_detect_appengine_admin_api_execution_enabled,
+    detection.detect_appengine_ingress_firewall_rule_creations,
+    detection.detect_appengine_ingress_firewall_rule_modifications,
+    detection.detect_appengine_ingress_firewall_rule_deletions,
+    detection.detect_appengine_admin_api_execution_enabled,
   ]
 
   tags = merge(local.appengine_common_tags, {
@@ -25,11 +25,11 @@ benchmark "audit_logs_appengine_detections" {
   })
 }
 
-detection "audit_logs_detect_appengine_ingress_firewall_rule_creations" {
+detection "detect_appengine_ingress_firewall_rule_creations" {
   title           = "Detect App Engine Ingress Firewall Rule Creations"
   description     = "Detect creations to App Engine ingress firewall rules that may expose resources to threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_appengine_ingress_firewall_rule_creations
+  query           = query.detect_appengine_ingress_firewall_rule_creations
   display_columns = local.detection_display_columns
 
   tags = merge(local.appengine_common_tags, {
@@ -37,11 +37,11 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_creations" {
   })
 }
 
-detection "audit_logs_detect_appengine_ingress_firewall_rule_modifications" {
+detection "detect_appengine_ingress_firewall_rule_modifications" {
   title           = "Detect App Engine Ingress Firewall Rule Modifications"
   description     = "Detect modifications to App Engine ingress firewall rules that may expose resources to threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_appengine_ingress_firewall_rule_modifications
+  query           = query.detect_appengine_ingress_firewall_rule_modifications
   display_columns = local.detection_display_columns
 
   tags = merge(local.appengine_common_tags, {
@@ -49,11 +49,11 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_modifications" {
   })
 }
 
-detection "audit_logs_detect_appengine_ingress_firewall_rule_deletions" {
+detection "detect_appengine_ingress_firewall_rule_deletions" {
   title           = "Detect App Engine Ingress Firewall Rule Deletions"
   description     = "Detect deletions to App Engine ingress firewall rules that may expose resources to threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_appengine_ingress_firewall_rule_deletions
+  query           = query.detect_appengine_ingress_firewall_rule_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.appengine_common_tags, {
@@ -61,11 +61,11 @@ detection "audit_logs_detect_appengine_ingress_firewall_rule_deletions" {
   })
 }
 
-detection "audit_logs_detect_appengine_admin_api_execution_enabled" {
+detection "detect_appengine_admin_api_execution_enabled" {
   title           = "Detect App Engine Admin API Executions Enabled"
   description     = "Detect when App Engine admin APIs are enabled, ensuring visibility into administrative configurations and monitoring for potential unauthorized changes."
   severity        = "medium"
-  query           = query.audit_logs_detect_appengine_admin_api_execution_enabled
+  query           = query.detect_appengine_admin_api_execution_enabled
   display_columns = local.detection_display_columns
 
   tags = merge(local.appengine_common_tags, {
@@ -73,10 +73,10 @@ detection "audit_logs_detect_appengine_admin_api_execution_enabled" {
   })
 }
 
-query "audit_logs_detect_appengine_ingress_firewall_rule_creations" {
+query "detect_appengine_ingress_firewall_rule_creations" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_appengine_ingress_firewall_rule_creations_sql_columns}
+      ${local.detect_appengine_ingress_firewall_rule_creations_sql_columns}
     from
       gcp_audit_log
     where
@@ -88,10 +88,10 @@ query "audit_logs_detect_appengine_ingress_firewall_rule_creations" {
   EOQ
 }
 
-query "audit_logs_detect_appengine_ingress_firewall_rule_modifications" {
+query "detect_appengine_ingress_firewall_rule_modifications" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_appengine_ingress_firewall_rule_modifications_sql_columns}
+      ${local.detect_appengine_ingress_firewall_rule_modifications_sql_columns}
     from
       gcp_audit_log
     where
@@ -103,10 +103,10 @@ query "audit_logs_detect_appengine_ingress_firewall_rule_modifications" {
   EOQ
 }
 
-query "audit_logs_detect_appengine_ingress_firewall_rule_deletions" {
+query "detect_appengine_ingress_firewall_rule_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_appengine_ingress_firewall_rule_deletions_sql_columns}
+      ${local.detect_appengine_ingress_firewall_rule_deletions_sql_columns}
     from
       gcp_audit_log
     where
@@ -118,10 +118,10 @@ query "audit_logs_detect_appengine_ingress_firewall_rule_deletions" {
   EOQ
 }
 // testing needed
-query "audit_logs_detect_appengine_admin_api_execution_enabled" {
+query "detect_appengine_admin_api_execution_enabled" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_appengine_admin_api_execution_enabled_sql_columns}
+      ${local.detect_appengine_admin_api_execution_enabled_sql_columns}
     from
       gcp_audit_log
     where

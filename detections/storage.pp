@@ -3,17 +3,17 @@ locals {
     service = "GCP/Storage"
   })
 
-  audit_logs_detect_storage_set_iam_policy_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_storage_bucket_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_storage_set_iam_policy_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_storage_bucket_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_storage_detections" {
+benchmark "storage_detections" {
   title       = "Storage Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Storage events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_storage_set_iam_policy,
-    detection.audit_logs_detect_storage_bucket_publicly_accessible,
+    detection.detect_storage_set_iam_policy,
+    detection.detect_storage_bucket_publicly_accessible,
   ]
 
   tags = merge(local.storage_common_tags, {
@@ -21,11 +21,11 @@ benchmark "audit_logs_storage_detections" {
   })
 }
 
-detection "audit_logs_detect_storage_set_iam_policy" {
+detection "detect_storage_set_iam_policy" {
   title           = "Detect Storage Set IAM Policies"
   description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
-  query           = query.audit_logs_detect_storage_set_iam_policy
+  query           = query.detect_storage_set_iam_policy
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -33,11 +33,11 @@ detection "audit_logs_detect_storage_set_iam_policy" {
   })
 }
 
-detection "audit_logs_detect_storage_bucket_publicly_accessible" {
+detection "detect_storage_bucket_publicly_accessible" {
   title           = "Detect Publicly Accessible Storage Buckets"
   description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
   severity        = "high"
-  query           = query.audit_logs_detect_storage_bucket_publicly_accessible
+  query           = query.detect_storage_bucket_publicly_accessible
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -45,10 +45,10 @@ detection "audit_logs_detect_storage_bucket_publicly_accessible" {
   })
 }
 
-query "audit_logs_detect_storage_set_iam_policy" {
+query "detect_storage_set_iam_policy" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_storage_set_iam_policy_sql_columns}
+      ${local.detect_storage_set_iam_policy_sql_columns}
     from
       gcp_audit_log
     where
@@ -60,10 +60,10 @@ query "audit_logs_detect_storage_set_iam_policy" {
   EOQ
 }
 
-query "audit_logs_detect_storage_bucket_publicly_accessible" {
+query "detect_storage_bucket_publicly_accessible" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_storage_bucket_publicly_accessible_sql_columns}
+      ${local.detect_storage_bucket_publicly_accessible_sql_columns}
     from 
       gcp_audit_log
     where

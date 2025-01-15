@@ -9,9 +9,9 @@ benchmark "mitre_v161_ta0040_t1531" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0040_t1531.md")
   children = [
-    detection.audit_log_detect_cloudfunctions_function_code_modifications,
-    detection.audit_log_detect_service_account_key_deletions,
-    detection.audit_log_detect_iam_roles_permission_revocations
+    detection.detect_cloudfunctions_function_code_modifications,
+    detection.detect_service_account_key_deletions,
+    detection.detect_iam_roles_permission_revocations
   ]
 
   tags = local.mitre_v161_ta0006_t1110_common_tags

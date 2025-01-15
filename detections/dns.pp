@@ -3,20 +3,20 @@ locals {
     service = "GCP/DNS"
   })
 
-  audit_logs_detect_dns_zone_deletions_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_dns_zone_modifications_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_dns_record_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_dns_zone_deletions_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_dns_zone_modifications_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_dns_record_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_dns_detections" {
+benchmark "dns_detections" {
   title       = "DNS Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DNS events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_dns_zone_deletions,
-    detection.audit_logs_detect_dns_zone_modifications,
-    detection.audit_logs_detect_dns_record_modifications,
-    detection.audit_logs_detect_dns_record_deletions
+    detection.detect_dns_zone_deletions,
+    detection.detect_dns_zone_modifications,
+    detection.detect_dns_record_modifications,
+    detection.detect_dns_record_deletions
   ]
 
   tags = merge(local.dns_common_tags, {
@@ -24,11 +24,11 @@ benchmark "audit_logs_dns_detections" {
   })
 }
 
-detection "audit_logs_detect_dns_zone_deletions" {
+detection "detect_dns_zone_deletions" {
   title           = "Detect DNS Zone Deletions"
   description     = "Detect deletions of DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_dns_zone_deletions
+  query           = query.detect_dns_zone_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -36,11 +36,11 @@ detection "audit_logs_detect_dns_zone_deletions" {
   })
 }
 
-detection "audit_logs_detect_dns_zone_modifications" {
+detection "detect_dns_zone_modifications" {
   title           = "Detect DNS Zone Modifications"
   description     = "Detect modifications to DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_dns_zone_modifications
+  query           = query.detect_dns_zone_modifications
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -48,11 +48,11 @@ detection "audit_logs_detect_dns_zone_modifications" {
   })
 }
 
-detection "audit_logs_detect_dns_record_modifications" {
+detection "detect_dns_record_modifications" {
   title           = "Detect DNS Record Modifications"
   description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_dns_record_modifications
+  query           = query.detect_dns_record_modifications
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -60,11 +60,11 @@ detection "audit_logs_detect_dns_record_modifications" {
   })
 }
 
-detection "audit_logs_detect_dns_record_deletions" {
+detection "detect_dns_record_deletions" {
   title           = "Detect DNS Record Deletions"
   description     = "Detect deletions of DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_dns_record_deletions
+  query           = query.detect_dns_record_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -72,10 +72,10 @@ detection "audit_logs_detect_dns_record_deletions" {
   })
 }
 
-query "audit_logs_detect_dns_zone_deletions" {
+query "detect_dns_zone_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_dns_zone_deletions_sql_columns}
+      ${local.detect_dns_zone_deletions_sql_columns}
     from
       gcp_audit_log
     where
@@ -87,10 +87,10 @@ query "audit_logs_detect_dns_zone_deletions" {
   EOQ
 }
 
-query "audit_logs_detect_dns_zone_modifications" {
+query "detect_dns_zone_modifications" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_dns_zone_modifications_sql_columns}
+      ${local.detect_dns_zone_modifications_sql_columns}
     from
       gcp_audit_log
     where
@@ -102,10 +102,10 @@ query "audit_logs_detect_dns_zone_modifications" {
   EOQ
 }
 
-query "audit_logs_detect_dns_record_modifications" {
+query "detect_dns_record_modifications" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_dns_record_modifications_sql_columns}
+      ${local.detect_dns_record_modifications_sql_columns}
     from
       gcp_audit_log
     where
@@ -117,10 +117,10 @@ query "audit_logs_detect_dns_record_modifications" {
   EOQ
 }
 
-query "audit_logs_detect_dns_record_deletions" {
+query "detect_dns_record_deletions" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_dns_record_modifications_sql_columns}
+      ${local.detect_dns_record_modifications_sql_columns}
     from
       gcp_audit_log
     where

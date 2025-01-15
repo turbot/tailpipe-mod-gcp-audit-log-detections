@@ -3,15 +3,15 @@ locals {
     service = "GCP/DLP"
   })
 
-  audit_logs_detect_dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_dlp_detections" {
+benchmark "dlp_detections" {
   title       = "DLP Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DLP events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_dlp_reidentify_content,
+    detection.detect_dlp_reidentify_content,
   ]
 
   tags = merge(local.audit_log_dlp_detection_common_tags, {
@@ -19,11 +19,11 @@ benchmark "audit_logs_dlp_detections" {
   })
 }
 
-detection "audit_logs_detect_dlp_reidentify_content" {
+detection "detect_dlp_reidentify_content" {
   title           = "Detect DLP Reidentify Contents"
   description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
   severity        = "medium"
-  query           = query.audit_logs_detect_dlp_reidentify_content
+  query           = query.detect_dlp_reidentify_content
   display_columns = local.detection_display_columns
 
   tags = merge(local.dlp_common_tags, {
@@ -31,10 +31,10 @@ detection "audit_logs_detect_dlp_reidentify_content" {
   })
 }
 
-query "audit_logs_detect_dlp_reidentify_content" {
+query "detect_dlp_reidentify_content" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_dlp_reidentify_content_sql_columns}
+      ${local.detect_dlp_reidentify_content_sql_columns}
     from
       gcp_audit_log
     where

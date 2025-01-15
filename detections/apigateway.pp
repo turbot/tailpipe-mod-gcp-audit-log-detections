@@ -3,15 +3,15 @@ locals {
     service = "GCP/APIGateway"
   })
 
-  audit_logs_detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_apigateway_detections" {
+benchmark "apigateway_detections" {
   title       = "API Gateway Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for API Gateway events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_apigateway_configured_to_execute_backend_commands
+    detection.detect_apigateway_configured_to_execute_backend_commands
   ]
 
   tags = merge(local.apigateway_common_tags, {
@@ -19,11 +19,11 @@ benchmark "audit_logs_apigateway_detections" {
   })
 }
 
-detection "audit_logs_detect_apigateway_configured_to_execute_backend_commands" {
+detection "detect_apigateway_configured_to_execute_backend_commands" {
   title           = "Detect API Gateway Configured to Execute Backend Commands"
   description     = "Detect log entries where an API Gateway is configured to execute backend commands."
   severity        = "medium"
-  query           = query.audit_logs_detect_apigateway_configured_to_execute_backend_commands
+  query           = query.detect_apigateway_configured_to_execute_backend_commands
   display_columns = local.detection_display_columns
 
   tags = merge(local.apigateway_common_tags, {
@@ -31,10 +31,10 @@ detection "audit_logs_detect_apigateway_configured_to_execute_backend_commands" 
   })
 }
 // testing needed
-query "audit_logs_detect_apigateway_configured_to_execute_backend_commands" {
+query "detect_apigateway_configured_to_execute_backend_commands" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_apigateway_configured_to_execute_backend_commands_sql_columns}
+      ${local.detect_apigateway_configured_to_execute_backend_commands_sql_columns}
     from
       gcp_audit_log
     where

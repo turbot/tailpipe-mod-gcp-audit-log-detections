@@ -20,7 +20,7 @@ benchmark "mitre_v161_ta0005_t1078_004" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0005_t1078_004.md")
   children = [
-    detection.audit_logs_security_command_center_calculate_container_threat_detection_settings,
-    detection.audit_logs_security_command_center_calculate_event_threat_detection_settings,
+    detection.security_command_center_calculate_container_threat_detection_settings,
+    detection.security_command_center_calculate_event_threat_detection_settings,
   ]
 }

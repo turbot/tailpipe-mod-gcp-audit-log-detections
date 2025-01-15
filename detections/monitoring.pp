@@ -3,19 +3,19 @@ locals {
     service = "GCP/Monitoring"
   })
 
-  audit_logs_detect_unusual_resource_consumption_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_api_monitoring_disabled_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_api_monitoring_policy_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_unusual_resource_consumption_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_api_monitoring_disabled_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_api_monitoring_policy_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
-benchmark "audit_logs_monitoring_detections" {
+benchmark "monitoring_detections" {
   title       = "Monitoring Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Monitoring events."
   type        = "detection"
   children = [
-    detection.audit_logs_detect_unusual_resource_consumption,
-    detection.audit_logs_detect_api_monitoring_disabled,
-    detection.audit_logs_detect_api_monitoring_policy_deleted,
+    detection.detect_unusual_resource_consumption,
+    detection.detect_api_monitoring_disabled,
+    detection.detect_api_monitoring_policy_deleted,
   ]
 
   tags = merge(local.monitoring_common_tags, {
@@ -23,11 +23,11 @@ benchmark "audit_logs_monitoring_detections" {
   })
 }
 
-detection "audit_logs_detect_unusual_resource_consumption" {
+detection "detect_unusual_resource_consumption" {
   title           = "Detect Unusual Resource Consumption"
   description     = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
   severity        = "medium"
-  query           = query.audit_logs_detect_unusual_resource_consumption
+  query           = query.detect_unusual_resource_consumption
   display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
@@ -35,11 +35,11 @@ detection "audit_logs_detect_unusual_resource_consumption" {
   })
 }
 
-detection "audit_logs_detect_api_monitoring_disabled" {
+detection "detect_api_monitoring_disabled" {
   title           = "Detect API Monitoring Disabled"
   description     = "Detect when API monitoring is disabled, which might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_api_monitoring_disabled
+  query           = query.detect_api_monitoring_disabled
   display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
@@ -47,11 +47,11 @@ detection "audit_logs_detect_api_monitoring_disabled" {
   })
 }
 
-detection "audit_logs_detect_api_monitoring_policy_deleted" {
+detection "detect_api_monitoring_policy_deleted" {
   title           = "Detect API Monitoring Policy Deleted"
   description     = "Detect when an API monitoring policy is deleted, which might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.audit_logs_detect_api_monitoring_policy_deleted
+  query           = query.detect_api_monitoring_policy_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
@@ -59,10 +59,10 @@ detection "audit_logs_detect_api_monitoring_policy_deleted" {
   })
 }
 
-query "audit_logs_detect_unusual_resource_consumption" {
+query "detect_unusual_resource_consumption" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_unusual_resource_consumption_sql_columns}
+      ${local.detect_unusual_resource_consumption_sql_columns}
     from
       gcp_audit_log
     where
@@ -73,10 +73,10 @@ query "audit_logs_detect_unusual_resource_consumption" {
   EOQ
 }
 
-query "audit_logs_detect_api_monitoring_disabled" {
+query "detect_api_monitoring_disabled" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_api_monitoring_disabled_sql_columns}
+      ${local.detect_api_monitoring_disabled_sql_columns}
     from
       gcp_audit_log
     where
@@ -88,10 +88,10 @@ query "audit_logs_detect_api_monitoring_disabled" {
   EOQ
 }
 
-query "audit_logs_detect_api_monitoring_policy_deleted" {
+query "detect_api_monitoring_policy_deleted" {
   sql = <<-EOQ
     select
-      ${local.audit_logs_detect_api_monitoring_policy_deleted_sql_columns}
+      ${local.detect_api_monitoring_policy_deleted_sql_columns}
     from
       gcp_audit_log
     where

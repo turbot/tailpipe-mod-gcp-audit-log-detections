@@ -9,14 +9,14 @@ benchmark "mitre_v161_ta0001_t1078" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0001_t1078.md")
   children = [
-    detection.audit_logs_detect_access_shared_resources,
-    detection.audit_logs_detect_disabled_service_account,
-    detection.audit_logs_detect_iam_policy_revoked,
-    detection.audit_logs_detect_login_without_mfa,
-    detection.audit_logs_detect_service_account_deletions,
-    detection.audit_logs_detect_service_account_key_creation,
-    detection.audit_logs_detect_workload_identity_pool_provider_creation,
-    detection.audit_logs_detect_iam_service_account_access_token_generations,
+    detection.detect_access_shared_resources,
+    detection.detect_disabled_service_account,
+    detection.detect_iam_policy_revoked,
+    detection.detect_login_without_mfa,
+    detection.detect_service_account_deletions,
+    detection.detect_service_account_key_creation,
+    detection.detect_workload_identity_pool_provider_creation,
+    detection.detect_iam_service_account_access_token_generations,
   ]
 
   tags = local.mitre_v161_ta0001_t1078_common_tags
