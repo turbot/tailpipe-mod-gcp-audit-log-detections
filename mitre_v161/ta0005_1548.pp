@@ -1,13 +1,13 @@
 locals {
-  mitre_v151_ta0005_t1548_common_tags = merge(local.mitre_v151_ta0002_common_tags, {
+  mitre_v161_ta0005_t1548_common_tags = merge(local.mitre_v161_ta0002_common_tags, {
     mitre_technique_id = "T1548"
   })
 }
 
-benchmark "mitre_v151_ta0005_t1548" {
+benchmark "mitre_v161_ta0005_t1548" {
   title         = "T1548 Abuse Elevation Control Mechanism"
   type          = "detection"
-  documentation = file("./mitre_v151/docs/ta0005_t1548.md")
+  documentation = file("./mitre_v161/docs/ta0005_t1548.md")
   children = [
     detection.audit_logs_detect_high_privilege_iam_roles,
     detection.audit_logs_detect_iam_federated_identity_provider_updation,
@@ -17,5 +17,5 @@ benchmark "mitre_v151_ta0005_t1548" {
     detection.audit_logs_detect_iam_service_account_access_token_generations,
   ]
 
-  tags = local.mitre_v151_ta0005_t1548_common_tags
+  tags = local.mitre_v161_ta0005_t1548_common_tags
 }

@@ -280,7 +280,7 @@ detection "audit_log_detect_service_account_key_deletions" {
   severity        = "medium"
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_log_detection_common_tags, {
+  tags = merge(local.audit_logs_detection_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
   })
 }
@@ -292,7 +292,7 @@ detection "audit_log_detect_iam_roles_permission_revocations" {
   query           = query.audit_log_detect_iam_roles_permission_revocations
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_log_detection_common_tags, {
+  tags = merge(local.audit_logs_detection_common_tags, {
     mitre_attack_ids = "TA0040:T1531"
   })
 }

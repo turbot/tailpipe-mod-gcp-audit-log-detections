@@ -1,13 +1,13 @@
 locals {
-  mitre_v151_ta0005_t1562_common_tags = merge(local.mitre_v151_ta0002_common_tags, {
+  mitre_v161_ta0005_t1562_common_tags = merge(local.mitre_v161_ta0002_common_tags, {
     mitre_technique_id = "T1525"
   })
 }
 
-benchmark "mitre_v151_ta0005_t1562" {
+benchmark "mitre_v161_ta0005_t1562" {
   title         = "T1525 Impair Defenses"
   type          = "detection"
-  documentation = file("./mitre_v151/docs/ta0005_t1562.md")
+  documentation = file("./mitre_v161/docs/ta0005_t1562.md")
   children = [
     detection.audit_logs_detect_appengine_ingress_firewall_rule_creations,
     detection.audit_logs_detect_appengine_ingress_firewall_rule_deletions,
@@ -19,5 +19,5 @@ benchmark "mitre_v151_ta0005_t1562" {
     detection.audit_logs_detect_encrypted_container_image_pushed,
   ]
 
-  tags = local.mitre_v151_ta0005_t1562_common_tags
+  tags = local.mitre_v161_ta0005_t1562_common_tags
 }

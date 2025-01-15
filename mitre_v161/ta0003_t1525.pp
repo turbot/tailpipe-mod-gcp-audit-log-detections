@@ -1,17 +1,17 @@
 locals {
-  mitre_v151_ta0003_t1525_common_tags = merge(local.mitre_v151_ta0002_common_tags, {
+  mitre_v161_ta0003_t1525_common_tags = merge(local.mitre_v161_ta0002_common_tags, {
     mitre_technique_id = "T1525"
   })
 }
 
-benchmark "mitre_v151_ta0003_t1525" {
+benchmark "mitre_v161_ta0003_t1525" {
   title         = "T1525 Implant Internal Image"
   type          = "detection"
-  documentation = file("./mitre_v151/docs/ta0003_t1525.md")
+  documentation = file("./mitre_v161/docs/ta0003_t1525.md")
   children = [
     detection.audit_logs_detect_artifact_registry_overwritten,
     detection.audit_logs_detect_artifact_registry_publicly_accessible,
   ]
 
-  tags = local.mitre_v151_ta0003_t1525_common_tags
+  tags = local.mitre_v161_ta0003_t1525_common_tags
 }

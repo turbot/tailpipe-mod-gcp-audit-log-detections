@@ -193,7 +193,7 @@ detection "audit_log_detect_compute_instances_with_metadata_startup_script_modif
   query           = query.audit_log_detect_compute_instances_with_metadata_startup_script_modifications
   display_columns = local.audit_log_detection_display_columns
 
-  tags = merge(local.audit_log_detection_common_tags, {
+  tags = merge(local.audit_logs_detection_common_tags, {
     mitre_attack_ids = "TA0040:T1491"
   })
 }

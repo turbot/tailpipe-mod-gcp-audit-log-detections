@@ -1,13 +1,13 @@
 locals {
-  mitre_v151_ta0005_t1211_common_tags = merge(local.mitre_v151_ta0002_common_tags, {
+  mitre_v161_ta0005_t1211_common_tags = merge(local.mitre_v161_ta0002_common_tags, {
     mitre_technique_id = "T1211"
   })
 }
 
-benchmark "mitre_v151_ta0005_t1211" {
+benchmark "mitre_v161_ta0005_t1211" {
   title         = "T1211 Exploitation for Defense Evasion"
   type          = "detection"
-  documentation = file("./mitre_v151/docs/ta0005_t1211.md")
+  documentation = file("./mitre_v161/docs/ta0005_t1211.md")
   children = [
     detection.audit_logs_detect_api_monitoring_disabled,
     detection.audit_logs_detect_api_monitoring_policy_deleted,
@@ -19,5 +19,5 @@ benchmark "mitre_v151_ta0005_t1211" {
 
   ]
 
-  tags = local.mitre_v151_ta0005_t1211_common_tags
+  tags = local.mitre_v161_ta0005_t1211_common_tags
 }
