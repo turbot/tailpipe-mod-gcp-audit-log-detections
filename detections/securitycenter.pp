@@ -3,11 +3,11 @@ locals {
     service = "GCP/SecurityCommandCenter"
   })
 
-  audit_logs_security_command_center_delete_notification_configs_sql_columns                         = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_security_command_center_calculate_virtual_machine_threat_detection_settings_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_security_command_center_calculate_event_threat_detection_settings_sql_columns           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_security_command_center_calculate_container_threat_detection_settings_sql_columns       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_security_command_center_calculate_security_health_threat_detection_settings_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_security_command_center_delete_notification_configs_sql_columns                         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_security_command_center_calculate_virtual_machine_threat_detection_settings_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_security_command_center_calculate_event_threat_detection_settings_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_security_command_center_calculate_container_threat_detection_settings_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_security_command_center_calculate_security_health_threat_detection_settings_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 
 }
 
@@ -33,7 +33,7 @@ detection "audit_logs_security_command_center_delete_notification_configs" {
   description     = "Detect deletions of Security Command Center notification configurations that might disrupt security configurations or expose resources to threats."
   severity        = "high"
   query           = query.audit_logs_security_command_center_delete_notification_configs
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -45,7 +45,7 @@ detection "audit_logs_security_command_center_calculate_virtual_machine_threat_d
   description     = "Detect calculations of Security Command Center virtual machine threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_security_command_center_calculate_virtual_machine_threat_detection_settings
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -57,7 +57,7 @@ detection "audit_logs_security_command_center_calculate_event_threat_detection_s
   description     = "Detect calculations of Security Command Center event threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_security_command_center_calculate_event_threat_detection_settings
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
@@ -69,7 +69,7 @@ detection "audit_logs_security_command_center_calculate_container_threat_detecti
   description     = "Detect calculations of Security Command Center container threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_security_command_center_calculate_container_threat_detection_settings
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1078.004"
@@ -81,7 +81,7 @@ detection "audit_logs_security_command_center_calculate_security_health_threat_d
   description     = "Detect calculations of Security Command Center security health threat detection settings that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_security_command_center_calculate_security_health_threat_detection_settings
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -97,7 +97,7 @@ query "audit_logs_security_command_center_delete_notification_configs" {
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.v%.securitycenter.deletenotificationconfig'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -112,7 +112,7 @@ query "audit_logs_security_command_center_calculate_virtual_machine_threat_detec
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculatevirtualmachinethreatdetectionsettings'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -127,7 +127,7 @@ query "audit_logs_security_command_center_calculate_event_threat_detection_setti
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculateeventthreatdetectionsettings'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -142,7 +142,7 @@ query "audit_logs_security_command_center_calculate_container_threat_detection_s
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculatecontainerthreatdetectionsettings'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -157,7 +157,7 @@ query "audit_logs_security_command_center_calculate_security_health_threat_detec
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculatesecurityHealthanalyticssettings'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

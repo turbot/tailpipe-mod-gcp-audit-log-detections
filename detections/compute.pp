@@ -2,18 +2,18 @@ locals {
   compute_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Compute"
   })
-  audit_logs_detect_vpn_tunnel_deletions_sql_columns                                        = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_firewall_rule_deletion_updates_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_full_network_traffic_packet_deletions_sql_columns                       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_full_network_traffic_packet_modifications_sql_columns                   = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_images_set_iam_policy_sql_columns                               = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_disks_set_iam_policy_sql_columns                                = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_snapshots_set_iam_policy_sql_columns                            = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_instances_with_public_network_interfaces_sql_columns            = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_public_ip_address_creation_sql_columns                                  = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_vpc_network_shared_to_external_project_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_compute_disk_size_small_sql_columns                                     = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_disable_compute_vpc_flow_logs_sql_columns                               = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_vpn_tunnel_deletions_sql_columns                                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_firewall_rule_deletion_updates_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_full_network_traffic_packet_deletions_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_full_network_traffic_packet_modifications_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_images_set_iam_policy_sql_columns                               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_disks_set_iam_policy_sql_columns                                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_snapshots_set_iam_policy_sql_columns                            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_instances_with_public_network_interfaces_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_public_ip_address_creation_sql_columns                                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_vpc_network_shared_to_external_project_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_compute_disk_size_small_sql_columns                                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_disable_compute_vpc_flow_logs_sql_columns                               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   audit_log_detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.audit_log_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -47,7 +47,7 @@ detection "audit_logs_detect_vpn_tunnel_deletions" {
   description     = "Detect deletions of VPN tunnels, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_vpn_tunnel_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
@@ -59,7 +59,7 @@ detection "audit_logs_detect_compute_firewall_rule_deletion_updates" {
   description     = "Detect updates to firewall rules, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_firewall_rule_deletion_updates
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -71,7 +71,7 @@ detection "audit_logs_detect_full_network_traffic_packet_deletions" {
   description     = "Detect deletions of full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_full_network_traffic_packet_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
@@ -83,7 +83,7 @@ detection "audit_logs_detect_full_network_traffic_packet_modifications" {
   description     = "Detect modifications to full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_full_network_traffic_packet_modifications
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
@@ -95,7 +95,7 @@ detection "audit_logs_detect_compute_images_set_iam_policy" {
   description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_images_set_iam_policy
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -107,7 +107,7 @@ detection "audit_logs_detect_compute_disks_set_iam_policy" {
   description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_disks_set_iam_policy
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -119,7 +119,7 @@ detection "audit_logs_detect_compute_snapshots_set_iam_policy" {
   description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_snapshots_set_iam_policy
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -131,7 +131,7 @@ detection "audit_logs_detect_compute_instances_with_public_network_interfaces" {
   description     = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_instances_with_public_network_interfaces
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -143,7 +143,7 @@ detection "audit_logs_detect_public_ip_address_creation" {
   description     = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
   severity        = "medium"
   query           = query.audit_logs_detect_public_ip_address_creation
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -155,7 +155,7 @@ detection "audit_logs_detect_vpc_network_shared_to_external_project" {
   description     = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
   severity        = "medium"
   query           = query.audit_logs_detect_vpc_network_shared_to_external_project
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0001:T1190,TA0005:T1548"
@@ -167,7 +167,7 @@ detection "audit_logs_detect_compute_disk_size_small" {
   description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_compute_disk_size_small
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -179,7 +179,7 @@ detection "audit_logs_detect_disable_compute_vpc_flow_logs" {
   description     = "Detect disabling of Compute VPC flow logs, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_disable_compute_vpc_flow_logs
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -209,7 +209,7 @@ query "audit_log_detect_compute_instances_with_metadata_startup_script_modificat
       and (method_name ilike 'v1.compute.instances.setMetadata')
       and (json_extract_string(request, '$.Metadata Keys Added') = '["startup-script"]'
         OR json_extract_string(request, '$.Metadata Keys Modified') = '["startup-script"]' OR json_extract_string(request, '$.Metadata Keys Deleted') = '["startup-script"]')
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -225,7 +225,7 @@ query "audit_logs_detect_compute_firewall_rule_deletion_updates" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.firewalls.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -240,7 +240,7 @@ query "audit_logs_detect_vpn_tunnel_deletions" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.vpntunnels.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -255,7 +255,7 @@ query "audit_logs_detect_full_network_traffic_packet_deletions" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'google.cloud.compute.v%.packetmirrorings.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -270,7 +270,7 @@ query "audit_logs_detect_full_network_traffic_packet_modifications" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'google.cloud.compute.v%.packetmirrorings.patch'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -285,7 +285,7 @@ query "audit_logs_detect_compute_images_set_iam_policy" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.images.setiampolicy'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -300,7 +300,7 @@ query "audit_logs_detect_compute_disks_set_iam_policy" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.disks.setiampolicy'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -315,7 +315,7 @@ query "audit_logs_detect_compute_snapshots_set_iam_policy" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.snapshots.setiampolicy'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -330,7 +330,7 @@ query "audit_logs_detect_compute_instances_with_public_network_interfaces" {
     where
       service_name = 'compute.googleapis.com'
       and (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
       and exists (
         select *
         from unnest(
@@ -353,7 +353,7 @@ query "audit_logs_detect_public_ip_address_creation" {
       service_name = 'compute.googleapis.com'
       and method_name ilike 'v%.compute.addresses.insert'
       and request.networkTier is not null
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -368,7 +368,7 @@ query "audit_logs_detect_vpc_network_shared_to_external_project" {
     where
       service_name = 'compute.googleapis.com'
       and method_name ilike 'googleapis.cloud.compute.v%.projects.enablexpnresource'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -390,7 +390,7 @@ query "audit_logs_detect_compute_disk_size_small" {
         where json_extract(disk, '$.boot') = 'true'
         and cast(json_extract(disk, '$.initializeParams.diskSizeGb') as integer) < 15
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -407,7 +407,7 @@ query "audit_logs_detect_disable_compute_vpc_flow_logs" {
       service_name = 'compute.googleapis.com'
       and method_name ilike 'google.cloud.compute.v%.subnetworks.patch'
       and request.enableFlowLogs = 'false'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

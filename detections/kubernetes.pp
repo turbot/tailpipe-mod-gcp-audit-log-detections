@@ -3,16 +3,16 @@ locals {
     service = "GCP/Kubernetes"
   })
 
-  audit_logs_detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_secrets_modified_sql_columns                       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_admission_webhook_config_creations_sql_columns     = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_admission_webhook_config_replaced_sql_columns      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_admission_webhook_config_modifications_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_cronjob_deletions_sql_columns                      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_cluster_with_public_endpoint_sql_columns           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_cloud_scheduler_run_job_sql_columns                           = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_container_executed_sql_columns                                = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_kubernetes_cronjob_modifications_sql_columns                  = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_secrets_modified_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_admission_webhook_config_creations_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_admission_webhook_config_replaced_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_admission_webhook_config_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_cronjob_deletions_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_cluster_with_public_endpoint_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_cloud_scheduler_run_job_sql_columns                           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_container_executed_sql_columns                                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_kubernetes_cronjob_modifications_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_kubernetes_detections" {
@@ -40,7 +40,7 @@ detection "audit_logs_detect_kubernetes_secrets_deletions" {
   description     = "Detect deletions of Kubernetes secrets, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_secrets_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -52,7 +52,7 @@ detection "audit_logs_detect_kubernetes_cronjob_deletions" {
   description     = "Detect deletions of Kubernetes cronjobs, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_cronjob_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -64,7 +64,7 @@ detection "audit_logs_detect_kubernetes_cronjob_modifications" {
   description     = "Detect modifications to Kubernetes cronjobs, ensuring visibility into changes that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_cronjob_modifications
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -76,7 +76,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_creations" {
   description     = "Detect creations of Kubernetes admission webhook configurations, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_creations
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -88,7 +88,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_replaced" {
   description     = "Detect replacements of Kubernetes admission webhook configurations, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_replaced
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -100,7 +100,7 @@ detection "audit_logs_detect_kubernetes_admission_webhook_config_modifications" 
   description     = "Detect modifications to Kubernetes admission webhook configurations, ensuring visibility into changes that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_admission_webhook_config_modifications
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -112,7 +112,7 @@ detection "audit_logs_detect_kubernetes_cluster_with_public_endpoint" {
   description     = "Detect Kubernetes clusters with public endpoints, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_kubernetes_cluster_with_public_endpoint
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0001:T119"
@@ -124,7 +124,7 @@ detection "audit_logs_detect_cloud_scheduler_run_job" {
   description     = "Detect when Cloud Scheduler jobs are run, ensuring visibility into scheduled operations and monitoring for unauthorized or unexpected executions."
   severity        = "medium"
   query           = query.audit_logs_detect_cloud_scheduler_run_job
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
@@ -136,7 +136,7 @@ detection "audit_logs_detect_container_executed" {
   description     = "Detect the executions of containers, ensuring visibility into runtime activities that might indicate unauthorized actions or potential security risks."
   severity        = "medium"
   query           = query.audit_logs_detect_container_executed
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
@@ -152,7 +152,7 @@ query "audit_logs_detect_kubernetes_secrets_deletions" {
     where
       service_name = 'k8s.io'
       and method_name ilike 'io.k8s.api.core.v%.secrets.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -167,7 +167,7 @@ query "audit_logs_detect_kubernetes_secrets_update" {
     where
       service_name = 'k8s.io'
       and method_name ilike 'io.k8s.api.core.v%.secrets.update'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -182,7 +182,7 @@ query "audit_logs_detect_kubernetes_admission_webhook_config_creations" {
     where
       service_name = 'admissionregistration.k8s.io'
       and method_name ilike 'admissionregistration.k8s.io.v%.mutatingwebhookconfigurations.create'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -197,7 +197,7 @@ query "audit_logs_detect_kubernetes_admission_webhook_config_replaced" {
     where
       service_name = 'admissionregistration.k8s.io'
       and method_name ilike 'admissionregistration.k8s.io.v%.mutatingwebhookconfigurations.replace'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -212,7 +212,7 @@ query "audit_logs_detect_kubernetes_admission_webhook_config_modifications" {
     where
       service_name = 'admissionregistration.k8s.io'
       and method_name ilike 'admissionregistration.k8s.io.v%.validatingwebhookconfigurations.patch'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -227,7 +227,7 @@ query "audit_logs_detect_kubernetes_cronjob_deletions" {
     where
       service_name = 'batch.k8s.io'
       and method_name ilike 'io.k8s.api.batch.v%.cronjobs.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -242,7 +242,7 @@ query "audit_logs_detect_kubernetes_cronjob_modifications" {
     where
       service_name = 'batch.k8s.io'
       and method_name ilike 'io.k8s.api.batch.v%.cronjobs.update'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -261,7 +261,7 @@ query "audit_logs_detect_kubernetes_cluster_with_public_endpoint" {
         cast(json_extract(request, '$.cluster.privateClusterConfig.enablePrivateNodes') as boolean) = false
         or cast(json_extract(request, '$.update.desiredPrivateClusterConfig.enablePrivateEndpoint') as boolean) = false
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -276,7 +276,7 @@ query "audit_logs_detect_container_executed" {
     where
       service_name = 'kubernetes.io'
       and method_name ilike 'exec'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -291,7 +291,7 @@ query "audit_logs_detect_cloud_scheduler_run_job" {
     where
       service_name = 'cloudscheduler.googleapis.com'
       and method_name ilike 'google.cloud.scheduler.v%.cloudscheduler.runjob'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

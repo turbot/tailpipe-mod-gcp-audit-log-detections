@@ -10,7 +10,7 @@ locals {
 locals {
   # Local internal variables to build the SQL select clause for common
   # dimensions. Do not edit directly.
-  audit_logs_detection_sql_columns = <<-EOQ
+  detection_sql_columns = <<-EOQ
   tp_timestamp as timestamp,
   method_name as operation,
   __RESOURCE_SQL__ as resource,
@@ -21,12 +21,12 @@ locals {
   *
   EOQ
 
-  audit_log_detection_where_conditions = <<-EOQ
+  detection_sql_where_conditions = <<-EOQ
     and severity != 'Error'
     -- and (operation is null or operation.last = true)
   EOQ
   // Keep same order as SQL statement for easier readability
-  audit_logs_detection_display_columns = [
+  detection_display_columns = [
     "timestamp",
     "operation",
     "resource",

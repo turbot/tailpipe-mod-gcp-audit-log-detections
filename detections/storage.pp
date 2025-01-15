@@ -3,8 +3,8 @@ locals {
     service = "GCP/Storage"
   })
 
-  audit_logs_detect_storage_set_iam_policy_sql_columns             = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_storage_bucket_publicly_accessible_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_storage_set_iam_policy_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_storage_bucket_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_storage_detections" {
@@ -26,7 +26,7 @@ detection "audit_logs_detect_storage_set_iam_policy" {
   description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_storage_set_iam_policy
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -38,7 +38,7 @@ detection "audit_logs_detect_storage_bucket_publicly_accessible" {
   description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
   severity        = "high"
   query           = query.audit_logs_detect_storage_bucket_publicly_accessible
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -54,7 +54,7 @@ query "audit_logs_detect_storage_set_iam_policy" {
     where
       service_name = 'storage.googleapis.com'
       and method_name = 'storage.setIamPermissions'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -69,7 +69,7 @@ query "audit_logs_detect_storage_bucket_publicly_accessible" {
     where
       service_name = 'storage.googleapis.com'
       and method_name = 'storage.setIamPermissions'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
       and service_data is not null
       and json_extract(service_data, '$.policyDelta.bindingDeltas') != 'null'
       and service_data like '%"member":"allUsers"%'

@@ -3,9 +3,9 @@ locals {
     service = "GCP/Monitoring"
   })
 
-  audit_logs_detect_unusual_resource_consumption_sql_columns  = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_api_monitoring_disabled_sql_columns       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_api_monitoring_policy_deleted_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_unusual_resource_consumption_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_api_monitoring_disabled_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_api_monitoring_policy_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_monitoring_detections" {
@@ -28,7 +28,7 @@ detection "audit_logs_detect_unusual_resource_consumption" {
   description     = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
   severity        = "medium"
   query           = query.audit_logs_detect_unusual_resource_consumption
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1566"
@@ -40,7 +40,7 @@ detection "audit_logs_detect_api_monitoring_disabled" {
   description     = "Detect when API monitoring is disabled, which might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_detect_api_monitoring_disabled
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -52,7 +52,7 @@ detection "audit_logs_detect_api_monitoring_policy_deleted" {
   description     = "Detect when an API monitoring policy is deleted, which might disrupt security configurations or expose resources to threats."
   severity        = "medium"
   query           = query.audit_logs_detect_api_monitoring_policy_deleted
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
@@ -67,7 +67,7 @@ query "audit_logs_detect_unusual_resource_consumption" {
       gcp_audit_log
     where
       method_name ilike 'google.monitoring.v%.createtimeseries'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -82,7 +82,7 @@ query "audit_logs_detect_api_monitoring_disabled" {
     where
       service_name = 'monitoring.googleapis.com'
       and method_name ilike 'google.monitoring.v%.metricservice.deletemetricdescriptor'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -97,7 +97,7 @@ query "audit_logs_detect_api_monitoring_policy_deleted" {
     where
       service_name = 'monitoring.googleapis.com'
       and method_name ilike 'google.monitoring.v%.alertpolicyservice.deletealertpolicy'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

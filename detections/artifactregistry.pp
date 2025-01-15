@@ -3,11 +3,11 @@ locals {
     service = "GCP/ArtifactRegistry"
   })
 
-  audit_logs_detect_artifact_registry_overwritten_sql_columns         = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_artifact_registry_publicly_accessible_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_artifact_registry_package_deletion_sql_columns    = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_artifact_registry_repository_deletion_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_encrypted_container_image_pushed_sql_columns      = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_artifact_registry_overwritten_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_artifact_registry_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_artifact_registry_package_deletion_sql_columns    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_artifact_registry_repository_deletion_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_encrypted_container_image_pushed_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_artifactregistry_detections" {
@@ -33,7 +33,7 @@ detection "audit_logs_detect_artifact_registry_overwritten" {
   description     = "Detect Artifact Registry overwritten, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_artifact_registry_overwritten
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
@@ -45,7 +45,7 @@ detection "audit_logs_detect_artifact_registry_publicly_accessible" {
   description     = "Detect Artifact Registry publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_artifact_registry_publicly_accessible
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0003:T1136"
@@ -57,7 +57,7 @@ detection "audit_logs_detect_artifact_registry_with_no_layers" {
   description     = "Detect Artifact Registry with no layers, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_artifact_registry_with_no_layers
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -69,7 +69,7 @@ detection "audit_logs_detect_artifact_registry_repository_deletion" {
   description     = "Detect Artifact Registry repository deletion, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_artifact_registry_repository_deletion
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -92,7 +92,7 @@ detection "audit_logs_detect_encrypted_container_image_pushed" {
   description     = "Detect encrypted container image pushed, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
   query           = query.audit_logs_detect_encrypted_container_image_pushed
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
@@ -113,7 +113,7 @@ query "audit_logs_detect_artifact_registry_overwritten" {
         from unnest(cast(json_extract(request -> 'dockerImage' -> 'tags', '$[*]') as varchar[])) as tag
         where tag = 'latest'
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -133,7 +133,7 @@ query "audit_logs_detect_artifact_registry_publicly_accessible" {
         from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
         where member = 'allAuthenticatedUsers' or member = 'allUsers'
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -152,7 +152,7 @@ query "audit_logs_detect_artifact_registry_with_no_layers" {
         select *
         from unnest(cast(json_extract(request -> 'dockerImage' -> 'layers', '$[*]') as varchar[])) as layer
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -167,7 +167,7 @@ query "audit_logs_detect_artifact_registry_package_deletion" {
     where
       service_name = 'artifactregistry.googleapis.com'
       and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deletepackage'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -182,7 +182,7 @@ query "audit_logs_detect_artifact_registry_repository_deletion" {
     where
       service_name = 'artifactregistry.googleapis.com'
       and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleterepository'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -198,7 +198,7 @@ query "audit_logs_detect_encrypted_container_image_pushed" {
       service_name = 'artifactregistry.googleapis.com'
       and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.uploadartifact'
       and json_extract(request -> 'dockerImage' -> 'encryption', '$.kmsKeyName') is not null
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

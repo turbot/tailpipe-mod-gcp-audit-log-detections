@@ -3,7 +3,7 @@ locals {
     service = "GCP/Apigee"
   })
 
-  audit_logs_detect_api_access_to_vulnerable_services_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_api_access_to_vulnerable_services_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_apigee_detections" {
@@ -24,7 +24,7 @@ detection "audit_logs_detect_api_access_to_vulnerable_services" {
   description     = "Detect log entries where API is accessed to a vulnerable service."
   severity        = "medium"
   query           = query.audit_logs_detect_api_access_to_vulnerable_services
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.apigee_common_tags, {
     mitre_attack_ids = "TA0001:T1190"
@@ -40,7 +40,7 @@ query "audit_logs_detect_api_access_to_vulnerable_services" {
     where
       service_name = 'apigee.googleapis.com'
       and (method_name ilike 'google.apigee.v%.accessresource' or method_name ilike 'google.apigee.v%.attackservice')
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

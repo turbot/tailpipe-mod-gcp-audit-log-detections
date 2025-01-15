@@ -3,7 +3,7 @@ locals {
     service = "GCP/APIGateway"
   })
 
-  audit_logs_detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_apigateway_detections" {
@@ -24,7 +24,7 @@ detection "audit_logs_detect_apigateway_configured_to_execute_backend_commands" 
   description     = "Detect log entries where an API Gateway is configured to execute backend commands."
   severity        = "medium"
   query           = query.audit_logs_detect_apigateway_configured_to_execute_backend_commands
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.apigateway_common_tags, {
     mitre_attack_ids = "TA0002:T1651"
@@ -45,7 +45,7 @@ query "audit_logs_detect_apigateway_configured_to_execute_backend_commands" {
         from unnest(cast(json_extract(request -> 'backendConfigs', '$[*].backendUri') as varchar[])) as uri_struct(uri)
         where uri like '%execute-command%'
       )
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

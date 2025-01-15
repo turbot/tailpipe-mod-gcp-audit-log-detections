@@ -3,7 +3,7 @@ locals {
     service = "GCP/DLP"
   })
 
-  audit_logs_detect_dlp_reidentify_content_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_dlp_detections" {
@@ -24,7 +24,7 @@ detection "audit_logs_detect_dlp_reidentify_content" {
   description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
   severity        = "medium"
   query           = query.audit_logs_detect_dlp_reidentify_content
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.dlp_common_tags, {
     mitre_attack_ids = "TA0009:T1119"
@@ -40,7 +40,7 @@ query "audit_logs_detect_dlp_reidentify_content" {
     where
       service_name = 'dlp.googleapis.com'
       and method_name ilike 'google.privacy.dlp.v%.dlpservice.reidentifycontent'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

@@ -3,9 +3,9 @@ locals {
     service = "GCP/DNS"
   })
 
-  audit_logs_detect_dns_zone_deletions_sql_columns       = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_dns_zone_modifications_sql_columns   = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  audit_logs_detect_dns_record_modifications_sql_columns = replace(local.audit_logs_detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_dns_zone_deletions_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_dns_zone_modifications_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  audit_logs_detect_dns_record_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "audit_logs_dns_detections" {
@@ -29,7 +29,7 @@ detection "audit_logs_detect_dns_zone_deletions" {
   description     = "Detect deletions of DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
   query           = query.audit_logs_detect_dns_zone_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -41,7 +41,7 @@ detection "audit_logs_detect_dns_zone_modifications" {
   description     = "Detect modifications to DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
   query           = query.audit_logs_detect_dns_zone_modifications
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -53,7 +53,7 @@ detection "audit_logs_detect_dns_record_modifications" {
   description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
   query           = query.audit_logs_detect_dns_record_modifications
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -65,7 +65,7 @@ detection "audit_logs_detect_dns_record_deletions" {
   description     = "Detect deletions of DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
   severity        = "medium"
   query           = query.audit_logs_detect_dns_record_deletions
-  display_columns = local.audit_logs_detection_display_columns
+  display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
@@ -81,7 +81,7 @@ query "audit_logs_detect_dns_zone_deletions" {
     where
       service_name = 'dns.googleapis.com'
       and method_name ilike 'dns.managedzones.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -96,7 +96,7 @@ query "audit_logs_detect_dns_zone_modifications" {
     where
       service_name = 'dns.googleapis.com'
       and method_name ilike 'dns.managedzones.patch'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -111,7 +111,7 @@ query "audit_logs_detect_dns_record_modifications" {
     where
       service_name = 'dns.googleapis.com'
       and method_name ilike 'dns.resourcerecordsets.patch'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
@@ -126,7 +126,7 @@ query "audit_logs_detect_dns_record_deletions" {
     where
       service_name = 'dns.googleapis.com'
       and method_name ilike 'dns.resourceeecordsets.delete'
-      ${local.audit_log_detection_where_conditions}
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
