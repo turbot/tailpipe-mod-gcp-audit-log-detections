@@ -3,7 +3,7 @@ locals {
   gcp_audit_log_detections_common_tags = {
     category = "Detection"
     plugin   = "gcp"
-    service  = "GCP"
+    service  = "GCP/AuditLog"
   }
 }
 
