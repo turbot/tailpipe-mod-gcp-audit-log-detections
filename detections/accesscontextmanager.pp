@@ -3,9 +3,9 @@ locals {
     service = "GCP/AccessContextManager"
   })
 
-  detect_access_policy_deletions_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_access_zone_deletions_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_access_level_deletions_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_access_context_manager_policy_deletions_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_access_context_manager_zone_deletions_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_access_context_manager_level_deletions_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "access_context_manager_detections" {
@@ -13,9 +13,9 @@ benchmark "access_context_manager_detections" {
   description = "This detection benchmark contains recommendations when scanning Admin Activity audit logs for Access Context Manager events."
   type        = "detection"
   children = [
-    detection.detect_access_policy_deletions,
-    detection.detect_access_zone_deletions,
-    detection.detect_access_level_deletions,
+    detection.detect_access_context_manager_policy_deletions,
+    detection.detect_access_context_manager_zone_deletions,
+    detection.detect_access_context_manager_level_deletions,
   ]
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -23,11 +23,11 @@ benchmark "access_context_manager_detections" {
   })
 }
 
-detection "detect_access_policy_deletions" {
-  title           = "Detect Access Policy Deletions"
+detection "detect_access_context_manager_policy_deletions" {
+  title           = "Detect Access Context Manager Policy Deletions"
   description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.detect_access_policy_deletions
+  query           = query.detect_access_context_manager_policy_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -35,11 +35,11 @@ detection "detect_access_policy_deletions" {
   })
 }
 
-detection "detect_access_zone_deletions" {
-  title           = "Detect Access Zone Deletions"
+detection "detect_access_context_manager_zone_deletions" {
+  title           = "Detect Access Context Manager Zone Deletions"
   description     = "Detect deletions of access zones that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.detect_access_zone_deletions
+  query           = query.detect_access_context_manager_zone_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -47,11 +47,11 @@ detection "detect_access_zone_deletions" {
   })
 }
 
-detection "detect_access_level_deletions" {
-  title           = "Detect Access Level Deletions"
+detection "detect_access_context_manager_level_deletions" {
+  title           = "Detect Access Context Manager Level Deletions"
   description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
   severity        = "medium"
-  query           = query.detect_access_level_deletions
+  query           = query.detect_access_context_manager_level_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -59,10 +59,10 @@ detection "detect_access_level_deletions" {
   })
 }
 
-query "detect_access_policy_deletions" {
+query "detect_access_context_manager_policy_deletions" {
   sql = <<-EOQ
     select
-      ${local.detect_access_policy_deletions_sql_columns}
+      ${local.detect_access_context_manager_policy_deletions_sql_columns}
     from
       gcp_audit_log
     where
@@ -74,10 +74,10 @@ query "detect_access_policy_deletions" {
   EOQ
 }
 
-query "detect_access_zone_deletions" {
+query "detect_access_context_manager_zone_deletions" {
   sql = <<-EOQ
     select
-      ${local.detect_access_zone_deletions_sql_columns}
+      ${local.detect_access_context_manager_zone_deletions_sql_columns}
     from
       gcp_audit_log
     where
@@ -89,10 +89,10 @@ query "detect_access_zone_deletions" {
   EOQ
 }
 
-query "detect_access_level_deletions" {
+query "detect_access_context_manager_level_deletions" {
   sql = <<-EOQ
     select
-      ${local.detect_access_level_deletions_sql_columns}
+      ${local.detect_access_context_manager_level_deletions_sql_columns}
     from
       gcp_audit_log
     where

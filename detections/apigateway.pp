@@ -21,8 +21,8 @@ benchmark "apigateway_detections" {
 
 detection "detect_apigateway_configured_to_execute_backend_commands" {
   title           = "Detect API Gateway Configured to Execute Backend Commands"
-  description     = "Detect log entries where an API Gateway is configured to execute backend commands."
-  severity        = "medium"
+  description     = "Detect log entries where an API Gateway is configured to execute backend commands that might expose resources to threats."
+  severity        = "high"
   query           = query.detect_apigateway_configured_to_execute_backend_commands
   display_columns = local.detection_display_columns
 

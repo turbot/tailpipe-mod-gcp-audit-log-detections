@@ -12,11 +12,11 @@ benchmark "mitre_v161_ta0005_t1562" {
     detection.detect_appengine_ingress_firewall_rule_creations,
     detection.detect_appengine_ingress_firewall_rule_deletions,
     detection.detect_appengine_ingress_firewall_rule_modifications,
-    detection.detect_artifact_registry_package_deletion,
-    detection.detect_artifact_registry_repository_deletion,
-    detection.detect_artifact_registry_with_no_layers,
-    detection.detect_compute_disk_size_small,
-    detection.detect_encrypted_container_image_pushed,
+    detection.detect_artifact_registry_package_deletions,
+    detection.detect_artifact_registry_repository_deletions,
+    detection.detect_artifact_registry_artifacts_with_no_layers,
+    detection.detect_compute_disks_with_small_sizes,
+    detection.detect_artifact_registry_encrypted_container_images_pushed,
   ]
 
   tags = local.mitre_v161_ta0005_t1562_common_tags

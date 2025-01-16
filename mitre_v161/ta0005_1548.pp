@@ -10,10 +10,10 @@ benchmark "mitre_v161_ta0005_t1548" {
   documentation = file("./mitre_v161/docs/ta0005_t1548.md")
   children = [
     detection.detect_high_privilege_iam_roles,
-    detection.detect_iam_federated_identity_provider_updation,
+    detection.detect_iam_federated_identity_provider_updations,
     detection.detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.detect_iam_service_account_token_creator_role,
-    detection.detect_vpc_network_shared_to_external_project,
+    detection.detect_iam_service_account_token_creator_roles,
+    detection.detect_vpc_networks_shared_to_external_projects,
     detection.detect_iam_service_account_access_token_generations,
   ]
 

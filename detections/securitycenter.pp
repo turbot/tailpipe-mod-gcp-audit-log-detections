@@ -108,7 +108,7 @@ query "security_command_center_calculate_virtual_machine_threat_detection_settin
     select
       ${local.security_command_center_calculate_virtual_machine_threat_detection_settings_sql_columns}
     from
-     gcp_audit_log
+      gcp_audit_log
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculatevirtualmachinethreatdetectionsettings'
@@ -123,7 +123,7 @@ query "security_command_center_calculate_event_threat_detection_settings" {
     select
       ${local.security_command_center_calculate_event_threat_detection_settings_sql_columns}
     from
-     gcp_audit_log
+      gcp_audit_log
     where
       service_name = 'securitycenter.googleapis.com'
       and method_name ilike 'google.cloud.securitycenter.settings.%.settings.calculateeventthreatdetectionsettings'

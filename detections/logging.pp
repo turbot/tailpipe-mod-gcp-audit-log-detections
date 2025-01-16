@@ -37,7 +37,7 @@ detection "detect_unauthorized_access_attempts" {
 detection "detect_log_sink_deletion_updates" {
   title           = "Detect Log Sink Deletions"
   description     = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
-  severity        = "medium"
+  severity        = "high"
   query           = query.detect_log_sink_deletion_updates
   display_columns = local.detection_display_columns
 
@@ -49,7 +49,7 @@ detection "detect_log_sink_deletion_updates" {
 detection "detect_logging_bucket_deletions" {
   title           = "Detect Logging Bucket Deletions"
   description     = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
-  severity        = "medium"
+  severity        = "high"
   query           = query.detect_logging_bucket_deletions
   display_columns = local.detection_display_columns
 

@@ -3,20 +3,20 @@ locals {
     service = "GCP/IAM"
   })
 
-  detect_service_account_creation_sql_columns                             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_service_account_creations_sql_columns                            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_service_account_deletions_sql_columns                            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_disabled_service_account_sql_columns                             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_service_account_key_creation_sql_columns                         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_workload_identity_pool_provider_creation_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_disabled_service_accounts_sql_columns                            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_service_account_key_creations_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_workload_identity_pool_provider_creations_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_iam_roles_granting_access_to_all_authenticated_users_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_service_account_token_creator_role_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_organization_iam_policy_change_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_workforce_pool_update_sql_columns                            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_federated_identity_provider_creation_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_policy_granting_apigateway_admin_role_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_service_account_token_creator_roles_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_organization_iam_policy_changes_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_workforce_pool_updates_sql_columns                           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_federated_identity_provider_creations_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_policy_granting_apigateway_admin_roles_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_high_privilege_iam_roles_sql_columns                             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_federated_identity_provider_updation_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_policy_removing_logging_admin_role_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_federated_identity_provider_updations_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_iam_policy_removing_logging_admin_roles_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_iam_service_account_access_token_generations_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_single_account_login_failures_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_failed_iam_service_account_access_token_generations_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
@@ -30,20 +30,20 @@ benchmark "iam_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for IAM events."
   type        = "detection"
   children = [
-    detection.detect_service_account_creation,
-    detection.detect_service_account_key_creation,
+    detection.detect_service_account_creations,
+    detection.detect_service_account_key_creations,
     detection.detect_service_account_deletions,
-    detection.detect_disabled_service_account,
-    detection.detect_workload_identity_pool_provider_creation,
+    detection.detect_disabled_service_accounts,
+    detection.detect_workload_identity_pool_provider_creations,
     detection.detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.detect_iam_service_account_token_creator_role,
-    detection.detect_organization_iam_policy_change,
-    detection.detect_iam_workforce_pool_update,
-    detection.detect_iam_federated_identity_provider_creation,
-    detection.detect_iam_policy_granting_apigateway_admin_role,
+    detection.detect_iam_service_account_token_creator_roles,
+    detection.detect_organization_iam_policy_changes,
+    detection.detect_iam_workforce_pool_updates,
+    detection.detect_iam_federated_identity_provider_creations,
+    detection.detect_iam_policy_granting_apigateway_admin_roles,
     detection.detect_high_privilege_iam_roles,
-    detection.detect_iam_federated_identity_provider_updation,
-    detection.detect_iam_policy_removing_logging_admin_role,
+    detection.detect_iam_federated_identity_provider_updations,
+    detection.detect_iam_policy_removing_logging_admin_roles,
     detection.detect_single_account_login_failures,
     detection.detect_iam_service_account_access_token_generations,
     detection.detect_failed_iam_service_account_access_token_generations,
@@ -57,11 +57,11 @@ benchmark "iam_detections" {
   })
 }
 
-detection "detect_service_account_creation" {
+detection "detect_service_account_creations" {
   title           = "Detect IAM Service Account Creations"
   description     = "Detect newly created IAM service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
   severity        = "medium"
-  query           = query.detect_service_account_creation
+  query           = query.detect_service_account_creations
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -81,11 +81,11 @@ detection "detect_service_account_deletions" {
   })
 }
 
-detection "detect_disabled_service_account" {
+detection "detect_disabled_service_accounts" {
   title           = "Detect Disabled IAM Service Accounts"
   description     = "Detect disabled IAM service accounts that might indicate unauthorized access attempts or potential data exposures."
   severity        = "medium"
-  query           = query.detect_disabled_service_account
+  query           = query.detect_disabled_service_accounts
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -93,10 +93,10 @@ detection "detect_disabled_service_account" {
   })
 }
 
-detection "detect_service_account_key_creation" {
+detection "detect_service_account_key_creations" {
   title           = "Detect IAM Service Account Key Creations"
   description     = "Detect the creations of IAM service account keys that might indicate potential misuse or unauthorized access attempts."
-  query           = query.detect_service_account_key_creation
+  query           = query.detect_service_account_key_creations
   severity        = "medium"
   display_columns = local.detection_display_columns
 
@@ -105,11 +105,11 @@ detection "detect_service_account_key_creation" {
   })
 }
 
-detection "detect_workload_identity_pool_provider_creation" {
+detection "detect_workload_identity_pool_provider_creations" {
   title           = "Detect IAM Workload Identity Pool Provider Creations"
   description     = "Detect the creations of IAM workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_workload_identity_pool_provider_creation
+  query           = query.detect_workload_identity_pool_provider_creations
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -120,7 +120,7 @@ detection "detect_workload_identity_pool_provider_creation" {
 detection "detect_iam_roles_granting_access_to_all_authenticated_users" {
   title           = "Detect IAM Roles Granting Access to All Authenticated Users"
   description     = "Detect IAM roles granting access to all authenticated users, ensuring visibility into over-permissioned configurations that could pose security risks."
-  severity        = "medium"
+  severity        = "high"
   query           = query.detect_iam_roles_granting_access_to_all_authenticated_users
   display_columns = local.detection_display_columns
 
@@ -129,11 +129,11 @@ detection "detect_iam_roles_granting_access_to_all_authenticated_users" {
   })
 }
 
-detection "detect_iam_service_account_token_creator_role" {
+detection "detect_iam_service_account_token_creator_roles" {
   title           = "Detect IAM Service Account Token Creator Roles"
   description     = "Detect the assignments of IAM service account token creator roles that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_iam_service_account_token_creator_role
+  query           = query.detect_iam_service_account_token_creator_roles
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -141,11 +141,11 @@ detection "detect_iam_service_account_token_creator_role" {
   })
 }
 
-detection "detect_organization_iam_policy_change" {
+detection "detect_organization_iam_policy_changes" {
   title           = "Detect Organization IAM Policy Changes"
   description     = "Detect changes to organization IAM policies that might expose resources to threats or indicate unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_organization_iam_policy_change
+  query           = query.detect_organization_iam_policy_changes
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -153,11 +153,11 @@ detection "detect_organization_iam_policy_change" {
   })
 }
 
-detection "detect_iam_workforce_pool_update" {
+detection "detect_iam_workforce_pool_updates" {
   title           = "Detect IAM Workforce Pool Updates"
   description     = "Detect updates to IAM workforce pools that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_iam_workforce_pool_update
+  query           = query.detect_iam_workforce_pool_updates
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -165,11 +165,11 @@ detection "detect_iam_workforce_pool_update" {
   })
 }
 
-detection "detect_iam_federated_identity_provider_creation" {
+detection "detect_iam_federated_identity_provider_creations" {
   title           = "Detect IAM Federated Identity Provider Creations"
   description     = "Detect the creations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_iam_federated_identity_provider_creation
+  query           = query.detect_iam_federated_identity_provider_creations
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -177,11 +177,11 @@ detection "detect_iam_federated_identity_provider_creation" {
   })
 }
 
-detection "detect_iam_policy_granting_apigateway_admin_role" {
+detection "detect_iam_policy_granting_apigateway_admin_roles" {
   title           = "Detect IAM Policies Granting Apigateway Admin Roles"
   description     = "Detect IAM policies granting apigateway admin roles that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_iam_policy_granting_apigateway_admin_role
+  query           = query.detect_iam_policy_granting_apigateway_admin_roles
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -192,7 +192,7 @@ detection "detect_iam_policy_granting_apigateway_admin_role" {
 detection "detect_high_privilege_iam_roles" {
   title           = "Detect High Privilege IAM Roles"
   description     = "Detect the creations of high privilege IAM roles that might indicate potential misuse or unauthorized access attempts."
-  severity        = "medium"
+  severity        = "high"
   query           = query.detect_high_privilege_iam_roles
   display_columns = local.detection_display_columns
 
@@ -201,11 +201,11 @@ detection "detect_high_privilege_iam_roles" {
   })
 }
 
-detection "detect_iam_federated_identity_provider_updation" {
+detection "detect_iam_federated_identity_provider_updations" {
   title           = "Detect IAM Federated Identity Provider Updations"
   description     = "Detect the updations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_iam_federated_identity_provider_updation
+  query           = query.detect_iam_federated_identity_provider_updations
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -213,11 +213,11 @@ detection "detect_iam_federated_identity_provider_updation" {
   })
 }
 
-detection "detect_iam_policy_removing_logging_admin_role" {
-  title           = "Detect IAM Policy Removing Logging Admin Role"
+detection "detect_iam_policy_removing_logging_admin_roles" {
+  title           = "Detect IAM Policy Removing Logging Admin Roles"
   description     = "Detect the removal of logging admin roles from IAM policies that might indicate potential misuse or unauthorized access attempts."
-  severity        = "medium"
-  query           = query.detect_iam_policy_removing_logging_admin_role
+  severity        = "high"
+  query           = query.detect_iam_policy_removing_logging_admin_roles
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -332,10 +332,10 @@ query "detect_iam_roles_permission_revocations" {
   EOQ
 }
 
-query "detect_service_account_creation" {
+query "detect_service_account_creations" {
   sql = <<-EOQ
     select
-      ${local.detect_service_account_creation_sql_columns}
+      ${local.detect_service_account_creations_sql_columns}
     from
       gcp_audit_log
     where
@@ -347,10 +347,10 @@ query "detect_service_account_creation" {
   EOQ
 }
 
-query "detect_disabled_service_account" {
+query "detect_disabled_service_accounts" {
   sql = <<-EOQ
     select
-      ${local.detect_disabled_service_account_sql_columns}
+      ${local.detect_disabled_service_accounts_sql_columns}
     from
       gcp_audit_log
     where
@@ -377,10 +377,10 @@ query "detect_service_account_deletions" {
   EOQ
 }
 
-query "detect_service_account_key_creation" {
+query "detect_service_account_key_creations" {
   sql = <<-EOQ
     select
-      ${local.detect_service_account_key_creation_sql_columns}
+      ${local.detect_service_account_key_creations_sql_columns}
     from
       gcp_audit_log
     where
@@ -392,10 +392,10 @@ query "detect_service_account_key_creation" {
   EOQ
 }
 
-query "detect_workload_identity_pool_provider_creation" {
+query "detect_workload_identity_pool_provider_creations" {
   sql = <<-EOQ
     select
-      ${local.detect_workload_identity_pool_provider_creation_sql_columns}
+      ${local.detect_workload_identity_pool_provider_creations_sql_columns}
     from
       gcp_audit_log
     where
@@ -423,10 +423,10 @@ query "detect_iam_roles_granting_access_to_all_authenticated_users" {
   EOQ
 }
 
-query "detect_iam_service_account_token_creator_role" {
+query "detect_iam_service_account_token_creator_roles" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_service_account_token_creator_role_sql_columns}
+      ${local.detect_iam_service_account_token_creator_roles_sql_columns}
     from
       gcp_audit_log
     where
@@ -439,10 +439,10 @@ query "detect_iam_service_account_token_creator_role" {
   EOQ
 }
 
-query "detect_organization_iam_policy_change" {
+query "detect_organization_iam_policy_changes" {
   sql = <<-EOQ
     select
-      ${local.detect_organization_iam_policy_change_sql_columns}
+      ${local.detect_organization_iam_policy_changes_sql_columns}
     from
       gcp_audit_log
     where
@@ -455,10 +455,10 @@ query "detect_organization_iam_policy_change" {
   EOQ
 }
 
-query "detect_iam_workforce_pool_update" {
+query "detect_iam_workforce_pool_updates" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_workforce_pool_update_sql_columns}
+      ${local.detect_iam_workforce_pool_updates_sql_columns}
     from
       gcp_audit_log
     where
@@ -470,10 +470,10 @@ query "detect_iam_workforce_pool_update" {
   EOQ
 }
 
-query "detect_iam_federated_identity_provider_creation" {
+query "detect_iam_federated_identity_provider_creations" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_federated_identity_provider_creation_sql_columns}
+      ${local.detect_iam_federated_identity_provider_creations_sql_columns}
     from
       gcp_audit_log
     where
@@ -485,10 +485,10 @@ query "detect_iam_federated_identity_provider_creation" {
   EOQ
 }
 
-query "detect_iam_policy_granting_apigateway_admin_role" {
+query "detect_iam_policy_granting_apigateway_admin_roles" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_policy_granting_apigateway_admin_role_sql_columns}
+      ${local.detect_iam_policy_granting_apigateway_admin_roles_sql_columns}
     from
       gcp_audit_log
     where
@@ -517,10 +517,10 @@ query "detect_high_privilege_iam_roles" {
   EOQ
 }
 
-query "detect_iam_federated_identity_provider_updation" {
+query "detect_iam_federated_identity_provider_updations" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_federated_identity_provider_updation_sql_columns}
+      ${local.detect_iam_federated_identity_provider_updations_sql_columns}
     from
       gcp_audit_log
     where
@@ -532,10 +532,10 @@ query "detect_iam_federated_identity_provider_updation" {
   EOQ
 }
 
-query "detect_iam_policy_removing_logging_admin_role" {
+query "detect_iam_policy_removing_logging_admin_roles" {
   sql = <<-EOQ
     select
-      ${local.detect_iam_policy_removing_logging_admin_role_sql_columns}
+      ${local.detect_iam_policy_removing_logging_admin_roles_sql_columns}
     from
       gcp_audit_log
     where

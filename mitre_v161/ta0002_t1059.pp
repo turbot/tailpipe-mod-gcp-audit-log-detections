@@ -9,7 +9,7 @@ benchmark "mitre_v161_ta0002_t1059" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0002_t1059.md")
   children = [
-    detection.detect_iam_policy_to_enable_script_execution,
+    detection.detect_iam_policies_enabling_script_execution,
   ]
 
   tags = local.mitre_v161_ta0002_t1059_common_tags

@@ -6,12 +6,12 @@ locals {
   detect_kubernetes_secrets_deletions_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_kubernetes_secrets_modified_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_kubernetes_admission_webhook_config_creations_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_kubernetes_admission_webhook_config_replaced_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_kubernetes_admission_webhook_configs_replaced_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_kubernetes_admission_webhook_config_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_kubernetes_cronjob_deletions_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_kubernetes_cluster_with_public_endpoint_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloud_scheduler_run_job_sql_columns                           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_container_executed_sql_columns                                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_kubernetes_clusters_with_public_endpoints_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_cloud_scheduler_run_jobs_sql_columns                          = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_containers_executed_sql_columns                               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_kubernetes_cronjob_modifications_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -24,10 +24,10 @@ benchmark "kubernetes_detections" {
     detection.detect_kubernetes_cronjob_deletions,
     detection.detect_kubernetes_cronjob_modifications,
     detection.detect_kubernetes_admission_webhook_config_creations,
-    detection.detect_kubernetes_admission_webhook_config_replaced,
+    detection.detect_kubernetes_admission_webhook_configs_replaced,
     detection.detect_kubernetes_admission_webhook_config_modifications,
-    detection.detect_kubernetes_cluster_with_public_endpoint,
-    detection.detect_cloud_scheduler_run_job,
+    detection.detect_kubernetes_clusters_with_public_endpoints,
+    detection.detect_cloud_scheduler_run_jobs,
   ]
 
   tags = merge(local.kubernetes_common_tags, {
@@ -38,7 +38,7 @@ benchmark "kubernetes_detections" {
 detection "detect_kubernetes_secrets_deletions" {
   title           = "Detect Kubernetes Secrets Deletions"
   description     = "Detect deletions of Kubernetes secrets, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  severity        = "medium"
+  severity        = "high"
   query           = query.detect_kubernetes_secrets_deletions
   display_columns = local.detection_display_columns
 
@@ -83,11 +83,11 @@ detection "detect_kubernetes_admission_webhook_config_creations" {
   })
 }
 
-detection "detect_kubernetes_admission_webhook_config_replaced" {
-  title           = "Detect Kubernetes Admission Webhook Config Replaced"
+detection "detect_kubernetes_admission_webhook_configs_replaced" {
+  title           = "Detect Kubernetes Admission Webhook Configs Replaced"
   description     = "Detect replacements of Kubernetes admission webhook configurations, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
   severity        = "medium"
-  query           = query.detect_kubernetes_admission_webhook_config_replaced
+  query           = query.detect_kubernetes_admission_webhook_configs_replaced
   display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
@@ -107,11 +107,11 @@ detection "detect_kubernetes_admission_webhook_config_modifications" {
   })
 }
 
-detection "detect_kubernetes_cluster_with_public_endpoint" {
+detection "detect_kubernetes_clusters_with_public_endpoints" {
   title           = "Detect Kubernetes Clusters with Public Endpoints"
   description     = "Detect Kubernetes clusters with public endpoints, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  severity        = "medium"
-  query           = query.detect_kubernetes_cluster_with_public_endpoint
+  severity        = "high"
+  query           = query.detect_kubernetes_clusters_with_public_endpoints
   display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
@@ -119,11 +119,11 @@ detection "detect_kubernetes_cluster_with_public_endpoint" {
   })
 }
 
-detection "detect_cloud_scheduler_run_job" {
+detection "detect_cloud_scheduler_run_jobs" {
   title           = "Detect Cloud Scheduler Run Jobs"
   description     = "Detect when Cloud Scheduler jobs are run, ensuring visibility into scheduled operations and monitoring for unauthorized or unexpected executions."
   severity        = "medium"
-  query           = query.detect_cloud_scheduler_run_job
+  query           = query.detect_cloud_scheduler_run_jobs
   display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
@@ -131,11 +131,11 @@ detection "detect_cloud_scheduler_run_job" {
   })
 }
 
-detection "detect_container_executed" {
+detection "detect_containers_executed" {
   title           = "Detect Containers Executed"
   description     = "Detect the executions of containers, ensuring visibility into runtime activities that might indicate unauthorized actions or potential security risks."
-  severity        = "medium"
-  query           = query.detect_container_executed
+  severity        = "high"
+  query           = query.detect_containers_executed
   display_columns = local.detection_display_columns
 
   tags = merge(local.kubernetes_common_tags, {
@@ -188,10 +188,10 @@ query "detect_kubernetes_admission_webhook_config_creations" {
   EOQ
 }
 
-query "detect_kubernetes_admission_webhook_config_replaced" {
+query "detect_kubernetes_admission_webhook_configs_replaced" {
   sql = <<-EOQ
     select
-      ${local.detect_kubernetes_admission_webhook_config_replaced_sql_columns}
+      ${local.detect_kubernetes_admission_webhook_configs_replaced_sql_columns}
     from
       gcp_audit_log
     where
@@ -248,10 +248,10 @@ query "detect_kubernetes_cronjob_modifications" {
   EOQ
 }
 // testing needed
-query "detect_kubernetes_cluster_with_public_endpoint" {
+query "detect_kubernetes_clusters_with_public_endpoints" {
   sql = <<-EOQ
     select
-      ${local.detect_kubernetes_cluster_with_public_endpoint_sql_columns}
+      ${local.detect_kubernetes_clusters_with_public_endpoints_sql_columns}
     from
       gcp_audit_log
     where
@@ -267,10 +267,10 @@ query "detect_kubernetes_cluster_with_public_endpoint" {
   EOQ
 }
 
-query "detect_container_executed" {
+query "detect_containers_executed" {
   sql = <<-EOQ
     select
-      ${local.detect_container_executed_sql_columns}
+      ${local.detect_containers_executed_sql_columns}
     from
       gcp_audit_log
     where
@@ -282,10 +282,10 @@ query "detect_container_executed" {
   EOQ
 }
 
-query "detect_cloud_scheduler_run_job" {
+query "detect_cloud_scheduler_run_jobs" {
   sql = <<-EOQ
     select
-      ${local.detect_cloud_scheduler_run_job_sql_columns}
+      ${local.detect_cloud_scheduler_run_jobs_sql_columns}
     from
       gcp_audit_log
     where
