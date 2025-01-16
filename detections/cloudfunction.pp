@@ -15,6 +15,7 @@ benchmark "cloudfunction_detections" {
   children = [
     detection.detect_cloudfunctions_publicly_accessible,
     detection.detect_cloudfunctions_operation_deletions,
+    detection.detect_cloudfunctions_function_code_modifications,
   ]
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -25,6 +26,7 @@ benchmark "cloudfunction_detections" {
 detection "detect_cloudfunctions_publicly_accessible" {
   title           = "Detect Cloud Functions Publicly Accessible"
   description     = "Detect when Cloud Functions are made publicly accessible, ensuring awareness of potential exposure and mitigating security risks associated with unrestricted access."
+  documentation   = file("./detections/docs/detect_cloudfunctions_publicly_accessible.md")
   severity        = "high"
   query           = query.detect_cloudfunctions_publicly_accessible
   display_columns = local.detection_display_columns
@@ -37,6 +39,7 @@ detection "detect_cloudfunctions_publicly_accessible" {
 detection "detect_cloudfunctions_operation_deletions" {
   title           = "Detect Cloud Functions Operation Deletions"
   description     = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
+  documentation   = file("./detections/docs/detect_cloudfunctions_operation_deletions.md")
   severity        = "medium"
   query           = query.detect_cloudfunctions_operation_deletions
   display_columns = local.detection_display_columns
@@ -49,6 +52,7 @@ detection "detect_cloudfunctions_operation_deletions" {
 detection "detect_cloudfunctions_function_code_modifications" {
   title           = "Detect Cloud Functions Code Modification"
   description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
+  documentation   = file("./detections/docs/detect_cloudfunctions_function_code_modifications.md")
   severity        = "high"
   query           = query.detect_cloudfunctions_function_code_modifications
   display_columns = local.detection_display_columns

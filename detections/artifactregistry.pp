@@ -6,7 +6,7 @@ locals {
   detect_overwritten_artifact_registry_artifacts_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_artifact_registries_publicly_accessible_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_artifact_registry_package_deletions_sql_columns                 = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_artifact_registry_repository_deletions_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  detect_artifact_registry_repository_deletions_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_artifact_registry_encrypted_container_images_pushed_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -31,6 +31,7 @@ benchmark "artifactregistry_detections" {
 detection "detect_overwritten_artifact_registry_artifacts" {
   title           = "Detect Overwritten Artifact Registry Artifacts"
   description     = "Detect overwritten Artifact Registry Artifacts, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_overwritten_artifact_registry_artifacts.md")
   severity        = "medium"
   query           = query.detect_overwritten_artifact_registry_artifacts
   display_columns = local.detection_display_columns
@@ -43,6 +44,7 @@ detection "detect_overwritten_artifact_registry_artifacts" {
 detection "detect_artifact_registries_publicly_accessible" {
   title           = "Detect Artifact Registries Publicly Accessible"
   description     = "Detect Artifact Registries publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_artifact_registries_publicly_accessible.md")
   severity        = "high"
   query           = query.detect_artifact_registries_publicly_accessible
   display_columns = local.detection_display_columns
@@ -55,6 +57,7 @@ detection "detect_artifact_registries_publicly_accessible" {
 detection "detect_artifact_registry_artifacts_with_no_layers" {
   title           = "Detect Artifact Registry Artifacts with No Layers"
   description     = "Detect Artifact Registry Artifacts with no layers, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_artifact_registry_artifacts_with_no_layers.md")
   severity        = "medium"
   query           = query.detect_artifact_registry_artifacts_with_no_layers
   display_columns = local.detection_display_columns
@@ -67,6 +70,7 @@ detection "detect_artifact_registry_artifacts_with_no_layers" {
 detection "detect_artifact_registry_repository_deletions" {
   title           = "Detect Artifact Registry Repository Deletions"
   description     = "Detect Artifact Registry repository deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_artifact_registry_repository_deletions.md")
   severity        = "high"
   query           = query.detect_artifact_registry_repository_deletions
   display_columns = local.detection_display_columns
@@ -79,6 +83,7 @@ detection "detect_artifact_registry_repository_deletions" {
 detection "detect_artifact_registry_package_deletions" {
   title       = "Detect Artifact Registry Package Deletions"
   description = "Detect Artifact Registry package deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation = file("./detections/docs/detect_artifact_registry_package_deletions.md")
   severity    = "medium"
   query       = query.detect_artifact_registry_package_deletions
 
@@ -90,6 +95,7 @@ detection "detect_artifact_registry_package_deletions" {
 detection "detect_artifact_registry_encrypted_container_images_pushed" {
   title           = "Detect Artifact Registry Encrypted Container Images Pushed"
   description     = "Detect Artifact Registry encrypted container images pushed, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_artifact_registry_encrypted_container_images_pushed.md")
   severity        = "medium"
   query           = query.detect_artifact_registry_encrypted_container_images_pushed
   display_columns = local.detection_display_columns

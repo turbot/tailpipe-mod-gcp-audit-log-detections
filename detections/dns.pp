@@ -27,6 +27,7 @@ benchmark "dns_detections" {
 detection "detect_dns_zone_deletions" {
   title           = "Detect DNS Zone Deletions"
   description     = "Detect deletions of DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  documentation   = file("./detections/docs/detect_dns_zone_deletions.md")
   severity        = "high"
   query           = query.detect_dns_zone_deletions
   display_columns = local.detection_display_columns
@@ -39,6 +40,7 @@ detection "detect_dns_zone_deletions" {
 detection "detect_dns_zone_modifications" {
   title           = "Detect DNS Zone Modifications"
   description     = "Detect modifications to DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  documentation   = file("./detections/docs/detect_dns_zone_modifications.md")
   severity        = "high"
   query           = query.detect_dns_zone_modifications
   display_columns = local.detection_display_columns
@@ -51,6 +53,7 @@ detection "detect_dns_zone_modifications" {
 detection "detect_dns_record_modifications" {
   title           = "Detect DNS Record Modifications"
   description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  documentation   = file("./detections/docs/detect_dns_record_modifications.md")
   severity        = "high"
   query           = query.detect_dns_record_modifications
   display_columns = local.detection_display_columns
@@ -63,6 +66,7 @@ detection "detect_dns_record_modifications" {
 detection "detect_dns_record_deletions" {
   title           = "Detect DNS Record Deletions"
   description     = "Detect deletions of DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  documentation   = file("./detections/docs/detect_dns_record_deletions.md")
   severity        = "high"
   query           = query.detect_dns_record_deletions
   display_columns = local.detection_display_columns

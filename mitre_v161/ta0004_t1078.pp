@@ -11,7 +11,6 @@ benchmark "mitre_v161_ta0004_t1078" {
   children = [
     detection.detect_access_context_manager_level_deletions,
     detection.detect_access_context_manager_policy_deletions,
-    detection.detect_access_context_manager_zone_deletions,
     detection.detect_compute_disks_set_iam_policy,
     detection.detect_compute_images_set_iam_policy,
     detection.detect_compute_snapshots_set_iam_policy,

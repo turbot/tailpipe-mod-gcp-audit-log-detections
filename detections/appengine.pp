@@ -28,6 +28,7 @@ benchmark "appengine_detections" {
 detection "detect_appengine_ingress_firewall_rule_creations" {
   title           = "Detect App Engine Ingress Firewall Rule Creations"
   description     = "Detect creations to App Engine ingress firewall rules that may expose resources to threats."
+  documentation   = file("./detections/docs/detect_appengine_ingress_firewall_rule_creations.md")
   severity        = "medium"
   query           = query.detect_appengine_ingress_firewall_rule_creations
   display_columns = local.detection_display_columns
@@ -40,6 +41,7 @@ detection "detect_appengine_ingress_firewall_rule_creations" {
 detection "detect_appengine_ingress_firewall_rule_modifications" {
   title           = "Detect App Engine Ingress Firewall Rule Modifications"
   description     = "Detect modifications to App Engine ingress firewall rules that may expose resources to threats."
+  documentation   = file("./detections/docs/detect_appengine_ingress_firewall_rule_modifications.md")
   severity        = "high"
   query           = query.detect_appengine_ingress_firewall_rule_modifications
   display_columns = local.detection_display_columns
@@ -52,6 +54,7 @@ detection "detect_appengine_ingress_firewall_rule_modifications" {
 detection "detect_appengine_ingress_firewall_rule_deletions" {
   title           = "Detect App Engine Ingress Firewall Rule Deletions"
   description     = "Detect deletions to App Engine ingress firewall rules that may expose resources to threats."
+  documentation   = file("./detections/docs/detect_appengine_ingress_firewall_rule_deletions.md")
   severity        = "high"
   query           = query.detect_appengine_ingress_firewall_rule_deletions
   display_columns = local.detection_display_columns
@@ -64,6 +67,7 @@ detection "detect_appengine_ingress_firewall_rule_deletions" {
 detection "detect_appengine_admin_api_execution_enabled" {
   title           = "Detect App Engine Admin API Executions Enabled"
   description     = "Detect when App Engine admin APIs are enabled, ensuring visibility into administrative configurations and monitoring for potential unauthorized changes."
+  documentation   = file("./detections/docs/detect_appengine_admin_api_execution_enabled.md")
   severity        = "medium"
   query           = query.detect_appengine_admin_api_execution_enabled
   display_columns = local.detection_display_columns

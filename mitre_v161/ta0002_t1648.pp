@@ -10,7 +10,7 @@ benchmark "mitre_v161_ta0002_t1648" {
   documentation = file("./mitre_v161/docs/ta0002_t1648.md")
   children = [
     detection.detect_appengine_admin_api_execution_enabled,
-    detection.detect_cloudfunctions_operation_delete,
+    detection.detect_cloudfunctions_operation_deletions,
     detection.detect_cloudfunctions_publicly_accessible,
   ]
 

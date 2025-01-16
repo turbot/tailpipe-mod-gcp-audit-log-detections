@@ -22,6 +22,7 @@ benchmark "apigateway_detections" {
 detection "detect_apigateway_configured_to_execute_backend_commands" {
   title           = "Detect API Gateway Configured to Execute Backend Commands"
   description     = "Detect log entries where an API Gateway is configured to execute backend commands that might expose resources to threats."
+  documentation   = file("./detections/docs/detect_apigateway_configured_to_execute_backend_commands.md")
   severity        = "high"
   query           = query.detect_apigateway_configured_to_execute_backend_commands
   display_columns = local.detection_display_columns
@@ -39,7 +40,7 @@ query "detect_apigateway_configured_to_execute_backend_commands" {
       gcp_audit_log
     where
       service_name = 'apigateway.googleapis.com'
-      and method_name ilike 'google.cloud.apigateway.v%.updateapiconfig'
+      and method_name ilike 'google.cloud.apigateway.v%.apigatewayservice.updateapiconfig'
       and exists(
         select *
         from unnest(cast(json_extract(request -> 'backendConfigs', '$[*].backendUri') as varchar[])) as uri_struct(uri)

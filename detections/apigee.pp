@@ -22,6 +22,7 @@ benchmark "apigee_detections" {
 detection "detect_apigee_api_access_to_vulnerable_services" {
   title           = "Detect Apigee API Access to Vulnerable Services"
   description     = "Detect log entries where Apigee API is accessed to a vulnerable service."
+  documentation   = file("./detections/docs/detect_apigee_api_access_to_vulnerable_services.md")
   severity        = "high"
   query           = query.detect_apigee_api_access_to_vulnerable_services
   display_columns = local.detection_display_columns

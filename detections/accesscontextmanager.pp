@@ -4,7 +4,6 @@ locals {
   })
 
   detect_access_context_manager_policy_deletions_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_access_context_manager_zone_deletions_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_access_context_manager_level_deletions_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -14,7 +13,6 @@ benchmark "access_context_manager_detections" {
   type        = "detection"
   children = [
     detection.detect_access_context_manager_policy_deletions,
-    detection.detect_access_context_manager_zone_deletions,
     detection.detect_access_context_manager_level_deletions,
   ]
 
@@ -26,20 +24,9 @@ benchmark "access_context_manager_detections" {
 detection "detect_access_context_manager_policy_deletions" {
   title           = "Detect Access Context Manager Policy Deletions"
   description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/detect_access_context_manager_policy_deletions.md")
   severity        = "medium"
   query           = query.detect_access_context_manager_policy_deletions
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.access_context_manager_common_tags, {
-    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
-  })
-}
-
-detection "detect_access_context_manager_zone_deletions" {
-  title           = "Detect Access Context Manager Zone Deletions"
-  description     = "Detect deletions of access zones that might disrupt security configurations or expose resources to threats."
-  severity        = "medium"
-  query           = query.detect_access_context_manager_zone_deletions
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -50,6 +37,7 @@ detection "detect_access_context_manager_zone_deletions" {
 detection "detect_access_context_manager_level_deletions" {
   title           = "Detect Access Context Manager Level Deletions"
   description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/detect_access_context_manager_level_deletions.md")
   severity        = "medium"
   query           = query.detect_access_context_manager_level_deletions
   display_columns = local.detection_display_columns
@@ -68,21 +56,6 @@ query "detect_access_context_manager_policy_deletions" {
     where
       service_name = 'accesscontextmanager.googleapis.com'
       and method_name ilike 'accesscontextmanager.accesspolicies.delete'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_access_context_manager_zone_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_access_context_manager_zone_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accesspolicies.accesszones.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

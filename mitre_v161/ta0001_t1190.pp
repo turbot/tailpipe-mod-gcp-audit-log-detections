@@ -11,7 +11,6 @@ benchmark "mitre_v161_ta0001_t1190" {
   children = [
     detection.detect_access_context_manager_level_deletions,
     detection.detect_access_context_manager_policy_deletions,
-    detection.detect_access_context_manager_zone_deletions,
     detection.detect_apigee_api_access_to_vulnerable_services,
     detection.detect_compute_firewall_rule_deletions,
     detection.detect_compute_instances_with_public_network_interfaces,

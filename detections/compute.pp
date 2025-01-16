@@ -45,6 +45,7 @@ benchmark "compute_detections" {
 detection "detect_vpn_tunnel_deletions" {
   title           = "Detect Compute VPN Tunnel Deletions"
   description     = "Detect deletions of VPN tunnels, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_vpn_tunnel_deletions.md")
   severity        = "high"
   query           = query.detect_vpn_tunnel_deletions
   display_columns = local.detection_display_columns
@@ -57,6 +58,7 @@ detection "detect_vpn_tunnel_deletions" {
 detection "detect_compute_firewall_rule_deletions" {
   title           = "Detect Compute Firewall Rule Deletions"
   description     = "Detect Compute firewall rule deletions, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
+  documentation   = file("./detections/docs/detect_compute_firewall_rule_deletions.md")
   severity        = "high"
   query           = query.detect_compute_firewall_rule_deletions
   display_columns = local.detection_display_columns
@@ -69,6 +71,7 @@ detection "detect_compute_firewall_rule_deletions" {
 detection "detect_full_network_traffic_packet_deletions" {
   title           = "Detect Compute Full Network Traffic Packet Deletions"
   description     = "Detect deletions of full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_full_network_traffic_packet_deletions.md")
   severity        = "high"
   query           = query.detect_full_network_traffic_packet_deletions
   display_columns = local.detection_display_columns
@@ -81,6 +84,7 @@ detection "detect_full_network_traffic_packet_deletions" {
 detection "detect_full_network_traffic_packet_modifications" {
   title           = "Detect Compute Full Network Traffic Packet Modifications"
   description     = "Detect modifications to full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_full_network_traffic_packet_modifications.md")
   severity        = "high"
   query           = query.detect_full_network_traffic_packet_modifications
   display_columns = local.detection_display_columns
@@ -93,6 +97,7 @@ detection "detect_full_network_traffic_packet_modifications" {
 detection "detect_compute_images_set_iam_policy" {
   title           = "Detect Compute Images Set IAM Policy"
   description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
+  documentation   = file("./detections/docs/detect_compute_images_set_iam_policy.md")
   severity        = "medium"
   query           = query.detect_compute_images_set_iam_policy
   display_columns = local.detection_display_columns
@@ -105,6 +110,7 @@ detection "detect_compute_images_set_iam_policy" {
 detection "detect_compute_disks_set_iam_policy" {
   title           = "Detect Compute Disks Set IAM Policy"
   description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
+  documentation   = file("./detections/docs/detect_compute_disks_set_iam_policy.md")
   severity        = "medium"
   query           = query.detect_compute_disks_set_iam_policy
   display_columns = local.detection_display_columns
@@ -117,6 +123,7 @@ detection "detect_compute_disks_set_iam_policy" {
 detection "detect_compute_snapshots_set_iam_policy" {
   title           = "Detect Compute Snapshots Set IAM Policy"
   description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
+  documentation   = file("./detections/docs/detect_compute_snapshots_set_iam_policy.md")
   severity        = "medium"
   query           = query.detect_compute_snapshots_set_iam_policy
   display_columns = local.detection_display_columns
@@ -129,6 +136,7 @@ detection "detect_compute_snapshots_set_iam_policy" {
 detection "detect_compute_instances_with_public_network_interfaces" {
   title           = "Detect Compute Instances with Public Network Interfaces"
   description     = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
+  documentation   = file("./detections/docs/detect_compute_instances_with_public_network_interfaces.md")
   severity        = "high"
   query           = query.detect_compute_instances_with_public_network_interfaces
   display_columns = local.detection_display_columns
@@ -141,6 +149,7 @@ detection "detect_compute_instances_with_public_network_interfaces" {
 detection "detect_public_ip_address_creations" {
   title           = "Detect Public IP Address Creations"
   description     = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
+  documentation   = file("./detections/docs/detect_public_ip_address_creations.md")
   severity        = "high"
   query           = query.detect_public_ip_address_creations
   display_columns = local.detection_display_columns
@@ -153,6 +162,7 @@ detection "detect_public_ip_address_creations" {
 detection "detect_vpc_networks_shared_to_external_projects" {
   title           = "Detect VPC Networks Shared to External Projects"
   description     = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
+  documentation   = file("./detections/docs/detect_vpc_networks_shared_to_external_projects.md")
   severity        = "high"
   query           = query.detect_vpc_networks_shared_to_external_projects
   display_columns = local.detection_display_columns
@@ -165,6 +175,7 @@ detection "detect_vpc_networks_shared_to_external_projects" {
 detection "detect_compute_disks_with_small_sizes" {
   title           = "Detect Compute Disks with Small Sizes"
   description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_compute_disks_with_small_sizes.md")
   severity        = "low"
   query           = query.detect_compute_disks_with_small_sizes
   display_columns = local.detection_display_columns
@@ -177,6 +188,7 @@ detection "detect_compute_disks_with_small_sizes" {
 detection "detect_disabling_of_compute_vpc_flow_logs" {
   title           = "Detect Disable Compute VPC Flow Logs"
   description     = "Detect disabling of Compute VPC flow logs, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_disabling_of_compute_vpc_flow_logs.md")
   severity        = "high"
   query           = query.detect_disabling_of_compute_vpc_flow_logs
   display_columns = local.detection_display_columns
@@ -189,6 +201,7 @@ detection "detect_disabling_of_compute_vpc_flow_logs" {
 detection "detect_compute_instances_with_metadata_startup_script_modifications" {
   title           = "Detect Compute Instances with Metadata Startup Script Modifications"
   description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
+  documentation   = file("./detections/docs/detect_compute_instances_with_metadata_startup_script_modifications.md")
   severity        = "high"
   query           = query.detect_compute_instances_with_metadata_startup_script_modifications
   display_columns = local.detection_display_columns

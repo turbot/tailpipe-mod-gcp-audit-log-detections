@@ -22,6 +22,7 @@ benchmark "dlp_detections" {
 detection "detect_dlp_reidentify_content" {
   title           = "Detect DLP Reidentify Content"
   description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
+  documentation   = file("./detections/docs/detect_dlp_reidentify_content.md")
   severity        = "high"
   query           = query.detect_dlp_reidentify_content
   display_columns = local.detection_display_columns
