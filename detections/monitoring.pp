@@ -26,6 +26,7 @@ benchmark "monitoring_detections" {
 detection "detect_monitoring_resource_consumption_spikes" {
   title           = "Detect Unusual Resource Consumption Spikes"
   description     = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
+  documentation   = file("./detections/docs/detect_monitoring_resource_consumption_spikes.md")
   severity        = "medium"
   query           = query.detect_monitoring_resource_consumption_spikes
   display_columns = local.detection_display_columns
@@ -38,6 +39,7 @@ detection "detect_monitoring_resource_consumption_spikes" {
 detection "detect_api_monitoring_disabled" {
   title           = "Detect API Monitoring Disabled"
   description     = "Detect when API monitoring is disabled, which might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/detect_api_monitoring_disabled.md")
   severity        = "high"
   query           = query.detect_api_monitoring_disabled
   display_columns = local.detection_display_columns
@@ -50,6 +52,7 @@ detection "detect_api_monitoring_disabled" {
 detection "detect_api_monitoring_policies_deleted" {
   title           = "Detect API Monitoring Policies Deleted"
   description     = "Detect when an API monitoring policies is deleted, which might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/detect_api_monitoring_policies_deleted.md")
   severity        = "high"
   query           = query.detect_api_monitoring_policies_deleted
   display_columns = local.detection_display_columns

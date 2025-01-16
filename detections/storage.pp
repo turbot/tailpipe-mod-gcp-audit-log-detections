@@ -24,6 +24,7 @@ benchmark "storage_detections" {
 detection "detect_storage_set_iam_policies" {
   title           = "Detect Storage Set IAM Policies"
   description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_storage_set_iam_policies.md")
   severity        = "medium"
   query           = query.detect_storage_set_iam_policies
   display_columns = local.detection_display_columns
@@ -36,6 +37,7 @@ detection "detect_storage_set_iam_policies" {
 detection "detect_storage_buckets_publicly_accessible" {
   title           = "Detect Storage Buckets Publicly Accessible"
   description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
+  documentation   = file("./detections/docs/detect_storage_buckets_publicly_accessible.md")
   severity        = "high"
   query           = query.detect_storage_buckets_publicly_accessible
   display_columns = local.detection_display_columns

@@ -25,6 +25,7 @@ benchmark "logging_detections" {
 detection "detect_unauthorized_access_attempts" {
   title           = "Detect Unauthorized Access Attempts"
   description     = "Detect failed or unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
+  documentation   = file("./detections/docs/detect_unauthorized_access_attempts.md")
   severity        = "high"
   query           = query.detect_unauthorized_access_attempts
   display_columns = local.detection_display_columns
@@ -37,6 +38,7 @@ detection "detect_unauthorized_access_attempts" {
 detection "detect_log_sink_deletion_updates" {
   title           = "Detect Log Sink Deletions"
   description     = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_log_sink_deletion_updates.md")
   severity        = "high"
   query           = query.detect_log_sink_deletion_updates
   display_columns = local.detection_display_columns
@@ -49,6 +51,7 @@ detection "detect_log_sink_deletion_updates" {
 detection "detect_logging_bucket_deletions" {
   title           = "Detect Logging Bucket Deletions"
   description     = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_logging_bucket_deletions.md")
   severity        = "high"
   query           = query.detect_logging_bucket_deletions
   display_columns = local.detection_display_columns

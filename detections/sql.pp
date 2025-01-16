@@ -25,6 +25,7 @@ benchmark "sql_detections" {
 detection "detect_cloudsql_ssl_certificate_deletions" {
   title           = "Detect Cloud SQL SSL Certificate Deletions"
   description     = "Detect Cloud SQL SSL certificate deletions that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_cloudsql_ssl_certificate_deletions.md")
   severity        = "medium"
   query           = query.detect_cloudsql_ssl_certificate_deletions
   display_columns = local.detection_display_columns
@@ -37,6 +38,7 @@ detection "detect_cloudsql_ssl_certificate_deletions" {
 detection "detect_cloudsql_login_failures" {
   title           = "Detect Cloud SQL Login Failures"
   description     = "Detect failed login attempts to Cloud SQL instances. Multiple failed logins may indicate unauthorized access attempts, misconfigured applications, or potential brute force attacks targeting database instances. This detection helps identify potential security threats to database resources."
+  documentation   = file("./detections/docs/detect_cloudsql_login_failures.md")
   severity        = "medium"
   query           = query.detect_cloudsql_login_failures
   display_columns = local.detection_display_columns
@@ -49,6 +51,7 @@ detection "detect_cloudsql_login_failures" {
 detection "detect_cloudsql_user_deletions" {
   title           = "Detect Cloud SQL User Deletions"
   description     = "Detect successful deletion of users from Cloud SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
+  documentation   = file("./detections/docs/detect_cloudsql_user_deletions.md")
   severity        = "medium"
   query           = query.detect_cloudsql_user_deletions
   display_columns = local.detection_display_columns

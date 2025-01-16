@@ -33,6 +33,7 @@ benchmark "resourcemanager_detections" {
 detection "detect_iam_policies_set_at_project_level" {
   title           = "Detect IAM Policies Set at Project Level"
   description     = "Detect changes to IAM policies at the project level, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_iam_policies_set_at_project_level.md")
   severity        = "medium"
   query           = query.detect_iam_policies_set_at_project_level
   display_columns = local.detection_display_columns
@@ -45,6 +46,7 @@ detection "detect_iam_policies_set_at_project_level" {
 detection "detect_logins_without_mfa" {
   title           = "Detect Logins Without MFA"
   description     = "Detect logins without MFA, ensuring visibility into access attempts that might indicate unauthorized activities or weak authentication practices."
+  documentation   = file("./detections/docs/detect_logins_without_mfa.md")
   severity        = "high"
   query           = query.detect_logins_without_mfa
   display_columns = local.detection_display_columns
@@ -57,6 +59,7 @@ detection "detect_logins_without_mfa" {
 detection "detect_access_shared_resources" {
   title           = "Detect Access to Shared Resources"
   description     = "Detect access to shared resources that might indicate unauthorized access attempts or potential misuse of resource sharing configurations."
+  documentation   = file("./detections/docs/detect_access_shared_resources.md")
   severity        = "medium"
   query           = query.detect_access_shared_resources
   display_columns = local.detection_display_columns
@@ -69,6 +72,7 @@ detection "detect_access_shared_resources" {
 detection "detect_iam_policies_revoked" {
   title           = "Detect IAM Policies Revoked"
   description     = "Detect IAM policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
+  documentation   = file("./detections/docs/detect_iam_policies_revoked.md")
   severity        = "medium"
   query           = query.detect_iam_policies_revoked
   display_columns = local.detection_display_columns
@@ -81,6 +85,7 @@ detection "detect_iam_policies_revoked" {
 detection "detect_iam_policies_enabling_script_execution" {
   title           = "Detect IAM Policies to Enable Script Execution"
   description     = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_iam_policies_enabling_script_execution.md")
   severity        = "high"
   query           = query.detect_iam_policies_enabling_script_execution
   display_columns = local.detection_display_columns
@@ -93,6 +98,7 @@ detection "detect_iam_policies_enabling_script_execution" {
 detection "detect_iam_policies_granting_owner_roles" {
   title           = "Detect IAM Policies Granting Owner Role"
   description     = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_iam_policies_granting_owner_roles.md")
   severity        = "high"
   query           = query.detect_iam_policies_granting_owner_roles
   display_columns = local.detection_display_columns
@@ -105,6 +111,7 @@ detection "detect_iam_policies_granting_owner_roles" {
 detection "detect_org_policies_revoked" {
   title           = "Detect Org Policies Revoked"
   description     = "Detect org policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
+  documentation   = file("./detections/docs/detect_org_policies_revoked.md")
   severity        = "high"
   query           = query.detect_org_policies_revoked
   display_columns = local.detection_display_columns

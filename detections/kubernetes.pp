@@ -38,6 +38,7 @@ benchmark "kubernetes_detections" {
 detection "detect_kubernetes_secrets_deletions" {
   title           = "Detect Kubernetes Secrets Deletions"
   description     = "Detect deletions of Kubernetes secrets, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_secrets_deletions.md")
   severity        = "high"
   query           = query.detect_kubernetes_secrets_deletions
   display_columns = local.detection_display_columns
@@ -50,6 +51,7 @@ detection "detect_kubernetes_secrets_deletions" {
 detection "detect_kubernetes_cronjob_deletions" {
   title           = "Detect Kubernetes Cronjob Deletions"
   description     = "Detect deletions of Kubernetes cronjobs, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_cronjob_deletions.md")
   severity        = "medium"
   query           = query.detect_kubernetes_cronjob_deletions
   display_columns = local.detection_display_columns
@@ -62,6 +64,7 @@ detection "detect_kubernetes_cronjob_deletions" {
 detection "detect_kubernetes_cronjob_modifications" {
   title           = "Detect Kubernetes Cronjob Modifications"
   description     = "Detect modifications to Kubernetes cronjobs, ensuring visibility into changes that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_cronjob_modifications.md")
   severity        = "medium"
   query           = query.detect_kubernetes_cronjob_modifications
   display_columns = local.detection_display_columns
@@ -74,6 +77,7 @@ detection "detect_kubernetes_cronjob_modifications" {
 detection "detect_kubernetes_admission_webhook_config_creations" {
   title           = "Detect Kubernetes Admission Webhook Config Creations"
   description     = "Detect creations of Kubernetes admission webhook configurations, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_admission_webhook_config_creations.md")
   severity        = "medium"
   query           = query.detect_kubernetes_admission_webhook_config_creations
   display_columns = local.detection_display_columns
@@ -86,6 +90,7 @@ detection "detect_kubernetes_admission_webhook_config_creations" {
 detection "detect_kubernetes_admission_webhook_configs_replaced" {
   title           = "Detect Kubernetes Admission Webhook Configs Replaced"
   description     = "Detect replacements of Kubernetes admission webhook configurations, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_admission_webhook_configs_replaced.md")
   severity        = "medium"
   query           = query.detect_kubernetes_admission_webhook_configs_replaced
   display_columns = local.detection_display_columns
@@ -98,6 +103,7 @@ detection "detect_kubernetes_admission_webhook_configs_replaced" {
 detection "detect_kubernetes_admission_webhook_config_modifications" {
   title           = "Detect Kubernetes Admission Webhook Config Modifications"
   description     = "Detect modifications to Kubernetes admission webhook configurations, ensuring visibility into changes that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_admission_webhook_config_modifications.md")
   severity        = "medium"
   query           = query.detect_kubernetes_admission_webhook_config_modifications
   display_columns = local.detection_display_columns
@@ -110,6 +116,7 @@ detection "detect_kubernetes_admission_webhook_config_modifications" {
 detection "detect_kubernetes_clusters_with_public_endpoints" {
   title           = "Detect Kubernetes Clusters with Public Endpoints"
   description     = "Detect Kubernetes clusters with public endpoints, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/detect_kubernetes_clusters_with_public_endpoints.md")
   severity        = "high"
   query           = query.detect_kubernetes_clusters_with_public_endpoints
   display_columns = local.detection_display_columns
@@ -122,6 +129,7 @@ detection "detect_kubernetes_clusters_with_public_endpoints" {
 detection "detect_cloud_scheduler_run_jobs" {
   title           = "Detect Cloud Scheduler Run Jobs"
   description     = "Detect when Cloud Scheduler jobs are run, ensuring visibility into scheduled operations and monitoring for unauthorized or unexpected executions."
+  documentation   = file("./detections/docs/detect_cloud_scheduler_run_jobs.md")
   severity        = "medium"
   query           = query.detect_cloud_scheduler_run_jobs
   display_columns = local.detection_display_columns
@@ -134,6 +142,7 @@ detection "detect_cloud_scheduler_run_jobs" {
 detection "detect_containers_executed" {
   title           = "Detect Containers Executed"
   description     = "Detect the executions of containers, ensuring visibility into runtime activities that might indicate unauthorized actions or potential security risks."
+  documentation   = file("./detections/docs/detect_containers_executed.md")
   severity        = "high"
   query           = query.detect_containers_executed
   display_columns = local.detection_display_columns
