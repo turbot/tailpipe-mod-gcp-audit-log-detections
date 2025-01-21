@@ -18,12 +18,18 @@ locals {
   tp_source_ip as source_ip,
   tp_index as project,
   tp_id as source_id,
+  -- Create new aliases to preserve original row data
+  timestamp as timestamp_src,
+  opertion as operation_src,
+  resource as resource_src,
   *
+  exclude timestamp, operation, resource
   EOQ
 
   detection_sql_where_conditions = <<-EOQ
     and severity != 'Error'
-    -- and (operation is null or operation.last = true)
+    -- TODO: Do we need to check operation?
+    -- and (operation_src is null or operation_src.last = true)
   EOQ
   // Keep same order as SQL statement for easier readability
   detection_display_columns = [
