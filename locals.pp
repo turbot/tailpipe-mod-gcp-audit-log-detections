@@ -23,7 +23,7 @@ locals {
   opertion as operation_src,
   resource as resource_src,
   *
-  exclude timestamp, operation, resource
+  exclude (timestamp, operation, resource)
   EOQ
 
   detection_sql_where_conditions = <<-EOQ
