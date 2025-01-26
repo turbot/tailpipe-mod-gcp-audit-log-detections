@@ -2,19 +2,19 @@ locals {
   compute_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Compute"
   })
-  detect_vpn_tunnel_deletions_sql_columns                                         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_firewall_rule_deletions_sql_columns                              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_full_network_traffic_packet_deletions_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_full_network_traffic_packet_modifications_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_images_set_iam_policy_sql_columns                                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_disks_set_iam_policy_sql_columns                                 = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_snapshots_set_iam_policy_sql_columns                             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_instances_with_public_network_interfaces_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_public_ip_address_creations_sql_columns                                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_vpc_networks_shared_to_external_projects_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_disks_with_small_sizes_sql_columns                               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_disabling_of_compute_vpc_flow_logs_sql_columns                           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_compute_instances_with_metadata_startup_script_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_vpn_tunnel_deleted_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_firewall_rule_deleted_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_full_network_traffic_packet_deleted_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_full_network_traffic_packet_updated_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_image_iam_policy_set_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_disk_iam_policy_set_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_snapshot_iam_policy_set_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_instance_with_public_network_interface_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_public_ip_address_created_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_vpc_network_shared_to_external_project_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_disk_with_small_size_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_vpc_flow_logs_disabled_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  compute_instance_metadata_startup_script_updated_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "compute_detections" {
@@ -22,19 +22,19 @@ benchmark "compute_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Compute events."
   type        = "detection"
   children = [
-    detection.detect_compute_firewall_rule_deletions,
-    detection.detect_vpn_tunnel_deletions,
-    detection.detect_full_network_traffic_packet_deletions,
-    detection.detect_full_network_traffic_packet_modifications,
-    detection.detect_compute_images_set_iam_policy,
-    detection.detect_compute_disks_set_iam_policy,
-    detection.detect_compute_snapshots_set_iam_policy,
-    detection.detect_compute_instances_with_public_network_interfaces,
-    detection.detect_public_ip_address_creations,
-    detection.detect_vpc_networks_shared_to_external_projects,
-    detection.detect_compute_disks_with_small_sizes,
-    detection.detect_disabling_of_compute_vpc_flow_logs,
-    detection.detect_compute_instances_with_metadata_startup_script_modifications,
+    detection.compute_disk_iam_policy_set,
+    detection.compute_disk_with_small_size,
+    detection.compute_firewall_rule_deleted,
+    detection.compute_full_network_traffic_packet_deleted,
+    detection.compute_full_network_traffic_packet_updated,
+    detection.compute_image_iam_policy_set,
+    detection.compute_instance_metadata_startup_script_updated,
+    detection.compute_instance_with_public_network_interface,
+    detection.compute_public_ip_address_created,
+    detection.compute_snapshot_iam_policy_set,
+    detection.compute_vpc_flow_logs_disabled,
+    detection.compute_vpc_network_shared_to_external_project,
+    detection.compute_vpn_tunnel_deleted,
   ]
 
   tags = merge(local.compute_common_tags, {
@@ -42,12 +42,12 @@ benchmark "compute_detections" {
   })
 }
 
-detection "detect_vpn_tunnel_deletions" {
-  title           = "Detect Compute VPN Tunnel Deletions"
+detection "compute_vpn_tunnel_deleted" {
+  title           = "VPN Tunnel Deleted"
   description     = "Detect deletions of VPN tunnels, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_vpn_tunnel_deletions.md")
+  documentation   = file("./detections/docs/compute_vpn_tunnel_deleted.md")
   severity        = "high"
-  query           = query.detect_vpn_tunnel_deletions
+  query           = query.compute_vpn_tunnel_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -55,12 +55,12 @@ detection "detect_vpn_tunnel_deletions" {
   })
 }
 
-detection "detect_compute_firewall_rule_deletions" {
-  title           = "Detect Compute Firewall Rule Deletions"
+detection "compute_firewall_rule_deleted" {
+  title           = "Compute Firewall Rule Deleted"
   description     = "Detect Compute firewall rule deletions, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
-  documentation   = file("./detections/docs/detect_compute_firewall_rule_deletions.md")
+  documentation   = file("./detections/docs/compute_firewall_rule_deleted.md")
   severity        = "high"
-  query           = query.detect_compute_firewall_rule_deletions
+  query           = query.compute_firewall_rule_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -68,12 +68,12 @@ detection "detect_compute_firewall_rule_deletions" {
   })
 }
 
-detection "detect_full_network_traffic_packet_deletions" {
-  title           = "Detect Compute Full Network Traffic Packet Deletions"
+detection "compute_full_network_traffic_packet_deleted" {
+  title           = "Full Network Traffic Packet Deleted"
   description     = "Detect deletions of full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_full_network_traffic_packet_deletions.md")
+  documentation   = file("./detections/docs/compute_full_network_traffic_packet_deleted.md")
   severity        = "high"
-  query           = query.detect_full_network_traffic_packet_deletions
+  query           = query.compute_full_network_traffic_packet_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -81,12 +81,12 @@ detection "detect_full_network_traffic_packet_deletions" {
   })
 }
 
-detection "detect_full_network_traffic_packet_modifications" {
-  title           = "Detect Compute Full Network Traffic Packet Modifications"
+detection "compute_full_network_traffic_packet_updated" {
+  title           = "Full Network Traffic Packet Modified"
   description     = "Detect modifications to full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_full_network_traffic_packet_modifications.md")
+  documentation   = file("./detections/docs/compute_full_network_traffic_packet_updated.md")
   severity        = "high"
-  query           = query.detect_full_network_traffic_packet_modifications
+  query           = query.compute_full_network_traffic_packet_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -94,12 +94,12 @@ detection "detect_full_network_traffic_packet_modifications" {
   })
 }
 
-detection "detect_compute_images_set_iam_policy" {
-  title           = "Detect Compute Images Set IAM Policy"
+detection "compute_image_iam_policy_set" {
+  title           = "Compute Image IAM Policy Set"
   description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
-  documentation   = file("./detections/docs/detect_compute_images_set_iam_policy.md")
+  documentation   = file("./detections/docs/compute_image_iam_policy_set.md")
   severity        = "medium"
-  query           = query.detect_compute_images_set_iam_policy
+  query           = query.compute_image_iam_policy_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -107,12 +107,12 @@ detection "detect_compute_images_set_iam_policy" {
   })
 }
 
-detection "detect_compute_disks_set_iam_policy" {
-  title           = "Detect Compute Disks Set IAM Policy"
+detection "compute_disk_iam_policy_set" {
+  title           = "Compute Disk IAM Policy Set"
   description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
-  documentation   = file("./detections/docs/detect_compute_disks_set_iam_policy.md")
+  documentation   = file("./detections/docs/compute_disk_iam_policy_set.md")
   severity        = "medium"
-  query           = query.detect_compute_disks_set_iam_policy
+  query           = query.compute_disk_iam_policy_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -120,12 +120,12 @@ detection "detect_compute_disks_set_iam_policy" {
   })
 }
 
-detection "detect_compute_snapshots_set_iam_policy" {
-  title           = "Detect Compute Snapshots Set IAM Policy"
+detection "compute_snapshot_iam_policy_set" {
+  title           = "Compute Snapshot IAM Policy Set"
   description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
-  documentation   = file("./detections/docs/detect_compute_snapshots_set_iam_policy.md")
+  documentation   = file("./detections/docs/compute_snapshot_iam_policy_set.md")
   severity        = "medium"
-  query           = query.detect_compute_snapshots_set_iam_policy
+  query           = query.compute_snapshot_iam_policy_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -133,12 +133,12 @@ detection "detect_compute_snapshots_set_iam_policy" {
   })
 }
 
-detection "detect_compute_instances_with_public_network_interfaces" {
-  title           = "Detect Compute Instances with Public Network Interfaces"
+detection "compute_instance_with_public_network_interface" {
+  title           = "Compute Instance with Public Network Interface"
   description     = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
-  documentation   = file("./detections/docs/detect_compute_instances_with_public_network_interfaces.md")
+  documentation   = file("./detections/docs/compute_instance_with_public_network_interface.md")
   severity        = "high"
-  query           = query.detect_compute_instances_with_public_network_interfaces
+  query           = query.compute_instance_with_public_network_interface
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -146,12 +146,12 @@ detection "detect_compute_instances_with_public_network_interfaces" {
   })
 }
 
-detection "detect_public_ip_address_creations" {
-  title           = "Detect Public IP Address Creations"
+detection "compute_public_ip_address_created" {
+  title           = "Public IP Address Created"
   description     = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
-  documentation   = file("./detections/docs/detect_public_ip_address_creations.md")
+  documentation   = file("./detections/docs/compute_public_ip_address_created.md")
   severity        = "high"
-  query           = query.detect_public_ip_address_creations
+  query           = query.compute_public_ip_address_created
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -159,12 +159,12 @@ detection "detect_public_ip_address_creations" {
   })
 }
 
-detection "detect_vpc_networks_shared_to_external_projects" {
-  title           = "Detect VPC Networks Shared to External Projects"
+detection "compute_vpc_network_shared_to_external_project" {
+  title           = "VPC Network Shared to External Project"
   description     = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
-  documentation   = file("./detections/docs/detect_vpc_networks_shared_to_external_projects.md")
+  documentation   = file("./detections/docs/compute_vpc_network_shared_to_external_project.md")
   severity        = "high"
-  query           = query.detect_vpc_networks_shared_to_external_projects
+  query           = query.compute_vpc_network_shared_to_external_project
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -172,12 +172,12 @@ detection "detect_vpc_networks_shared_to_external_projects" {
   })
 }
 
-detection "detect_compute_disks_with_small_sizes" {
-  title           = "Detect Compute Disks with Small Sizes"
+detection "compute_disk_with_small_size" {
+  title           = "Compute Disk with Small Size"
   description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_compute_disks_with_small_sizes.md")
+  documentation   = file("./detections/docs/compute_disk_with_small_size.md")
   severity        = "low"
-  query           = query.detect_compute_disks_with_small_sizes
+  query           = query.compute_disk_with_small_size
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -185,12 +185,12 @@ detection "detect_compute_disks_with_small_sizes" {
   })
 }
 
-detection "detect_disabling_of_compute_vpc_flow_logs" {
-  title           = "Detect Disable Compute VPC Flow Logs"
+detection "compute_vpc_flow_logs_disabled" {
+  title           = "Compute VPC Flow Logs Disabled"
   description     = "Detect disabling of Compute VPC flow logs, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_disabling_of_compute_vpc_flow_logs.md")
+  documentation   = file("./detections/docs/compute_vpc_flow_logs_disabled.md")
   severity        = "high"
-  query           = query.detect_disabling_of_compute_vpc_flow_logs
+  query           = query.compute_vpc_flow_logs_disabled
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
@@ -198,230 +198,15 @@ detection "detect_disabling_of_compute_vpc_flow_logs" {
   })
 }
 
-detection "detect_compute_instances_with_metadata_startup_script_modifications" {
-  title           = "Detect Compute Instances with Metadata Startup Script Modifications"
+detection "compute_instance_metadata_startup_script_updated" {
+  title           = "Compute Instance Metadata Startup Script Modified"
   description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
-  documentation   = file("./detections/docs/detect_compute_instances_with_metadata_startup_script_modifications.md")
+  documentation   = file("./detections/docs/compute_instance_metadata_startup_script_updated.md")
   severity        = "high"
-  query           = query.detect_compute_instances_with_metadata_startup_script_modifications
+  query           = query.compute_instance_metadata_startup_script_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.compute_common_tags, {
     mitre_attack_ids = "TA0040:T1491"
   })
-}
-
-query "detect_compute_instances_with_metadata_startup_script_modifications" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_instances_with_metadata_startup_script_modifications_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and (method_name ilike 'v1.compute.instances.setMetadata')
-      and (json_extract_string(request, '$.Metadata Keys Added') = '["startup-script"]'
-        OR json_extract_string(request, '$.Metadata Keys Modified') = '["startup-script"]' OR json_extract_string(request, '$.Metadata Keys Deleted') = '["startup-script"]')
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-// tested
-query "detect_compute_firewall_rule_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_firewall_rule_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.firewalls.delete'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_vpn_tunnel_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_vpn_tunnel_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.vpntunnels.delete'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_full_network_traffic_packet_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_full_network_traffic_packet_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.delete'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_full_network_traffic_packet_modifications" {
-  sql = <<-EOQ
-    select
-      ${local.detect_full_network_traffic_packet_modifications_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.patch'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_compute_images_set_iam_policy" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_images_set_iam_policy_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.images.setiampolicy'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_compute_disks_set_iam_policy" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_disks_set_iam_policy_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.disks.setiampolicy'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_compute_snapshots_set_iam_policy" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_snapshots_set_iam_policy_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.snapshots.setiampolicy'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_compute_instances_with_public_network_interfaces" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_instances_with_public_network_interfaces_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
-      ${local.detection_sql_where_conditions}
-      and exists (
-        select *
-        from unnest(
-        cast(json_extract(request, '$.networkInterfaces[*].accessConfigs[*].name') as json[])
-        ) as access_type
-        where (access_type::varchar ilike '%nat%' or access_type::varchar ilike '%external%')
-      )
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_public_ip_address_creations" {
-  sql = <<-EOQ
-    select
-      ${local.detect_public_ip_address_creations_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.addresses.insert'
-      and request.networkTier is not null
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_vpc_networks_shared_to_external_projects" {
-  sql = <<-EOQ
-    select
-      ${local.detect_vpc_networks_shared_to_external_projects_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'googleapis.cloud.compute.v%.projects.enablexpnresource'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-// testing needed
-query "detect_compute_disks_with_small_sizes" {
-  sql = <<-EOQ
-    select
-      ${local.detect_compute_disks_with_small_sizes_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike '%.compute.instances.insert'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
-        where json_extract(disk, '$.boot') = 'true'
-        and cast(json_extract(disk, '$.initializeParams.diskSizeGb') as integer) < 15
-      )
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-// testing needed
-query "detect_disabling_of_compute_vpc_flow_logs" {
-  sql = <<-EOQ
-    select
-      ${local.detect_disabling_of_compute_vpc_flow_logs_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.subnetworks.patch'
-      and request.enableFlowLogs = 'false'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
 }

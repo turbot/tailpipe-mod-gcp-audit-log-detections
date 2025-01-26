@@ -3,7 +3,7 @@ locals {
     service = "GCP/APIGateway"
   })
 
-  detect_apigateway_configured_to_execute_backend_commands_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  apigateway_backend_command_execution_configured_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "apigateway_detections" {
@@ -11,7 +11,7 @@ benchmark "apigateway_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for API Gateway events."
   type        = "detection"
   children = [
-    detection.detect_apigateway_configured_to_execute_backend_commands
+    detection.apigateway_backend_command_execution_configured
   ]
 
   tags = merge(local.apigateway_common_tags, {
@@ -19,12 +19,12 @@ benchmark "apigateway_detections" {
   })
 }
 
-detection "detect_apigateway_configured_to_execute_backend_commands" {
-  title           = "Detect API Gateway Configured to Execute Backend Commands"
+detection "apigateway_backend_command_execution_configured" {
+  title           = "API Gateway Backend Command Execution Configured"
   description     = "Detect log entries where an API Gateway is configured to execute backend commands that might expose resources to threats."
-  documentation   = file("./detections/docs/detect_apigateway_configured_to_execute_backend_commands.md")
+  documentation   = file("./detections/docs/apigateway_backend_command_execution_configured.md")
   severity        = "high"
-  query           = query.detect_apigateway_configured_to_execute_backend_commands
+  query           = query.apigateway_backend_command_execution_configured
   display_columns = local.detection_display_columns
 
   tags = merge(local.apigateway_common_tags, {
@@ -32,10 +32,10 @@ detection "detect_apigateway_configured_to_execute_backend_commands" {
   })
 }
 // testing needed
-query "detect_apigateway_configured_to_execute_backend_commands" {
+query "apigateway_backend_command_execution_configured" {
   sql = <<-EOQ
     select
-      ${local.detect_apigateway_configured_to_execute_backend_commands_sql_columns}
+      ${local.apigateway_backend_command_execution_configured_sql_columns}
     from
       gcp_audit_log
     where

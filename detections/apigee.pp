@@ -3,7 +3,7 @@ locals {
     service = "GCP/Apigee"
   })
 
-  detect_apigee_api_access_to_vulnerable_services_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  apigee_api_accessed_vulnerable_services_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "apigee_detections" {
@@ -11,7 +11,7 @@ benchmark "apigee_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Apigee events."
   type        = "detection"
   children = [
-    detection.detect_apigee_api_access_to_vulnerable_services
+    detection.apigee_api_accessed_vulnerable_services
   ]
 
   tags = merge(local.apigee_common_tags, {
@@ -19,12 +19,12 @@ benchmark "apigee_detections" {
   })
 }
 
-detection "detect_apigee_api_access_to_vulnerable_services" {
-  title           = "Detect Apigee API Access to Vulnerable Services"
+detection "apigee_api_accessed_vulnerable_services" {
+  title           = "Apigee API Accessed Vulnerable Services"
   description     = "Detect log entries where Apigee API is accessed to a vulnerable service."
-  documentation   = file("./detections/docs/detect_apigee_api_access_to_vulnerable_services.md")
+  documentation   = file("./detections/docs/apigee_api_accessed_vulnerable_services.md")
   severity        = "high"
-  query           = query.detect_apigee_api_access_to_vulnerable_services
+  query           = query.apigee_api_accessed_vulnerable_services
   display_columns = local.detection_display_columns
 
   tags = merge(local.apigee_common_tags, {
@@ -32,10 +32,10 @@ detection "detect_apigee_api_access_to_vulnerable_services" {
   })
 }
 
-query "detect_apigee_api_access_to_vulnerable_services" {
+query "apigee_api_accessed_vulnerable_services" {
   sql = <<-EOQ
     select
-      ${local.detect_apigee_api_access_to_vulnerable_services_sql_columns}
+      ${local.apigee_api_accessed_vulnerable_services_sql_columns}
     from
       gcp_audit_log
     where

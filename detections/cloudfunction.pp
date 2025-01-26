@@ -3,9 +3,9 @@ locals {
     service = "GCP/CloudFunctions"
   })
 
-  detect_cloudfunctions_publicly_accessible_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloudfunctions_operation_deletions_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloudfunctions_function_code_modifications_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  cloudfunctions_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  cloudfunctions_operations_deleted_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  cloudfunctions_code_updated_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "cloudfunction_detections" {
@@ -13,9 +13,9 @@ benchmark "cloudfunction_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Cloudfunction events."
   type        = "detection"
   children = [
-    detection.detect_cloudfunctions_publicly_accessible,
-    detection.detect_cloudfunctions_operation_deletions,
-    detection.detect_cloudfunctions_function_code_modifications,
+    detection.cloudfunctions_code_updated,
+    detection.cloudfunctions_operations_deleted,
+    detection.cloudfunctions_publicly_accessible,
   ]
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -23,12 +23,12 @@ benchmark "cloudfunction_detections" {
   })
 }
 
-detection "detect_cloudfunctions_publicly_accessible" {
-  title           = "Detect Cloud Functions Publicly Accessible"
+detection "cloudfunctions_publicly_accessible" {
+  title           = "Cloud Functions Publicly Accessible"
   description     = "Detect when Cloud Functions are made publicly accessible, ensuring awareness of potential exposure and mitigating security risks associated with unrestricted access."
-  documentation   = file("./detections/docs/detect_cloudfunctions_publicly_accessible.md")
+  documentation   = file("./detections/docs/cloudfunctions_publicly_accessible.md")
   severity        = "high"
-  query           = query.detect_cloudfunctions_publicly_accessible
+  query           = query.cloudfunctions_publicly_accessible
   display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -36,12 +36,12 @@ detection "detect_cloudfunctions_publicly_accessible" {
   })
 }
 
-detection "detect_cloudfunctions_operation_deletions" {
-  title           = "Detect Cloud Functions Operation Deletions"
+detection "cloudfunctions_operations_deleted" {
+  title           = "Cloud Functions Operations Deleted"
   description     = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
-  documentation   = file("./detections/docs/detect_cloudfunctions_operation_deletions.md")
+  documentation   = file("./detections/docs/cloudfunctions_operations_deleted.md")
   severity        = "medium"
-  query           = query.detect_cloudfunctions_operation_deletions
+  query           = query.cloudfunctions_operations_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -49,12 +49,12 @@ detection "detect_cloudfunctions_operation_deletions" {
   })
 }
 
-detection "detect_cloudfunctions_function_code_modifications" {
-  title           = "Detect Cloud Functions Code Modification"
+detection "cloudfunctions_code_updated" {
+  title           = "Cloud Functions Code Modified"
   description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
-  documentation   = file("./detections/docs/detect_cloudfunctions_function_code_modifications.md")
+  documentation   = file("./detections/docs/cloudfunctions_code_updated.md")
   severity        = "high"
-  query           = query.detect_cloudfunctions_function_code_modifications
+  query           = query.cloudfunctions_code_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -63,10 +63,10 @@ detection "detect_cloudfunctions_function_code_modifications" {
 }
 
 
-query "detect_cloudfunctions_function_code_modifications" {
+query "cloudfunctions_code_updated" {
   sql = <<-EOQ
     select 
-      ${local.detect_cloudfunctions_function_code_modifications_sql_columns}
+      ${local.cloudfunctions_code_updated_sql_columns}
     from 
       gcp_audit_log
     where
@@ -79,10 +79,10 @@ query "detect_cloudfunctions_function_code_modifications" {
   EOQ
 }
 
-query "detect_cloudfunctions_publicly_accessible" {
+query "cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
     select 
-      ${local.detect_cloudfunctions_publicly_accessible_sql_columns}
+      ${local.cloudfunctions_publicly_accessible_sql_columns}
     from 
       gcp_audit_log
     where
@@ -99,10 +99,10 @@ query "detect_cloudfunctions_publicly_accessible" {
   EOQ
 }
 
-query "detect_cloudfunctions_operation_deletions" {
+query "cloudfunctions_operations_deleted" {
   sql = <<-EOQ
     select 
-      ${local.detect_cloudfunctions_operation_deletions_sql_columns}
+      ${local.cloudfunctions_operations_deleted_sql_columns}
     from 
       gcp_audit_log
     where

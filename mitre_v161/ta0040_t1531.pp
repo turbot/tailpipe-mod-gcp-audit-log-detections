@@ -9,7 +9,7 @@ benchmark "mitre_v161_ta0040_t1531" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0040_t1531.md")
   children = [
-    detection.detect_cloudfunctions_function_code_modifications,
+    detection.cloudfunctions_code_updated,
     detection.detect_service_account_key_deletions,
     detection.detect_iam_roles_permission_revocations
   ]

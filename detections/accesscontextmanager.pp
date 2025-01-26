@@ -3,8 +3,8 @@ locals {
     service = "GCP/AccessContextManager"
   })
 
-  detect_access_context_manager_policy_deletions_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_access_context_manager_level_deletions_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  access_context_manager_policy_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  access_context_manager_level_deleted_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "access_context_manager_detections" {
@@ -12,8 +12,8 @@ benchmark "access_context_manager_detections" {
   description = "This detection benchmark contains recommendations when scanning Admin Activity audit logs for Access Context Manager events."
   type        = "detection"
   children = [
-    detection.detect_access_context_manager_policy_deletions,
-    detection.detect_access_context_manager_level_deletions,
+    detection.access_context_manager_policy_deleted,
+    detection.access_context_manager_level_deleted,
   ]
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -21,12 +21,12 @@ benchmark "access_context_manager_detections" {
   })
 }
 
-detection "detect_access_context_manager_policy_deletions" {
-  title           = "Detect Access Context Manager Policy Deletions"
+detection "access_context_manager_policy_deleted" {
+  title           = "Access Context Manager Policy Deleted"
   description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
-  documentation   = file("./detections/docs/detect_access_context_manager_policy_deletions.md")
+  documentation   = file("./detections/docs/access_context_manager_policy_deleted.md")
   severity        = "medium"
-  query           = query.detect_access_context_manager_policy_deletions
+  query           = query.access_context_manager_policy_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -34,12 +34,12 @@ detection "detect_access_context_manager_policy_deletions" {
   })
 }
 
-detection "detect_access_context_manager_level_deletions" {
-  title           = "Detect Access Context Manager Level Deletions"
+detection "access_context_manager_level_deleted" {
+  title           = "Access Context Manager Level Deleted"
   description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
-  documentation   = file("./detections/docs/detect_access_context_manager_level_deletions.md")
+  documentation   = file("./detections/docs/access_context_manager_level_deleted.md")
   severity        = "medium"
-  query           = query.detect_access_context_manager_level_deletions
+  query           = query.access_context_manager_level_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
@@ -47,25 +47,25 @@ detection "detect_access_context_manager_level_deletions" {
   })
 }
 
-query "detect_access_context_manager_policy_deletions" {
+query "access_context_manager_policy_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_access_context_manager_policy_deletions_sql_columns}
+      ${local.access_context_manager_policy_deleted_sql_columns}
     from
       gcp_audit_log
     where
       service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accesspolicies.delete'
+      and method_name ilike 'accesscontextmanager.policies.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
 
-query "detect_access_context_manager_level_deletions" {
+query "access_context_manager_level_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_access_context_manager_level_deletions_sql_columns}
+      ${local.access_context_manager_level_deleted_sql_columns}
     from
       gcp_audit_log
     where

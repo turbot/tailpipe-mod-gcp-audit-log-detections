@@ -3,11 +3,11 @@ locals {
     service = "GCP/ArtifactRegistry"
   })
 
-  detect_overwritten_artifact_registry_artifacts_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_artifact_registries_publicly_accessible_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_artifact_registry_package_deletions_sql_columns                 = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_artifact_registry_repository_deletions_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_artifact_registry_encrypted_container_images_pushed_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  artifact_registry_artifacts_overwritten_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  artifact_registry_publicly_accessible_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  artifact_registry_repository_deleted_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  artifact_registry_package_deleted_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  artifact_registry_encrypted_container_image_pushed_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "artifactregistry_detections" {
@@ -15,12 +15,12 @@ benchmark "artifactregistry_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Artifact Registry events."
   type        = "detection"
   children = [
-    detection.detect_overwritten_artifact_registry_artifacts,
-    detection.detect_artifact_registries_publicly_accessible,
-    detection.detect_artifact_registry_artifacts_with_no_layers,
-    detection.detect_artifact_registry_package_deletions,
-    detection.detect_artifact_registry_repository_deletions,
-    detection.detect_artifact_registry_encrypted_container_images_pushed,
+    detection.artifact_registry_artifacts_no_layers,
+    detection.artifact_registry_artifacts_overwritten,
+    detection.artifact_registry_encrypted_container_image_pushed,
+    detection.artifact_registry_package_deleted,
+    detection.artifact_registry_publicly_accessible,
+    detection.artifact_registry_repository_deleted,
   ]
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -28,12 +28,12 @@ benchmark "artifactregistry_detections" {
   })
 }
 
-detection "detect_overwritten_artifact_registry_artifacts" {
-  title           = "Detect Overwritten Artifact Registry Artifacts"
+detection "artifact_registry_artifacts_overwritten" {
+  title           = "Artifact Registry Artifacts Overwritten"
   description     = "Detect overwritten Artifact Registry Artifacts, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_overwritten_artifact_registry_artifacts.md")
+  documentation   = file("./detections/docs/artifact_registry_artifacts_overwritten.md")
   severity        = "medium"
-  query           = query.detect_overwritten_artifact_registry_artifacts
+  query           = query.artifact_registry_artifacts_overwritten
   display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -41,12 +41,12 @@ detection "detect_overwritten_artifact_registry_artifacts" {
   })
 }
 
-detection "detect_artifact_registries_publicly_accessible" {
-  title           = "Detect Artifact Registries Publicly Accessible"
+detection "artifact_registry_publicly_accessible" {
+  title           = "Artifact Registry Publicly Accessible"
   description     = "Detect Artifact Registries publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_artifact_registries_publicly_accessible.md")
+  documentation   = file("./detections/docs/artifact_registry_publicly_accessible.md")
   severity        = "high"
-  query           = query.detect_artifact_registries_publicly_accessible
+  query           = query.artifact_registry_publicly_accessible
   display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -54,12 +54,12 @@ detection "detect_artifact_registries_publicly_accessible" {
   })
 }
 
-detection "detect_artifact_registry_artifacts_with_no_layers" {
-  title           = "Detect Artifact Registry Artifacts with No Layers"
+detection "artifact_registry_artifacts_no_layers" {
+  title           = "Artifact Registry Artifacts No Layers"
   description     = "Detect Artifact Registry Artifacts with no layers, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_artifact_registry_artifacts_with_no_layers.md")
+  documentation   = file("./detections/docs/artifact_registry_artifacts_no_layers.md")
   severity        = "medium"
-  query           = query.detect_artifact_registry_artifacts_with_no_layers
+  query           = query.artifact_registry_artifacts_no_layers
   display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -67,12 +67,12 @@ detection "detect_artifact_registry_artifacts_with_no_layers" {
   })
 }
 
-detection "detect_artifact_registry_repository_deletions" {
-  title           = "Detect Artifact Registry Repository Deletions"
+detection "artifact_registry_repository_deleted" {
+  title           = "Artifact Registry Repository Deleted"
   description     = "Detect Artifact Registry repository deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_artifact_registry_repository_deletions.md")
+  documentation   = file("./detections/docs/artifact_registry_repository_deleted.md")
   severity        = "high"
-  query           = query.detect_artifact_registry_repository_deletions
+  query           = query.artifact_registry_repository_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -80,24 +80,24 @@ detection "detect_artifact_registry_repository_deletions" {
   })
 }
 
-detection "detect_artifact_registry_package_deletions" {
-  title       = "Detect Artifact Registry Package Deletions"
-  description = "Detect Artifact Registry package deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  documentation = file("./detections/docs/detect_artifact_registry_package_deletions.md")
-  severity    = "medium"
-  query       = query.detect_artifact_registry_package_deletions
+detection "artifact_registry_package_deleted" {
+  title         = "Artifact Registry Package Deleted"
+  description   = "Detect Artifact Registry package deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  documentation = file("./detections/docs/artifact_registry_package_deleted.md")
+  severity      = "medium"
+  query         = query.artifact_registry_package_deleted
 
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
 
-detection "detect_artifact_registry_encrypted_container_images_pushed" {
-  title           = "Detect Artifact Registry Encrypted Container Images Pushed"
+detection "artifact_registry_encrypted_container_image_pushed" {
+  title           = "Artifact Registry Encrypted Container Image Pushed"
   description     = "Detect Artifact Registry encrypted container images pushed, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_artifact_registry_encrypted_container_images_pushed.md")
+  documentation   = file("./detections/docs/artifact_registry_encrypted_container_image_pushed.md")
   severity        = "medium"
-  query           = query.detect_artifact_registry_encrypted_container_images_pushed
+  query           = query.artifact_registry_encrypted_container_image_pushed
   display_columns = local.detection_display_columns
 
   tags = merge(local.artifactregistry_common_tags, {
@@ -105,10 +105,10 @@ detection "detect_artifact_registry_encrypted_container_images_pushed" {
   })
 }
 // testing needed
-query "detect_overwritten_artifact_registry_artifacts" {
+query "artifact_registry_artifacts_overwritten" {
   sql = <<-EOQ
     select
-      ${local.detect_overwritten_artifact_registry_artifacts_sql_columns}
+      ${local.artifact_registry_artifacts_overwritten_sql_columns}
     from
       gcp_audit_log
     where
@@ -125,10 +125,10 @@ query "detect_overwritten_artifact_registry_artifacts" {
   EOQ
 }
 // testing needed
-query "detect_artifact_registries_publicly_accessible" {
+query "artifact_registry_publicly_accessible" {
   sql = <<-EOQ
     select
-      ${local.detect_artifact_registries_publicly_accessible_sql_columns}
+      ${local.artifact_registry_publicly_accessible_sql_columns}
     from
       gcp_audit_log
     where
@@ -145,10 +145,10 @@ query "detect_artifact_registries_publicly_accessible" {
   EOQ
 }
 // testing needed
-query "detect_artifact_registry_artifacts_with_no_layers" {
+query "artifact_registry_artifacts_no_layers" {
   sql = <<-EOQ
     select
-      ${local.detect_overwritten_artifact_registry_artifacts_sql_columns}
+      ${local.artifact_registry_artifacts_overwritten_sql_columns}
     from
       gcp_audit_log
     where
@@ -164,10 +164,10 @@ query "detect_artifact_registry_artifacts_with_no_layers" {
   EOQ
 }
 
-query "detect_artifact_registry_package_deletions" {
+query "artifact_registry_package_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_artifact_registry_package_deletions_sql_columns}
+      ${local.artifact_registry_package_deleted_sql_columns}
     from
       gcp_audit_log
     where
@@ -179,10 +179,10 @@ query "detect_artifact_registry_package_deletions" {
   EOQ
 }
 
-query "detect_artifact_registry_repository_deletions" {
+query "artifact_registry_repository_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_artifact_registry_repository_deletions_sql_columns}
+      ${local.artifact_registry_repository_deleted_sql_columns}
     from
       gcp_audit_log
     where
@@ -194,10 +194,10 @@ query "detect_artifact_registry_repository_deletions" {
   EOQ
 }
 // testing needed
-query "detect_artifact_registry_encrypted_container_images_pushed" {
+query "artifact_registry_encrypted_container_image_pushed" {
   sql = <<-EOQ
     select
-      ${local.detect_artifact_registry_encrypted_container_images_pushed_sql_columns}
+      ${local.artifact_registry_encrypted_container_image_pushed_sql_columns}
     from
       gcp_audit_log
     where
