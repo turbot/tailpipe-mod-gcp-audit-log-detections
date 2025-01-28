@@ -31,7 +31,7 @@ benchmark "compute_detections" {
 
 detection "compute_vpn_tunnel_deleted" {
   title           = "VPN Tunnel Deleted"
-  description     = "Detect deletions of VPN tunnels, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when a VPN tunnel is deleted to check for potential disruptions to secure network connections or unauthorized access attempts that may expose resources to threats."
   documentation   = file("./detections/docs/compute_vpn_tunnel_deleted.md")
   severity        = "high"
   query           = query.compute_vpn_tunnel_deleted
@@ -44,7 +44,7 @@ detection "compute_vpn_tunnel_deleted" {
 
 detection "compute_firewall_rule_deleted" {
   title           = "Compute Firewall Rule Deleted"
-  description     = "Detect Compute firewall rule deletions, ensuring visibility into modifications that may expose multiple resources to threats and enabling prompt action to maintain network security."
+  description     = "Detect when a Compute firewall rule is deleted to check for risks of exposing resources to unauthorized access or reducing the overall network security posture."
   documentation   = file("./detections/docs/compute_firewall_rule_deleted.md")
   severity        = "high"
   query           = query.compute_firewall_rule_deleted
@@ -57,7 +57,7 @@ detection "compute_firewall_rule_deleted" {
 
 detection "compute_full_network_traffic_packet_deleted" {
   title           = "Full Network Traffic Packet Deleted"
-  description     = "Detect deletions of full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when full network traffic packet deleted to check for risks of losing visibility into network traffic monitoring, which may indicate malicious intent or unauthorized activity."
   documentation   = file("./detections/docs/compute_full_network_traffic_packet_deleted.md")
   severity        = "high"
   query           = query.compute_full_network_traffic_packet_deleted
@@ -69,10 +69,10 @@ detection "compute_full_network_traffic_packet_deleted" {
 }
 
 detection "compute_full_network_traffic_packet_updated" {
-  title           = "Full Network Traffic Packet Modified"
-  description     = "Detect modifications to full network traffic packets, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  title           = "Full Network Traffic Packet Updated"
+  description     = "Detect when full network traffic packet updated to check for risks of tampered network traffic monitoring configurations that could reduce visibility or enable data exfiltration."
   documentation   = file("./detections/docs/compute_full_network_traffic_packet_updated.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.compute_full_network_traffic_packet_updated
   display_columns = local.detection_display_columns
 
@@ -83,9 +83,9 @@ detection "compute_full_network_traffic_packet_updated" {
 
 detection "compute_image_iam_policy_set" {
   title           = "Compute Image IAM Policy Set"
-  description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
+  description     = "Detect when a Compute image IAM policy is set to check for potential unauthorized access attempts or misconfigurations that might expose sensitive resources."
   documentation   = file("./detections/docs/compute_image_iam_policy_set.md")
-  severity        = "low"
+  severity        = "medium"
   query           = query.compute_image_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -96,9 +96,9 @@ detection "compute_image_iam_policy_set" {
 
 detection "compute_disk_iam_policy_set" {
   title           = "Compute Disk IAM Policy Set"
-  description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
+  description     = "Detect when a Compute disk IAM policy is set to check for risks of unauthorized access to disk resources or data exposure due to misconfigured permissions."
   documentation   = file("./detections/docs/compute_disk_iam_policy_set.md")
-  severity        = "low"
+  severity        = "medium"
   query           = query.compute_disk_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -109,9 +109,9 @@ detection "compute_disk_iam_policy_set" {
 
 detection "compute_snapshot_iam_policy_set" {
   title           = "Compute Snapshot IAM Policy Set"
-  description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
+  description     = "Detect when a Compute snapshot IAM policy is set to check for potential data exposure or unauthorized access attempts."
   documentation   = file("./detections/docs/compute_snapshot_iam_policy_set.md")
-  severity        = "low"
+  severity        = "medium"
   query           = query.compute_snapshot_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -122,7 +122,7 @@ detection "compute_snapshot_iam_policy_set" {
 
 detection "compute_instance_with_public_network_interface" {
   title           = "Compute Instance with Public Network Interface"
-  description     = "Detect compute instances with public network interfaces, ensuring visibility into exposed resources and mitigating risks of unauthorized access or data breaches."
+  description     = "Detect when a Compute instance is configured with a public network interface to check for risks of exposing resources to unauthorized access or potential data breaches."
   documentation   = file("./detections/docs/compute_instance_with_public_network_interface.md")
   severity        = "high"
   query           = query.compute_instance_with_public_network_interface
@@ -135,7 +135,7 @@ detection "compute_instance_with_public_network_interface" {
 
 detection "compute_public_ip_address_created" {
   title           = "Public IP Address Created"
-  description     = "Detect the creation of public IP addresses, ensuring awareness of potential resource exposure and mitigating security risks associated with unrestricted external access."
+  description     = "Detect when a public IP address is created to check for potential exposure of resources to external threats or unauthorized access."
   documentation   = file("./detections/docs/compute_public_ip_address_created.md")
   severity        = "high"
   query           = query.compute_public_ip_address_created
@@ -148,7 +148,7 @@ detection "compute_public_ip_address_created" {
 
 detection "compute_vpc_network_shared_to_external_project" {
   title           = "VPC Network Shared to External Project"
-  description     = "Detect VPC networks shared to external projects, ensuring awareness of potential resource exposure and mitigating risks associated with unauthorized access or misconfigurations."
+  description     = "Detect when a VPC network is shared with an external project to check for risks of exposing resources to unauthorized access or external threats."
   documentation   = file("./detections/docs/compute_vpc_network_shared_to_external_project.md")
   severity        = "high"
   query           = query.compute_vpc_network_shared_to_external_project
@@ -161,7 +161,7 @@ detection "compute_vpc_network_shared_to_external_project" {
 
 detection "compute_disk_with_small_size" {
   title           = "Compute Disk with Small Size"
-  description     = "Detect compute disk sizes that are too small, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when a Compute disk is configured with an unusually small size to check for risks of resource misconfigurations or potential inefficiencies."
   documentation   = file("./detections/docs/compute_disk_with_small_size.md")
   severity        = "low"
   query           = query.compute_disk_with_small_size
@@ -174,7 +174,7 @@ detection "compute_disk_with_small_size" {
 
 detection "compute_vpc_flow_logs_disabled" {
   title           = "Compute VPC Flow Logs Disabled"
-  description     = "Detect disabling of Compute VPC flow logs, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when VPC flow logs are disabled to check for risks of losing visibility into network traffic monitoring, which could lead to undetected malicious activity."
   documentation   = file("./detections/docs/compute_vpc_flow_logs_disabled.md")
   severity        = "high"
   query           = query.compute_vpc_flow_logs_disabled

@@ -1,6 +1,6 @@
 ## Overview
 
-Detect updates to IAM policies for Compute Engine disks. Unauthorized changes can expose disks to potential security risks. Monitoring such updates helps enforce secure access controls.
+Detect when a Compute disk IAM policy is set. Unauthorized changes can expose disks to potential security risks. Monitoring such updates helps enforce secure access controls.
 
 **References**:
 - [IAM Policy Management](https://cloud.google.com/iam/docs/policies)

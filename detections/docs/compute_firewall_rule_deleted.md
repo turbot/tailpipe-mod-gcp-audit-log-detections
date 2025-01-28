@@ -1,6 +1,6 @@
 ## Overview
 
-Detect deletions of Compute Engine firewall rules. Firewall rule deletions can leave resources unprotected and expose them to unauthorized access. Monitoring these actions helps maintain network security.
+Detect when a Compute firewall rule is deleted. Firewall rule deletions can leave resources unprotected and expose them to unauthorized access. Monitoring these actions helps maintain network security.
 
 **References**:
 - [Firewall Rules Overview](https://cloud.google.com/vpc/docs/firewalls)

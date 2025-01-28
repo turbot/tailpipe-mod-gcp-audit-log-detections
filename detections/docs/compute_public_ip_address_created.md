@@ -1,6 +1,6 @@
 ## Overview
 
-Detect the creation of public IP addresses in Compute Engine. Public IPs may expose resources to external access, increasing the risk of unauthorized access. Monitoring these actions helps secure network configurations.
+Detect when a public IP address is created in Compute Engine. Public IPs may expose resources to external access, increasing the risk of unauthorized access. Monitoring these actions helps secure network configurations.
 
 **References**:
 - [Managing IP Addresses](https://cloud.google.com/compute/docs/ip-addresses)

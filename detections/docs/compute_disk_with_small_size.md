@@ -1,6 +1,6 @@
 ## Overview
 
-Detect Compute Engine disks with sizes below the recommended threshold. Insufficient disk sizes may affect performance and usability. Monitoring these configurations ensures compliance with resource requirements.
+Detect when a Compute disk is configured with small size. Insufficient disk sizes may affect performance and usability. Monitoring these configurations ensures compliance with resource requirements.
 
 **References**:
 - [Disk Management Overview](https://cloud.google.com/compute/docs/disks)

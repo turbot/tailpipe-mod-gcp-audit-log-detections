@@ -1,6 +1,6 @@
 ## Overview
 
-Detect modifications to full network traffic packet mirroring configurations. Unauthorized modifications can weaken monitoring capabilities and expose systems to threats. Monitoring these actions ensures proper traffic analysis and security compliance.
+Detect when full network traffic packet updated. Unauthorized modifications can weaken monitoring capabilities and expose systems to threats. Monitoring these actions ensures proper traffic analysis and security compliance.
 
 **References**:
 - [Packet Mirroring Overview](https://cloud.google.com/vpc/docs/packet-mirroring)
