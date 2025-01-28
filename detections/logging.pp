@@ -79,8 +79,7 @@ query "logging_sink_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.configservicev%.deletesink'
+      method_name ilike 'google.logging.v%.configservicev%.deletesink'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -94,8 +93,7 @@ query "logging_bucket_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.configservicev%.deletebucket'
+      method_name ilike 'google.logging.v%.configservicev%.deletebucket'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

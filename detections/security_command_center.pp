@@ -37,8 +37,7 @@ query "security_command_center_notification_config_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'securitycenter.googleapis.com'
-      and method_name ilike 'google.cloud.securitycenter.v%.securitycenter.deletenotificationconfig'
+      method_name ilike 'google.cloud.securitycenter.v%.securitycenter.deletenotificationconfig'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

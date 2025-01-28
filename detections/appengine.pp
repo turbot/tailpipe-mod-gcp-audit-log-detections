@@ -65,8 +65,7 @@ query "appengine_ingress_firewall_rule_created" {
     from
       gcp_audit_log
     where
-      service_name = 'appengine.googleapis.com'
-      and method_name ilike 'google.appengine.v%.firewall.createingressrule'
+      method_name ilike 'google.appengine.v%.firewall.createingressrule'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -80,8 +79,7 @@ query "appengine_ingress_firewall_rule_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'appengine.googleapis.com'
-      and method_name ilike 'google.appengine.v%.firewall.updateingressrule'
+      method_name ilike 'google.appengine.v%.firewall.updateingressrule'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -95,8 +93,7 @@ query "appengine_ingress_firewall_rule_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'appengine.googleapis.com'
-      and method_name ilike 'google.appengine.v%.firewall.deleteingressrule'
+      method_name ilike 'google.appengine.v%.firewall.deleteingressrule'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

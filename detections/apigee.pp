@@ -37,8 +37,7 @@ query "apigee_security_action_disabled" {
     from
       gcp_audit_log
     where
-      service_name = 'apigee.googleapis.com'
-      and (method_name ilike 'google.cloud.apigee.v%.securityactionservice.disablesecurityaction')
+      (method_name ilike 'google.cloud.apigee.v%.securityactionservice.disablesecurityaction')
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

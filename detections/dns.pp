@@ -95,8 +95,7 @@ query "dns_zone_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'dns.googleapis.com'
-      and method_name ilike 'dns.managedzones.patch'
+      method_name ilike 'dns.managedzones.patch'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -110,8 +109,7 @@ query "dns_record_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'dns.googleapis.com'
-      and method_name ilike 'dns.resourcerecordsets.patch'
+      method_name ilike 'dns.resourcerecordsets.patch'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -125,8 +123,7 @@ query "dns_record_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'dns.googleapis.com'
-      and method_name ilike 'dns.resourcerecordsets.delete'
+      method_name ilike 'dns.resourcerecordsets.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

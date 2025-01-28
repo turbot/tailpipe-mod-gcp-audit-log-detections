@@ -51,8 +51,7 @@ query "cloud_functions_publicly_accessible" {
     from 
       gcp_audit_log
     where
-      service_name = 'cloud_functionss.googleapis.com'
-      and lower(method_name) = 'google.cloud.functions.v%.cloud_functionssservice.setiampolicy'
+      lower(method_name) = 'google.cloud.functions.v%.cloudfunctionssservice.setiampolicy'
       ${local.detection_sql_where_conditions}
       and exists (
         select 1
@@ -71,8 +70,7 @@ query "cloud_functions_deleted" {
     from 
       gcp_audit_log
     where
-      service_name = 'cloud_functionss.googleapis.com'
-      and method_name ilike 'google.cloud.functions.v%.functionservice.deletefunction'
+      method_name ilike 'google.cloud.functions.v%.functionservice.deletefunction'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

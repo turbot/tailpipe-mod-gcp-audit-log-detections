@@ -52,8 +52,7 @@ query "sql_ssl_certificate_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'sqladmin.googleapis.com'
-      and method_name ilike 'cloudsql.sslCerts.delete'
+      method_name ilike 'cloudsql.sslCerts.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -67,8 +66,7 @@ query "sql_user_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'sqladmin.googleapis.com'
-      and method_name ilike 'cloudsql.users.delete'
+      method_name ilike 'cloudsql.users.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

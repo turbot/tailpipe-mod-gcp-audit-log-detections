@@ -52,8 +52,7 @@ query "monitoring_metric_descriptor_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'monitoring.googleapis.com'
-      and method_name ilike 'google.monitoring.v%.metricservice.deletemetricdescriptor'
+      method_name ilike 'google.monitoring.v%.metricservice.deletemetricdescriptor'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -67,8 +66,7 @@ query "monitoring_alert_policy_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'monitoring.googleapis.com'
-      and method_name ilike 'google.monitoring.v%.alertpolicyservice.deletealertpolicy'
+      method_name ilike 'google.monitoring.v%.alertpolicyservice.deletealertpolicy'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

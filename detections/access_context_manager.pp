@@ -52,8 +52,7 @@ query "access_context_manager_policy_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.policies.delete'
+      method_name ilike 'accesscontextmanager.policies.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -67,8 +66,7 @@ query "access_context_manager_level_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'accesscontextmanager.googleapis.com'
-      and method_name ilike 'accesscontextmanager.accesspolicies.accesslevels.delete'
+      method_name ilike 'accesscontextmanager.accesspolicies.accesslevels.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

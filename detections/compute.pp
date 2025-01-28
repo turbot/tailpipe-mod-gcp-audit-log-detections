@@ -192,8 +192,7 @@ query "compute_firewall_rule_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.firewalls.delete'
+      method_name ilike '%.compute.firewalls.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -207,8 +206,7 @@ query "compute_vpn_tunnel_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.vpntunnels.delete'
+      method_name ilike '%.compute.vpntunnels.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -222,8 +220,7 @@ query "compute_full_network_traffic_packet_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.delete'
+      method_name ilike '%.compute.packetmirrorings.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -237,8 +234,7 @@ query "compute_full_network_traffic_packet_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.patch'
+      method_name ilike '%.compute.packetmirrorings.patch'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -252,8 +248,7 @@ query "compute_image_iam_policy_set" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.images.setiampolicy'
+      method_name ilike '%.compute.images.setiampolicy'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -267,8 +262,7 @@ query "compute_disk_iam_policy_set" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.disks.setiampolicy'
+      method_name ilike '%.compute.disks.setiampolicy'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -282,8 +276,7 @@ query "compute_snapshot_iam_policy_set" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.snapshots.setiampolicy'
+      method_name ilike '%.compute.snapshots.setiampolicy'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -297,8 +290,7 @@ query "compute_instance_with_public_network_interface" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
+      (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
       ${local.detection_sql_where_conditions}
       and exists (
         select *
@@ -319,8 +311,7 @@ query "compute_public_ip_address_created" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'v%.compute.addresses.insert'
+      method_name ilike '%.compute.addresses.insert'
       and request.networkTier is not null
       ${local.detection_sql_where_conditions}
     order by
@@ -335,8 +326,7 @@ query "compute_vpc_network_shared_to_external_project" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'googleapis.cloud.compute.v%.projects.enablexpnresource'
+      method_name ilike '%.compute.projects.enablexpnresource'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -350,8 +340,7 @@ query "compute_disk_with_small_size" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike '%.compute.instances.insert'
+      method_name ilike '%.compute.instances.insert'
       and exists (
         select *
         from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
@@ -371,8 +360,7 @@ query "compute_vpc_flow_logs_disabled" {
     from
       gcp_audit_log
     where
-      service_name = 'compute.googleapis.com'
-      and method_name ilike 'google.cloud.compute.v%.subnetworks.patch'
+      method_name ilike '%.compute.subnetworks.patch'
       and request.enableFlowLogs = 'false'
       ${local.detection_sql_where_conditions}
     order by

@@ -53,8 +53,7 @@ query "dlp_deidentify_content" {
     from
       gcp_audit_log
     where
-      service_name = 'dlp.googleapis.com'
-      and method_name ilike 'google.privacy.dlp.v%.dlpservice.deidentifycontent'
+      method_name ilike 'google.privacy.dlp.v%.dlpservice.deidentifycontent'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -68,8 +67,7 @@ query "dlp_reidentify_content" {
     from
       gcp_audit_log
     where
-      service_name = 'dlp.googleapis.com'
-      and method_name ilike 'google.privacy.dlp.v%.dlpservice.reidentifycontent'
+      method_name ilike 'google.privacy.dlp.v%.dlpservice.reidentifycontent'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

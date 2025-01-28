@@ -51,8 +51,7 @@ query "storage_iam_policy_set" {
     from
       gcp_audit_log
     where
-      service_name = 'storage.googleapis.com'
-      and method_name ilike 'storage.setiampermissions'
+      method_name ilike 'storage.setiampermissions'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -66,8 +65,7 @@ query "storage_bucket_publicly_accessible" {
     from 
       gcp_audit_log
     where
-      service_name = 'storage.googleapis.com'
-      and method_name ilike 'storage.setiampermissions'
+      method_name ilike 'storage.setiampermissions'
       and service_data is not null
       and json_extract(service_data, '$.policyDelta.bindingDeltas') != 'null'
       and service_data like '%"member":"allUsers"%'

@@ -50,8 +50,7 @@ query "artifact_registry_package_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'artifactregistry.googleapis.com'
-      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deletepackage'
+      method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deletepackage'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -65,8 +64,7 @@ query "artifact_registry_repository_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'artifactregistry.googleapis.com'
-      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleterepository'
+      method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleterepository'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
