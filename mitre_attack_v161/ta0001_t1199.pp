@@ -11,7 +11,7 @@ benchmark "mitre_attack_v161_ta0001_t1199" {
   children = [
     detection.cloudfunctions_publicly_accessible,
     detection.compute_vpc_network_shared_to_external_project,
-    detection.iam_organization_policy_changed,
+    detection.iam_organization_policy_updated,
     detection.iam_role_granted_to_all_users,
     detection.iam_service_account_token_creator_role_assigned,
   ]

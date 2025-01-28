@@ -2,25 +2,6 @@ locals {
   iam_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/IAM"
   })
-
-  iam_service_account_created_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_deleted_sql_columns                        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_disabled_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_key_created_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_workload_identity_pool_provider_created_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_role_granted_to_all_users_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_token_creator_role_assigned_sql_columns    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_organization_policy_changed_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_workforce_pool_updated_sql_columns                         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_federated_identity_provider_created_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_policy_granted_apigateway_admin_role_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_role_with_high_privileges_created_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_federated_identity_provider_updated_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_access_token_generated_sql_columns         = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_access_token_generation_failed_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_single_account_login_failed_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_signblob_failed_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  iam_service_account_key_deleted_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "iam_detections" {
@@ -30,7 +11,7 @@ benchmark "iam_detections" {
   children = [
     detection.iam_federated_identity_provider_created,
     detection.iam_federated_identity_provider_updated,
-    detection.iam_organization_policy_changed,
+    detection.iam_organization_policy_updated,
     detection.iam_policy_granted_apigateway_admin_role,
     detection.iam_role_granted_to_all_users,
     detection.iam_role_with_high_privileges_created,
@@ -55,7 +36,8 @@ benchmark "iam_detections" {
 
 detection "iam_service_account_created" {
   title           = "IAM Service Account Created"
-  description     = "Detect newly created IAM service accounts, providing visibility into potential misuse or unauthorized access to resources, and enabling timely investigation to maintain security."
+  description     = "Detect when an IAM service account was created, potentially indicating misuse or unauthorized access to resources. Monitoring service account creation helps identify security risks and ensures compliance with access policies."
+  documentation   = file("./detections/docs/iam_service_account_created.md")
   severity        = "low"
   query           = query.iam_service_account_created
   display_columns = local.detection_display_columns
@@ -67,7 +49,8 @@ detection "iam_service_account_created" {
 
 detection "iam_service_account_key_created" {
   title           = "IAM Service Account Key Created"
-  description     = "Detect the creations of IAM service account keys that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when an IAM service account key was created, potentially indicating misuse or unauthorized access attempts. Monitoring service account key creation helps identify security risks and prevent unauthorized access to critical resources."
+  documentation   = file("./detections/docs/iam_service_account_key_created.md")
   severity        = "low"
   query           = query.iam_service_account_key_created
   display_columns = local.detection_display_columns
@@ -79,7 +62,8 @@ detection "iam_service_account_key_created" {
 
 detection "iam_service_account_deleted" {
   title           = "IAM Service Account Deleted"
-  description     = "Detect deleted IAM service accounts that might indicate malicious actions or disrupt access to resources."
+  description     = "Detect when an IAM service account was deleted, potentially indicating malicious actions or disrupting access to critical resources. Monitoring service account deletions helps identify unauthorized activities and ensures resource availability."
+  documentation   = file("./detections/docs/iam_service_account_deleted.md")
   severity        = "high"
   query           = query.iam_service_account_deleted
   display_columns = local.detection_display_columns
@@ -91,7 +75,8 @@ detection "iam_service_account_deleted" {
 
 detection "iam_service_account_disabled" {
   title           = "IAM Service Account Disabled"
-  description     = "Detect disabled IAM service accounts that might indicate unauthorized access attempts or potential data exposures."
+  description     = "Detect when an IAM service account was disabled, which may indicate unauthorized access attempts, potential data exposure, or security policy enforcement. Monitoring disabled service accounts helps identify suspicious activities and ensure resource integrity."
+  documentation   = file("./detections/docs/iam_service_account_disabled.md")
   severity        = "high"
   query           = query.iam_service_account_disabled
   display_columns = local.detection_display_columns
@@ -103,7 +88,8 @@ detection "iam_service_account_disabled" {
 
 detection "iam_workload_identity_pool_provider_created" {
   title           = "IAM Workload Identity Pool Provider Created"
-  description     = "Detect the creations of IAM workload identity pool providers that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when an IAM workload identity pool provider was created, potentially indicating misuse or unauthorized access attempts. Monitoring workload identity pool provider creation helps identify security risks and ensures compliance with access control policies."
+  documentation   = file("./detections/docs/iam_workload_identity_pool_provider_created.md")
   severity        = "medium"
   query           = query.iam_workload_identity_pool_provider_created
   display_columns = local.detection_display_columns
@@ -114,8 +100,9 @@ detection "iam_workload_identity_pool_provider_created" {
 }
 
 detection "iam_role_granted_to_all_users" {
-  title           = "IAM Role Granted To All Authenticated Users"
-  description     = "Detect IAM roles granting access to all authenticated users, ensuring visibility into over-permissioned configurations that could pose security risks."
+  title           = "IAM Role Granted to All Authenticated Users"
+  description     = "Detect when an IAM role was granted access to all authenticated users, potentially exposing sensitive resources to over-permissioned configurations and increasing the risk of unauthorized access or misuse."
+  documentation   = file("./detections/docs/iam_role_granted_to_all_users.md")
   severity        = "high"
   query           = query.iam_role_granted_to_all_users
   display_columns = local.detection_display_columns
@@ -127,7 +114,8 @@ detection "iam_role_granted_to_all_users" {
 
 detection "iam_service_account_token_creator_role_assigned" {
   title           = "IAM Service Account Token Creator Role Assigned"
-  description     = "Detect the assignments of IAM service account token creator roles that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when the IAM Service Account Token Creator role was assigned, which may indicate potential misuse or unauthorized access attempts. Monitoring this assignment helps identify suspicious activity and maintain control over token creation capabilities."
+  documentation   = file("./detections/docs/iam_service_account_token_creator_role_assigned.md")
   severity        = "medium"
   query           = query.iam_service_account_token_creator_role_assigned
   display_columns = local.detection_display_columns
@@ -137,11 +125,12 @@ detection "iam_service_account_token_creator_role_assigned" {
   })
 }
 
-detection "iam_organization_policy_changed" {
-  title           = "IAM Organization Policy Changed"
-  description     = "Detect changes to organization IAM policies that might expose resources to threats or indicate unauthorized access attempts."
+detection "iam_organization_policy_updated" {
+  title           = "IAM Organization Policy Updated"
+  description     = "Detect when an IAM organization policy was updated, potentially exposing resources to threats or indicating unauthorized access attempts. Monitoring policy changes ensures compliance with security requirements and prevents accidental or malicious misconfigurations."
+  documentation   = file("./detections/docs/iam_organization_policy_updated.md")
   severity        = "medium"
-  query           = query.iam_organization_policy_changed
+  query           = query.iam_organization_policy_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
@@ -151,7 +140,8 @@ detection "iam_organization_policy_changed" {
 
 detection "iam_workforce_pool_updated" {
   title           = "IAM Workforce Pool Updated"
-  description     = "Detect updates to IAM workforce pools that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when an IAM workforce pool was updated, potentially indicating misuse or unauthorized access attempts. Monitoring workforce pool updates helps ensure security compliance and prevents accidental or malicious misconfigurations."
+  documentation   = file("./detections/docs/iam_workforce_pool_updated.md")
   severity        = "medium"
   query           = query.iam_workforce_pool_updated
   display_columns = local.detection_display_columns
@@ -163,7 +153,8 @@ detection "iam_workforce_pool_updated" {
 
 detection "iam_federated_identity_provider_created" {
   title           = "IAM Federated Identity Provider Created"
-  description     = "Detect the creations of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when an IAM federated identity provider was created, potentially indicating misuse or unauthorized access attempts. Monitoring federated identity provider creation helps identify security risks and ensures compliance with identity and access management policies."
+  documentation   = file("./detections/docs/iam_federated_identity_provider_created.md")
   severity        = "medium"
   query           = query.iam_federated_identity_provider_created
   display_columns = local.detection_display_columns
@@ -174,8 +165,9 @@ detection "iam_federated_identity_provider_created" {
 }
 
 detection "iam_policy_granted_apigateway_admin_role" {
-  title           = "IAM Policy Granted Apigateway Admin Role"
-  description     = "Detect IAM policies granting apigateway admin roles that might indicate potential misuse or unauthorized access attempts."
+  title           = "IAM Policy Granted API Gateway Admin Role"
+  description     = "Detect when an API Gateway Admin role was granted by IAM policy, potentially indicating misuse or unauthorized access attempts. Monitoring such policy changes helps ensure security and prevents unauthorized administrative access to API Gateway resources."
+  documentation   = file("./detections/docs/iam_policy_granted_apigateway_admin_role.md")
   severity        = "medium"
   query           = query.iam_policy_granted_apigateway_admin_role
   display_columns = local.detection_display_columns
@@ -186,8 +178,9 @@ detection "iam_policy_granted_apigateway_admin_role" {
 }
 
 detection "iam_role_with_high_privileges_created" {
-  title           = "IAM Role With High Privileges Created"
-  description     = "Detect the creations of high privilege IAM roles that might indicate potential misuse or unauthorized access attempts."
+  title           = "IAM Role with High Privileges Created"
+  description     = "Detect when a high privilege IAM role was created, potentially indicating misuse or unauthorized access attempts. Monitoring the creation of such roles helps mitigate risks associated with privilege escalation and unauthorized activities."
+  documentation   = file("./detections/docs/iam_role_with_high_privileges_created.md")
   severity        = "high"
   query           = query.iam_role_with_high_privileges_created
   display_columns = local.detection_display_columns
@@ -199,7 +192,8 @@ detection "iam_role_with_high_privileges_created" {
 
 detection "iam_federated_identity_provider_updated" {
   title           = "IAM Federated Identity Provider Updated"
-  description     = "Detect the updates of IAM federated identity providers that might indicate potential misuse or unauthorized access attempts."
+  description     = "Detect when an IAM federated identity provider was updated, potentially indicating misuse or unauthorized access attempts. Monitoring updates to federated identity providers helps ensure compliance with security policies and prevents unauthorized changes."
+  documentation   = file("./detections/docs/iam_federated_identity_provider_updated.md")
   severity        = "medium"
   query           = query.iam_federated_identity_provider_updated
   display_columns = local.detection_display_columns
@@ -211,7 +205,8 @@ detection "iam_federated_identity_provider_updated" {
 
 detection "iam_service_account_access_token_generated" {
   title           = "IAM Service Account Access Token Generated"
-  description     = "Detect the generation of IAM service account access tokens that might indicate unauthorized access attempts or potential data exposures."
+  description     = "Detect when an IAM service account access token was generated, potentially indicating unauthorized access attempts or data exposure. Monitoring access token generation helps identify suspicious activities and ensures compliance with security policies."
+  documentation   = file("./detections/docs/iam_service_account_access_token_generated.md")
   severity        = "medium"
   query           = query.iam_service_account_access_token_generated
   display_columns = local.detection_display_columns
@@ -223,7 +218,8 @@ detection "iam_service_account_access_token_generated" {
 
 detection "iam_service_account_access_token_generation_failed" {
   title           = "IAM Service Account Access Token Generation Failed"
-  description     = "Detect failed attempts to generate IAM service account access tokens, which may indicate unauthorized access attempts or misconfigurations leading to operational issues."
+  description     = "Detect when an IAM service account access token generate attempt was failed, potentially indicating unauthorized access attempts, misconfigurations, or operational issues. Monitoring failed token generation helps identify security risks and ensure proper system configuration."
+  documentation   = file("./detections/docs/iam_service_account_access_token_generation_failed.md")
   severity        = "medium"
   query           = query.iam_service_account_access_token_generation_failed
   display_columns = local.detection_display_columns
@@ -235,7 +231,8 @@ detection "iam_service_account_access_token_generation_failed" {
 
 detection "iam_single_account_login_failed" {
   title           = "IAM Single Account Login Failed"
-  description     = "Detect multiple failed login attempts for a single user account, which may indicate brute force attempts or compromised credentials."
+  description     = "Detect when multiple failed login attempt was failed for a single IAM user account, potentially indicating brute force attacks or compromised credentials. Monitoring failed login attempts helps identify unauthorized access attempts and ensures account security."
+  documentation   = file("./detections/docs/iam_single_account_login_failed.md")
   severity        = "low"
   query           = query.iam_single_account_login_failed
   display_columns = local.detection_display_columns
@@ -247,7 +244,8 @@ detection "iam_single_account_login_failed" {
 
 detection "iam_service_account_signblob_failed" {
   title           = "IAM Service Account SignBlob Failed"
-  description     = "Detect failed attempts to sign binary blobs using service account credentials, which may indicate unauthorized attempts or potential service account compromise."
+  description     = "Detect when an IAM service account credential was failed to sign binary blobs, potentially indicating unauthorized attempts or service account compromise. Monitoring failed SignBlob attempts helps identify suspicious activities and ensures the security of sensitive operations."
+  documentation   = file("./detections/docs/iam_service_account_signblob_failed.md")
   severity        = "medium"
   query           = query.iam_service_account_signblob_failed
   display_columns = local.detection_display_columns
@@ -259,7 +257,8 @@ detection "iam_service_account_signblob_failed" {
 
 detection "iam_service_account_key_deleted" {
   title           = "IAM Service Account Key Deleted"
-  description     = "Detect deletions of IAM service account keys to check for potential misuse or unauthorized access attempts, which could disrupt services, erase evidence of malicious activity, or impact operational continuity."
+  description     = "Detect when an IAM service account key was deleted, potentially indicating misuse, unauthorized access attempts, or efforts to disrupt services and erase evidence of malicious activity. Monitoring key deletions helps ensure operational continuity and enhances security visibility."
+  documentation   = file("./detections/docs/iam_service_account_key_deleted.md")
   severity        = "medium"
   query           = query.iam_service_account_key_deleted
   display_columns = local.detection_display_columns
@@ -272,7 +271,7 @@ detection "iam_service_account_key_deleted" {
 query "iam_service_account_created" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -287,7 +286,7 @@ query "iam_service_account_created" {
 query "iam_service_account_key_created" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_key_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -302,7 +301,7 @@ query "iam_service_account_key_created" {
 query "iam_service_account_deleted" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -317,7 +316,7 @@ query "iam_service_account_deleted" {
 query "iam_service_account_disabled" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_disabled_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -332,7 +331,7 @@ query "iam_service_account_disabled" {
 query "iam_workload_identity_pool_provider_created" {
   sql = <<-EOQ
     select
-      ${local.iam_workload_identity_pool_provider_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -347,7 +346,7 @@ query "iam_workload_identity_pool_provider_created" {
 query "iam_role_granted_to_all_users" {
   sql = <<-EOQ
     select
-      ${local.iam_role_granted_to_all_users_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -363,7 +362,7 @@ query "iam_role_granted_to_all_users" {
 query "iam_service_account_token_creator_role_assigned" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_token_creator_role_assigned_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -376,10 +375,10 @@ query "iam_service_account_token_creator_role_assigned" {
   EOQ
 }
 
-query "iam_organization_policy_changed" {
+query "iam_organization_policy_updated" {
   sql = <<-EOQ
     select
-      ${local.iam_organization_policy_changed_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -394,7 +393,7 @@ query "iam_organization_policy_changed" {
 query "iam_workforce_pool_updated" {
   sql = <<-EOQ
     select
-      ${local.iam_workforce_pool_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -409,7 +408,7 @@ query "iam_workforce_pool_updated" {
 query "iam_federated_identity_provider_created" {
   sql = <<-EOQ
     select
-      ${local.iam_federated_identity_provider_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -424,7 +423,7 @@ query "iam_federated_identity_provider_created" {
 query "iam_policy_granted_apigateway_admin_role" {
   sql = <<-EOQ
     select
-      ${local.iam_policy_granted_apigateway_admin_role_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -440,7 +439,7 @@ query "iam_policy_granted_apigateway_admin_role" {
 query "iam_role_with_high_privileges_created" {
   sql = <<-EOQ
     select
-      ${local.iam_role_with_high_privileges_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -456,7 +455,7 @@ query "iam_role_with_high_privileges_created" {
 query "iam_federated_identity_provider_updated" {
   sql = <<-EOQ
     select
-      ${local.iam_federated_identity_provider_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -471,7 +470,7 @@ query "iam_federated_identity_provider_updated" {
 query "iam_service_account_access_token_generated" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_access_token_generated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -486,7 +485,7 @@ query "iam_service_account_access_token_generated" {
 query "iam_service_account_access_token_generation_failed" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_access_token_generation_failed_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -501,7 +500,7 @@ query "iam_service_account_access_token_generation_failed" {
 query "iam_single_account_login_failed" {
   sql = <<-EOQ
     select
-      ${local.iam_single_account_login_failed_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -516,7 +515,7 @@ query "iam_single_account_login_failed" {
 query "iam_service_account_signblob_failed" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_signblob_failed_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -531,7 +530,7 @@ query "iam_service_account_signblob_failed" {
 query "iam_service_account_key_deleted" {
   sql = <<-EOQ
     select
-      ${local.iam_service_account_key_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
