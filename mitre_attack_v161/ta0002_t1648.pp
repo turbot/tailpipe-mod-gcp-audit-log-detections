@@ -9,8 +9,8 @@ benchmark "mitre_attack_v161_ta0002_t1648" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0002_t1648.md")
   children = [
-    detection.cloudfunction_deleted,
-    detection.cloudfunction_publicly_accessible,
+    detection.cloud_functions_deleted,
+    detection.cloud_functions_publicly_accessible,
   ]
 
   tags = local.mitre_attack_v161_ta0002_t1648_common_tags
