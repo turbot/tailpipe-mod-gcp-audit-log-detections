@@ -5,10 +5,8 @@ locals {
   detect_iam_policies_set_at_project_level_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_logins_without_mfa_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_access_shared_resources_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_iam_policies_revoked_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_iam_policies_enabling_script_execution_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_iam_policies_granting_owner_roles_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_org_policies_revoked_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "resourcemanager_detections" {
@@ -19,10 +17,8 @@ benchmark "resourcemanager_detections" {
     detection.detect_iam_policies_set_at_project_level,
     detection.detect_logins_without_mfa,
     detection.detect_access_shared_resources,
-    detection.detect_iam_policies_revoked,
     detection.detect_iam_policies_enabling_script_execution,
     detection.detect_iam_policies_granting_owner_roles,
-    detection.detect_org_policies_revoked,
   ]
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -69,19 +65,6 @@ detection "detect_access_shared_resources" {
   })
 }
 
-detection "detect_iam_policies_revoked" {
-  title           = "Detect IAM Policies Revoked"
-  description     = "Detect IAM policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
-  documentation   = file("./detections/docs/detect_iam_policies_revoked.md")
-  severity        = "medium"
-  query           = query.detect_iam_policies_revoked
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.resourcemanager_common_tags, {
-    mitre_attack_ids = "TA0001:T1078"
-  })
-}
-
 detection "detect_iam_policies_enabling_script_execution" {
   title           = "Detect IAM Policies to Enable Script Execution"
   description     = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
@@ -105,19 +88,6 @@ detection "detect_iam_policies_granting_owner_roles" {
 
   tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
-  })
-}
-
-detection "detect_org_policies_revoked" {
-  title           = "Detect Org Policies Revoked"
-  description     = "Detect org policies that have been revoked, ensuring visibility into changes that might impact access controls or signal unauthorized modifications."
-  documentation   = file("./detections/docs/detect_org_policies_revoked.md")
-  severity        = "high"
-  query           = query.detect_org_policies_revoked
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.resourcemanager_common_tags, {
-    mitre_attack_ids = "TA0005:T1211"
   })
 }
 
@@ -166,22 +136,6 @@ query "detect_access_shared_resources" {
       timestamp desc;
   EOQ
 }
-// TO DO: need to test
-query "detect_iam_policies_revoked" {
-  sql = <<-EOQ
-    select
-      ${local.detect_iam_policies_revoked_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'google.cloud.resourcemanager.v%.projects.setiampolicy'
-      and json_array_length(response -> 'bindings') = 0
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
 
 query "detect_iam_policies_enabling_script_execution" {
   sql = <<-EOQ
@@ -217,26 +171,6 @@ query "detect_iam_policies_granting_owner_roles" {
         from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
         where roles = 'roles/owner'
       )
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_org_policies_revoked" {
-  sql = <<-EOQ
-    select
-      ${local.detect_org_policies_revoked_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'orgpolicy.googleapis.com'
-      and method_name ilike 'google.cloud.orgpolicy.v%.policyservice.setorgpolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy' -> 'spec' -> 'rules', '$[*]') as json[])) as rule_struct(rule)
-        where json_extract(rule, '$.values.allowedValues') is not null
-    )
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

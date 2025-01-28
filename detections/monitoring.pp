@@ -3,8 +3,8 @@ locals {
     service = "GCP/Monitoring"
   })
 
-  detect_api_monitoring_disabled_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_api_monitoring_policies_deleted_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  monitoring_metric_descriptor_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  monitoring_alert_policy_deleted_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "monitoring_detections" {
@@ -12,8 +12,8 @@ benchmark "monitoring_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Monitoring events."
   type        = "detection"
   children = [
-    detection.detect_api_monitoring_disabled,
-    detection.detect_api_monitoring_policies_deleted,
+    detection.monitoring_metric_descriptor_deleted,
+    detection.monitoring_alert_policy_deleted,
   ]
 
   tags = merge(local.monitoring_common_tags, {
@@ -21,12 +21,12 @@ benchmark "monitoring_detections" {
   })
 }
 
-detection "detect_api_monitoring_disabled" {
-  title           = "Detect API Monitoring Disabled"
-  description     = "Detect when API monitoring is disabled, which might disrupt security configurations or expose resources to threats."
-  documentation   = file("./detections/docs/detect_api_monitoring_disabled.md")
+detection "monitoring_metric_descriptor_deleted" {
+  title           = "Monitoring Metric Descriptor Deleted"
+  description     = "Detect when monitoring APIs are disabled, which might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/monitoring_metric_descriptor_deleted.md")
   severity        = "high"
-  query           = query.detect_api_monitoring_disabled
+  query           = query.monitoring_metric_descriptor_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
@@ -34,12 +34,12 @@ detection "detect_api_monitoring_disabled" {
   })
 }
 
-detection "detect_api_monitoring_policies_deleted" {
-  title           = "Detect API Monitoring Policies Deleted"
-  description     = "Detect when an API monitoring policies is deleted, which might disrupt security configurations or expose resources to threats."
-  documentation   = file("./detections/docs/detect_api_monitoring_policies_deleted.md")
+detection "monitoring_alert_policy_deleted" {
+  title           = "Monitoring Alert Policy Deleted"
+  description     = "Detect when monitoring policies are deleted, which might disrupt security configurations or expose resources to threats."
+  documentation   = file("./detections/docs/monitoring_alert_policy_deleted.md")
   severity        = "high"
-  query           = query.detect_api_monitoring_policies_deleted
+  query           = query.monitoring_alert_policy_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.monitoring_common_tags, {
@@ -47,10 +47,10 @@ detection "detect_api_monitoring_policies_deleted" {
   })
 }
 
-query "detect_api_monitoring_disabled" {
+query "monitoring_metric_descriptor_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_api_monitoring_disabled_sql_columns}
+      ${local.monitoring_metric_descriptor_deleted_sql_columns}
     from
       gcp_audit_log
     where
@@ -62,10 +62,10 @@ query "detect_api_monitoring_disabled" {
   EOQ
 }
 
-query "detect_api_monitoring_policies_deleted" {
+query "monitoring_alert_policy_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_api_monitoring_policies_deleted_sql_columns}
+      ${local.monitoring_alert_policy_deleted_sql_columns}
     from
       gcp_audit_log
     where
