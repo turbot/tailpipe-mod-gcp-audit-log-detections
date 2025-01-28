@@ -1,13 +1,13 @@
 locals {
-  mitre_v161_ta0001_t1190_common_tags = merge(local.mitre_v161_ta0001_common_tags, {
+  mitre_attack_v161_ta0001_t1190_common_tags = merge(local.mitre_attack_v161_ta0001_common_tags, {
     mitre_technique_id = "T1190"
   })
 }
 
-benchmark "mitre_v161_ta0001_t1190" {
+benchmark "mitre_attack_v161_ta0001_t1190" {
   title         = "T1190 Exploit Public-Facing Application"
   type          = "detection"
-  documentation = file("./mitre_v161/docs/ta0001_t1190.md")
+  documentation = file("./mitre_attack_v161/docs/ta0001_t1190.md")
   children = [
     detection.access_context_manager_level_deleted,
     detection.access_context_manager_policy_deleted,
@@ -22,5 +22,5 @@ benchmark "mitre_v161_ta0001_t1190" {
     detection.compute_vpn_tunnel_deleted,
   ]
 
-  tags = local.mitre_v161_ta0001_t1190_common_tags
+  tags = local.mitre_attack_v161_ta0001_t1190_common_tags
 }

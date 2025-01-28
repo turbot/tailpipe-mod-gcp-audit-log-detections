@@ -1,13 +1,13 @@
 locals {
-  mitre_v161_ta0003_t1098_common_tags = merge(local.mitre_v161_ta0002_common_tags, {
+  mitre_attack_v161_ta0003_t1098_common_tags = merge(local.mitre_attack_v161_ta0002_common_tags, {
     mitre_technique_id = "T1098"
   })
 }
 
-benchmark "mitre_v161_ta0003_t1098" {
+benchmark "mitre_attack_v161_ta0003_t1098" {
   title         = "T1098 Account Manipulation"
   type          = "detection"
-  documentation = file("./mitre_v161/docs/ta0003_t1098.md")
+  documentation = file("./mitre_attack_v161/docs/ta0003_t1098.md")
   children = [
     detection.detect_cloudsql_ssl_certificate_deletions,
     detection.detect_disabled_service_accounts,
@@ -19,5 +19,5 @@ benchmark "mitre_v161_ta0003_t1098" {
     detection.detect_cloudsql_user_deletions,
   ]
 
-  tags = local.mitre_v161_ta0003_t1098_common_tags
+  tags = local.mitre_attack_v161_ta0003_t1098_common_tags
 }

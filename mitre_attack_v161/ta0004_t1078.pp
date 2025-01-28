@@ -1,13 +1,13 @@
 locals {
-  mitre_v161_ta0004_t1078_common_tags = merge(local.mitre_v161_ta0004_common_tags, {
+  mitre_attack_v161_ta0004_t1078_common_tags = merge(local.mitre_attack_v161_ta0004_common_tags, {
     mitre_technique_id = "T1078"
   })
 }
 
-benchmark "mitre_v161_ta0004_t1078" {
+benchmark "mitre_attack_v161_ta0004_t1078" {
   title         = "T1078 Valid Accounts"
   type          = "detection"
-  documentation = file("./mitre_v161/docs/ta0004_t1078.md")
+  documentation = file("./mitre_attack_v161/docs/ta0004_t1078.md")
   children = [
     detection.access_context_manager_level_deleted,
     detection.access_context_manager_policy_deleted,
@@ -25,5 +25,5 @@ benchmark "mitre_v161_ta0004_t1078" {
     detection.compute_vpn_tunnel_deleted,
   ]
 
-  tags = local.mitre_v161_ta0004_t1078_common_tags
+  tags = local.mitre_attack_v161_ta0004_t1078_common_tags
 }
