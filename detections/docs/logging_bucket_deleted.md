@@ -1,8 +1,8 @@
 ## Overview
 
-Detect deletions of logging buckets in GCP. Logging buckets store critical audit and application logs, and unauthorized deletions can disrupt monitoring and security analysis. Monitoring these actions helps maintain logging configurations and detect potential threats.
+Detect when a logging bucket was deleted in GCP. Logging buckets store logs for analysis and compliance, and their deletion can result in the loss of critical log data, impacting monitoring and forensic investigations. Monitoring these events ensures the integrity and availability of log storage and prevents unauthorized or accidental deletions.
 
 **References**:
-- [Managing Logs Buckets](https://cloud.google.com/logging/docs/routing/overview)
-- [Google Cloud Audit Logs](https://cloud.google.com/logging/docs/audit)
-- [gcloud Command: delete logging bucket](https://cloud.google.com/sdk/gcloud/reference/logging/buckets/delete)
+- [Cloud Logging Buckets Overview](https://cloud.google.com/logging/docs/buckets)
+- [Best Practices for Managing Logging Buckets](https://docs.cadosecurity.com/cado/deploy/gcp/logs)
+- [gcloud Command: gcloud logging buckets delete](https://cloud.google.com/sdk/gcloud/reference/logging/buckets/delete)
