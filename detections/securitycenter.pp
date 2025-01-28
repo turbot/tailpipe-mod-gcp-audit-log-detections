@@ -3,16 +3,15 @@ locals {
     service = "GCP/SecurityCommandCenter"
   })
 
-  security_command_center_delete_notification_configs_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-
+  security_command_center_notification_config_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "security_command_center_detections" {
   title       = "Security Command Center Detections"
-  description = "This benchmark contains recommendations when scanning audit logs for Security Center events."
+  description = "This benchmark contains recommendations when scanning audit logs for Security Command Center events."
   type        = "detection"
   children = [
-    detection.security_command_center_delete_notification_configs
+    detection.security_command_center_notification_config_deleted
   ]
 
   tags = merge(local.security_command_center_common_tags, {
@@ -20,12 +19,12 @@ benchmark "security_command_center_detections" {
   })
 }
 
-detection "security_command_center_delete_notification_configs" {
-  title           = "Detect Security Command Center Delete Notification Configs"
+detection "security_command_center_notification_config_deleted" {
+  title           = "Security Command Center Notification Config Deleted"
   description     = "Detect deletions of Security Command Center notification configurations that might disrupt security configurations or expose resources to threats."
-  documentation   = file("./detections/docs/security_command_center_delete_notification_configs.md")
+  documentation   = file("./detections/docs/security_command_center_notification_config_deleted.md")
   severity        = "high"
-  query           = query.security_command_center_delete_notification_configs
+  query           = query.security_command_center_notification_config_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.security_command_center_common_tags, {
@@ -33,10 +32,10 @@ detection "security_command_center_delete_notification_configs" {
   })
 }
 
-query "security_command_center_delete_notification_configs" {
+query "security_command_center_notification_config_deleted" {
   sql = <<-EOQ
     select
-      ${local.security_command_center_delete_notification_configs_sql_columns}
+      ${local.security_command_center_notification_config_deleted_sql_columns}
     from
       gcp_audit_log
     where

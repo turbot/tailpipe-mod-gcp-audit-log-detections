@@ -14,11 +14,11 @@ benchmark "mitre_attack_v161_ta0001_t1190" {
     detection.apigee_security_action_disabled,
     detection.compute_firewall_rule_deleted,
     detection.compute_instance_with_public_network_interface,
-    detection.detect_dns_record_modifications,
+    detection.dns_record_updated,
     detection.compute_full_network_traffic_packet_deleted,
     detection.compute_full_network_traffic_packet_updated,
     detection.compute_public_ip_address_created,
-    detection.detect_storage_buckets_publicly_accessible,
+    detection.storage_bucket_publicly_accessible,
     detection.compute_vpn_tunnel_deleted,
   ]
 

@@ -9,14 +9,14 @@ benchmark "mitre_attack_v161_ta0003_t1098" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0003_t1098.md")
   children = [
-    detection.detect_cloudsql_ssl_certificate_deletions,
-    detection.detect_disabled_service_accounts,
-    detection.detect_iam_policies_granting_owner_roles,
-    detection.detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.detect_iam_workforce_pool_updates,
-    detection.detect_service_account_deletions,
-    detection.detect_service_account_key_creations,
-    detection.detect_cloudsql_user_deletions,
+    detection.sql_ssl_certificate_deleted,
+    detection.iam_service_account_disabled,
+    detection.resourcemanager_owner_role_policy_set,
+    detection.iam_role_granted_to_all_users,
+    detection.iam_workforce_pool_updated,
+    detection.iam_service_account_deleted,
+    detection.iam_service_account_key_created,
+    detection.sql_user_deleted,
   ]
 
   tags = local.mitre_attack_v161_ta0003_t1098_common_tags

@@ -3,8 +3,8 @@ locals {
     service = "GCP/Storage"
   })
 
-  detect_storage_set_iam_policies_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_storage_buckets_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  storage_iam_policy_set_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  storage_bucket_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "storage_detections" {
@@ -12,8 +12,8 @@ benchmark "storage_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Storage events."
   type        = "detection"
   children = [
-    detection.detect_storage_set_iam_policies,
-    detection.detect_storage_buckets_publicly_accessible,
+    detection.storage_iam_policy_set,
+    detection.storage_bucket_publicly_accessible,
   ]
 
   tags = merge(local.storage_common_tags, {
@@ -21,12 +21,12 @@ benchmark "storage_detections" {
   })
 }
 
-detection "detect_storage_set_iam_policies" {
-  title           = "Detect Storage Set IAM Policies"
+detection "storage_iam_policy_set" {
+  title           = "Storage IAM Policy Set"
   description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_storage_set_iam_policies.md")
+  documentation   = file("./detections/docs/storage_iam_policy_set.md")
   severity        = "low"
-  query           = query.detect_storage_set_iam_policies
+  query           = query.storage_iam_policy_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -34,12 +34,12 @@ detection "detect_storage_set_iam_policies" {
   })
 }
 
-detection "detect_storage_buckets_publicly_accessible" {
-  title           = "Detect Storage Buckets Publicly Accessible"
+detection "storage_bucket_publicly_accessible" {
+  title           = "Storage Bucket Publicly Accessible"
   description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
-  documentation   = file("./detections/docs/detect_storage_buckets_publicly_accessible.md")
+  documentation   = file("./detections/docs/storage_bucket_publicly_accessible.md")
   severity        = "high"
-  query           = query.detect_storage_buckets_publicly_accessible
+  query           = query.storage_bucket_publicly_accessible
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -47,10 +47,10 @@ detection "detect_storage_buckets_publicly_accessible" {
   })
 }
 
-query "detect_storage_set_iam_policies" {
+query "storage_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.detect_storage_set_iam_policies_sql_columns}
+      ${local.storage_iam_policy_set_sql_columns}
     from
       gcp_audit_log
     where
@@ -62,10 +62,10 @@ query "detect_storage_set_iam_policies" {
   EOQ
 }
 
-query "detect_storage_buckets_publicly_accessible" {
+query "storage_bucket_publicly_accessible" {
   sql = <<-EOQ
     select
-      ${local.detect_storage_buckets_publicly_accessible_sql_columns}
+      ${local.storage_bucket_publicly_accessible_sql_columns}
     from 
       gcp_audit_log
     where

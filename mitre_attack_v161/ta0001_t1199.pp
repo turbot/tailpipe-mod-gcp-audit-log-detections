@@ -10,9 +10,9 @@ benchmark "mitre_attack_v161_ta0001_t1199" {
   documentation = file("./mitre_attack_v161/docs/ta0001_t1199.md")
   children = [
     detection.cloudfunctions_publicly_accessible,
-    detection.detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.detect_iam_service_account_token_creator_roles,
-    detection.detect_organization_iam_policy_changes,
+    detection.iam_role_granted_to_all_users,
+    detection.iam_service_account_token_creator_role_assigned,
+    detection.iam_organization_policy_changed,
     detection.compute_vpc_network_shared_to_external_project,
   ]
 

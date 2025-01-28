@@ -1,23 +1,22 @@
 locals {
-  mitre_attack_v161_ta0001_t1078_common_tags = merge(local.mitre_attack_v161_ta0001_common_tags, {
-    mitre_attack_technique_id = "T1078"
+  mitre_v161_ta0001_t1078_common_tags = merge(local.mitre_v161_ta0001_common_tags, {
+    mitre_technique_id = "T1078"
   })
 }
 
-benchmark "mitre_attack_v161_ta0001_t1078" {
+benchmark "mitre_v161_ta0001_t1078" {
   title         = "T1078 Valid Accounts"
   type          = "detection"
-  documentation = file("./mitre_attack_v161/docs/ta0001_t1078.md")
+  documentation = file("./mitre_v161/docs/ta0001_t1078.md")
   children = [
-    detection.detect_access_shared_resources,
-    detection.detect_disabled_service_accounts,
-    detection.detect_iam_policies_revoked,
-    detection.detect_logins_without_mfa,
-    detection.detect_service_account_deletions,
-    detection.detect_service_account_key_creations,
-    detection.detect_workload_identity_pool_provider_creations,
-    detection.detect_iam_service_account_access_token_generations,
+    detection.resourcemanager_shared_resource_access,
+    detection.iam_service_account_disabled,
+    detection.resourcemanager_login_without_mfa,
+    detection.iam_service_account_deleted,
+    detection.iam_service_account_key_created,
+    detection.iam_workload_identity_pool_provider_created,
+    detection.iam_service_account_access_token_generated,
   ]
 
-  tags = local.mitre_attack_v161_ta0001_t1078_common_tags
+  tags = local.mitre_v161_ta0001_t1078_common_tags
 }

@@ -3,9 +3,9 @@ locals {
     service = "GCP/DNS"
   })
 
-  dns_zone_deleted_sql_columns    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  dns_zone_modified_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  dns_record_modified_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  dns_zone_deleted_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  dns_zone_updated_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  dns_record_updated_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "dns_detections" {
@@ -14,9 +14,9 @@ benchmark "dns_detections" {
   type        = "detection"
   children = [
     detection.dns_record_deleted,
-    detection.dns_record_modified,
+    detection.dns_record_updated,
     detection.dns_zone_deleted,
-    detection.dns_zone_modified,
+    detection.dns_zone_updated,
   ]
 
   tags = merge(local.dns_common_tags, {
@@ -37,12 +37,12 @@ detection "dns_zone_deleted" {
   })
 }
 
-detection "dns_zone_modified" {
-  title           = "DNS Zone Modified"
+detection "dns_zone_updated" {
+  title           = "DNS Zone Updated"
   description     = "Detect modifications to DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
-  documentation   = file("./detections/docs/dns_zone_modified.md")
+  documentation   = file("./detections/docs/dns_zone_updated.md")
   severity        = "high"
-  query           = query.dns_zone_modified
+  query           = query.dns_zone_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -50,12 +50,12 @@ detection "dns_zone_modified" {
   })
 }
 
-detection "dns_record_modified" {
-  title           = "DNS Record Modified"
+detection "dns_record_updated" {
+  title           = "DNS Record Updated"
   description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
-  documentation   = file("./detections/docs/dns_record_modified.md")
+  documentation   = file("./detections/docs/dns_record_updated.md")
   severity        = "high"
-  query           = query.dns_record_modified
+  query           = query.dns_record_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -91,10 +91,10 @@ query "dns_zone_deleted" {
   EOQ
 }
 
-query "dns_zone_modified" {
+query "dns_zone_updated" {
   sql = <<-EOQ
     select
-      ${local.dns_zone_modified_sql_columns}
+      ${local.dns_zone_updated_sql_columns}
     from
       gcp_audit_log
     where
@@ -106,10 +106,10 @@ query "dns_zone_modified" {
   EOQ
 }
 
-query "dns_record_modified" {
+query "dns_record_updated" {
   sql = <<-EOQ
     select
-      ${local.dns_record_modified_sql_columns}
+      ${local.dns_record_updated_sql_columns}
     from
       gcp_audit_log
     where
@@ -124,7 +124,7 @@ query "dns_record_modified" {
 query "dns_record_deleted" {
   sql = <<-EOQ
     select
-      ${local.dns_record_modified_sql_columns}
+      ${local.dns_record_updated_sql_columns}
     from
       gcp_audit_log
     where

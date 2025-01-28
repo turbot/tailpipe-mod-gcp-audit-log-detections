@@ -9,10 +9,10 @@ benchmark "mitre_attack_v161_ta0006_t1110" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0006_t1110.md")
   children = [
-    detection.detect_cloudsql_login_failures,
-    detection.detect_failed_iam_service_account_access_token_generations,
-    detection.detect_service_account_signblob_failures,
-    detection.detect_single_account_login_failures,
+    detection.sql_login_failed,
+    detection.iam_service_account_access_token_generation_failed,
+    detection.iam_service_account_signblob_failed,
+    detection.iam_single_account_login_failed,
   ]
 
   tags = local.mitre_attack_v161_ta0006_t1110_common_tags

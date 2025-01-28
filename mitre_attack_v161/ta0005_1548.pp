@@ -9,12 +9,12 @@ benchmark "mitre_attack_v161_ta0005_t1548" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0005_t1548.md")
   children = [
-    detection.detect_high_privilege_iam_roles,
-    detection.detect_iam_federated_identity_provider_updations,
-    detection.detect_iam_roles_granting_access_to_all_authenticated_users,
-    detection.detect_iam_service_account_token_creator_roles,
+    detection.iam_role_with_high_privileges_created,
+    detection.iam_federated_identity_provider_updated,
+    detection.iam_role_granted_to_all_users,
+    detection.iam_service_account_token_creator_role_assigned,
     detection.compute_vpc_network_shared_to_external_project,
-    detection.detect_iam_service_account_access_token_generations,
+    detection.iam_service_account_access_token_generated,
   ]
 
   tags = local.mitre_attack_v161_ta0005_t1548_common_tags

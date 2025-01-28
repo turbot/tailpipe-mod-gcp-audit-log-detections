@@ -9,8 +9,7 @@ benchmark "mitre_attack_v161_ta0002_t1651" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0002_t1651.md")
   children = [
-    detection.detect_containers_executed,
-    detection.detect_iam_service_account_access_token_generations
+    detection.iam_service_account_access_token_generated
   ]
 
   tags = local.mitre_attack_v161_ta0002_t1651_common_tags

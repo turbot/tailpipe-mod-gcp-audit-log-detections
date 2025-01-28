@@ -2,9 +2,9 @@ locals {
   sql_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/SQL"
   })
-  detect_cloudsql_ssl_certificate_deletions_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloudsql_login_failures_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_cloudsql_user_deletions_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  sql_ssl_certificate_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  sql_login_failed_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  sql_user_deleted_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "sql_detections" {
@@ -12,9 +12,9 @@ benchmark "sql_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for SQL events."
   type        = "detection"
   children = [
-    detection.detect_cloudsql_ssl_certificate_deletions,
-    detection.detect_cloudsql_login_failures,
-    detection.detect_cloudsql_user_deletions,
+    detection.sql_ssl_certificate_deleted,
+    detection.sql_login_failed,
+    detection.sql_user_deleted,
   ]
 
   tags = merge(local.sql_common_tags, {
@@ -22,12 +22,12 @@ benchmark "sql_detections" {
   })
 }
 
-detection "detect_cloudsql_ssl_certificate_deletions" {
-  title           = "Detect Cloud SQL SSL Certificate Deletions"
-  description     = "Detect Cloud SQL SSL certificate deletions that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_cloudsql_ssl_certificate_deletions.md")
+detection "sql_ssl_certificate_deleted" {
+  title           = "SQL SSL Certificate Deleted"
+  description     = "Detect SQL SSL certificate deletions that might expose resources to threats or signal unauthorized access attempts."
+  documentation   = file("./detections/docs/sql_ssl_certificate_deleted.md")
   severity        = "medium"
-  query           = query.detect_cloudsql_ssl_certificate_deletions
+  query           = query.sql_ssl_certificate_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.sql_common_tags, {
@@ -35,12 +35,12 @@ detection "detect_cloudsql_ssl_certificate_deletions" {
   })
 }
 
-detection "detect_cloudsql_login_failures" {
-  title           = "Detect Cloud SQL Login Failures"
-  description     = "Detect failed login attempts to Cloud SQL instances. Multiple failed logins may indicate unauthorized access attempts, misconfigured applications, or potential brute force attacks targeting database instances. This detection helps identify potential security threats to database resources."
-  documentation   = file("./detections/docs/detect_cloudsql_login_failures.md")
+detection "sql_login_failed" {
+  title           = "SQL Login Failed"
+  description     = "Detect failed login attempts to SQL instances. Multiple failed logins may indicate unauthorized access attempts, misconfigured applications, or potential brute force attacks targeting database instances. This detection helps identify potential security threats to database resources."
+  documentation   = file("./detections/docs/sql_login_failed.md")
   severity        = "medium"
-  query           = query.detect_cloudsql_login_failures
+  query           = query.sql_login_failed
   display_columns = local.detection_display_columns
 
   tags = merge(local.sql_common_tags, {
@@ -48,12 +48,12 @@ detection "detect_cloudsql_login_failures" {
   })
 }
 
-detection "detect_cloudsql_user_deletions" {
-  title           = "Detect Cloud SQL User Deletions"
-  description     = "Detect successful deletion of users from Cloud SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
-  documentation   = file("./detections/docs/detect_cloudsql_user_deletions.md")
+detection "sql_user_deleted" {
+  title           = "SQL User Deleted"
+  description     = "Detect successful deletion of users from SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
+  documentation   = file("./detections/docs/sql_user_deleted.md")
   severity        = "medium"
-  query           = query.detect_cloudsql_user_deletions
+  query           = query.sql_user_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.sql_common_tags, {
@@ -61,10 +61,25 @@ detection "detect_cloudsql_user_deletions" {
   })
 }
 
-query "detect_cloudsql_login_failures" {
+query "sql_ssl_certificate_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_cloudsql_login_failures_sql_columns}
+      ${local.sql_ssl_certificate_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'sqladmin.googleapis.com'
+      and method_name ilike 'cloudsql.sslCerts.delete'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "sql_login_failed" {
+  sql = <<-EOQ
+    select
+      ${local.sql_login_failed_sql_columns}
     from
       gcp_audit_log
     where
@@ -76,30 +91,15 @@ query "detect_cloudsql_login_failures" {
   EOQ
 }
 
-query "detect_cloudsql_user_deletions" {
+query "sql_user_deleted" {
   sql = <<-EOQ
     select
-      ${local.detect_cloudsql_user_deletions_sql_columns}
+      ${local.sql_user_deleted_sql_columns}
     from
       gcp_audit_log
     where
       service_name = 'sqladmin.googleapis.com'
       and method_name ilike 'cloudsql.users.delete'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_cloudsql_ssl_certificate_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_cloudsql_ssl_certificate_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'sqladmin.googleapis.com'
-      and method_name ilike 'cloudsql.sslCerts.delete'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
