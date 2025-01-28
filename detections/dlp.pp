@@ -11,6 +11,7 @@ benchmark "dlp_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DLP events."
   type        = "detection"
   children = [
+    detection.dlp_deidentify_content,
     detection.dlp_reidentify_content,
   ]
 
@@ -25,6 +26,19 @@ detection "dlp_reidentify_content" {
   documentation   = file("./detections/docs/dlp_reidentify_content.md")
   severity        = "high"
   query           = query.dlp_reidentify_content
+  display_columns = local.detection_display_columns
+
+  tags = merge(local.dlp_common_tags, {
+    mitre_attack_ids = "TA0009:T1119"
+  })
+}
+
+detection "dlp_deidentify_content" {
+  title           = "DLP Deidentify Content"
+  description     = "Detect deidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
+  documentation   = file("./detections/docs/dlp_deidentify_content.md")
+  severity        = "high"
+  query           = query.dlp_deidentify_content
   display_columns = local.detection_display_columns
 
   tags = merge(local.dlp_common_tags, {

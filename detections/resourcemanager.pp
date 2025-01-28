@@ -5,7 +5,6 @@ locals {
   resourcemanager_iam_policy_set_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   resourcemanager_login_without_mfa_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   resourcemanager_shared_resource_access_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  resourcemanager_script_execution_policy_set_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   resourcemanager_owner_role_policy_set_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
@@ -17,7 +16,6 @@ benchmark "resourcemanager_detections" {
     detection.resourcemanager_iam_policy_set,
     detection.resourcemanager_login_without_mfa,
     detection.resourcemanager_owner_role_policy_set,
-    detection.resourcemanager_script_execution_policy_set,
     detection.resourcemanager_shared_resource_access,
   ]
 
@@ -62,19 +60,6 @@ detection "resourcemanager_shared_resource_access" {
 
   tags = merge(local.resourcemanager_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
-  })
-}
-
-detection "resourcemanager_script_execution_policy_set" {
-  title           = "Resource Manager Script Execution Policy Set"
-  description     = "Detect IAM policies that enable script execution, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/resourcemanager_script_execution_policy_set.md")
-  severity        = "high"
-  query           = query.resourcemanager_script_execution_policy_set
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.resourcemanager_common_tags, {
-    mitre_attack_ids = "TA0002:T1059"
   })
 }
 
@@ -131,26 +116,6 @@ query "resourcemanager_shared_resource_access" {
     where
       service_name = 'cloudresourcemanager.googleapis.com'
       and method_name ilike 'google.cloud.accesscontextmanager.v%.accesssharedresource'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "resourcemanager_script_execution_policy_set" {
-  sql = <<-EOQ
-    select
-      ${local.resourcemanager_script_execution_policy_set_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
-        where roles = 'roles/cloudfunctions.invoker' or roles = 'roles/cloudfunctions.developer'
-      )
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
