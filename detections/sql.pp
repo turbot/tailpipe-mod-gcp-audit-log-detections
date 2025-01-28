@@ -12,8 +12,8 @@ benchmark "sql_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for SQL events."
   type        = "detection"
   children = [
-    detection.sql_ssl_certificate_deleted,
     detection.sql_login_failed,
+    detection.sql_ssl_certificate_deleted,
     detection.sql_user_deleted,
   ]
 

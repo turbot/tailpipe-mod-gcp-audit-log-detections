@@ -12,8 +12,8 @@ benchmark "storage_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Storage events."
   type        = "detection"
   children = [
-    detection.storage_iam_policy_set,
     detection.storage_bucket_publicly_accessible,
+    detection.storage_iam_policy_set,
   ]
 
   tags = merge(local.storage_common_tags, {

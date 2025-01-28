@@ -16,9 +16,9 @@ benchmark "resourcemanager_detections" {
   children = [
     detection.resourcemanager_iam_policy_set,
     detection.resourcemanager_login_without_mfa,
-    detection.resourcemanager_shared_resource_access,
-    detection.resourcemanager_script_execution_policy_set,
     detection.resourcemanager_owner_role_policy_set,
+    detection.resourcemanager_script_execution_policy_set,
+    detection.resourcemanager_shared_resource_access,
   ]
 
   tags = merge(local.resourcemanager_common_tags, {

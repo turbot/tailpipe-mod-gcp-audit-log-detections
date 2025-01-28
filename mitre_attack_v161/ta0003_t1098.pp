@@ -9,13 +9,13 @@ benchmark "mitre_attack_v161_ta0003_t1098" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0003_t1098.md")
   children = [
-    detection.sql_ssl_certificate_deleted,
-    detection.iam_service_account_disabled,
-    detection.resourcemanager_owner_role_policy_set,
     detection.iam_role_granted_to_all_users,
-    detection.iam_workforce_pool_updated,
     detection.iam_service_account_deleted,
+    detection.iam_service_account_disabled,
     detection.iam_service_account_key_created,
+    detection.iam_workforce_pool_updated,
+    detection.resourcemanager_owner_role_policy_set,
+    detection.sql_ssl_certificate_deleted,
     detection.sql_user_deleted,
   ]
 

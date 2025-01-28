@@ -12,17 +12,17 @@ benchmark "mitre_attack_v161_ta0004_t1078" {
     detection.access_context_manager_level_deleted,
     detection.access_context_manager_policy_deleted,
     detection.compute_disk_iam_policy_set,
+    detection.compute_full_network_traffic_packet_deleted,
+    detection.compute_full_network_traffic_packet_updated,
     detection.compute_image_iam_policy_set,
     detection.compute_snapshot_iam_policy_set,
+    detection.compute_vpn_tunnel_deleted,
     detection.dns_record_deleted,
     detection.dns_record_updated,
     detection.dns_zone_deleted,
     detection.dns_zone_updated,
-    detection.compute_full_network_traffic_packet_deleted,
-    detection.compute_full_network_traffic_packet_updated,
     detection.logging_bucket_deleted,
     detection.storage_iam_policy_set,
-    detection.compute_vpn_tunnel_deleted,
   ]
 
   tags = local.mitre_attack_v161_ta0004_t1078_common_tags

@@ -28,24 +28,24 @@ benchmark "iam_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for IAM events."
   type        = "detection"
   children = [
-    detection.iam_service_account_created,
-    detection.iam_service_account_key_created,
-    detection.iam_service_account_deleted,
-    detection.iam_service_account_disabled,
-    detection.iam_workload_identity_pool_provider_created,
-    detection.iam_role_granted_to_all_users,
-    detection.iam_service_account_token_creator_role_assigned,
-    detection.iam_organization_policy_changed,
-    detection.iam_workforce_pool_updated,
     detection.iam_federated_identity_provider_created,
-    detection.iam_policy_granted_apigateway_admin_role,
-    detection.iam_role_with_high_privileges_created,
     detection.iam_federated_identity_provider_updated,
-    detection.iam_single_account_login_failed,
+    detection.iam_organization_policy_changed,
+    detection.iam_policy_granted_apigateway_admin_role,
+    detection.iam_role_granted_to_all_users,
+    detection.iam_role_with_high_privileges_created,
     detection.iam_service_account_access_token_generated,
     detection.iam_service_account_access_token_generation_failed,
-    detection.iam_service_account_signblob_failed,
+    detection.iam_service_account_created,
+    detection.iam_service_account_deleted,
+    detection.iam_service_account_disabled,
+    detection.iam_service_account_key_created,
     detection.iam_service_account_key_deleted,
+    detection.iam_service_account_signblob_failed,
+    detection.iam_service_account_token_creator_role_assigned,
+    detection.iam_single_account_login_failed,
+    detection.iam_workforce_pool_updated,
+    detection.iam_workload_identity_pool_provider_created,
   ]
 
   tags = merge(local.iam_common_tags, {

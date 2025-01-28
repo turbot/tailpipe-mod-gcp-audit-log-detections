@@ -11,10 +11,10 @@ benchmark "mitre_attack_v161_ta0003_t1136" {
   children = [
     detection.iam_federated_identity_provider_created,
     detection.iam_policy_granted_apigateway_admin_role,
-    detection.resourcemanager_owner_role_policy_set,
-    detection.iam_service_account_token_creator_role_assigned,
     detection.iam_service_account_created,
     detection.iam_service_account_key_created,
+    detection.iam_service_account_token_creator_role_assigned,
+    detection.resourcemanager_owner_role_policy_set,
   ]
 
   tags = local.mitre_attack_v161_ta0003_t1136_common_tags

@@ -10,10 +10,10 @@ benchmark "mitre_attack_v161_ta0001_t1199" {
   documentation = file("./mitre_attack_v161/docs/ta0001_t1199.md")
   children = [
     detection.cloudfunctions_publicly_accessible,
+    detection.compute_vpc_network_shared_to_external_project,
+    detection.iam_organization_policy_changed,
     detection.iam_role_granted_to_all_users,
     detection.iam_service_account_token_creator_role_assigned,
-    detection.iam_organization_policy_changed,
-    detection.compute_vpc_network_shared_to_external_project,
   ]
 
   tags = local.mitre_attack_v161_ta0001_t1199_common_tags

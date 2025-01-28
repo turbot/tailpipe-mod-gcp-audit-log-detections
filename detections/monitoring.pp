@@ -12,8 +12,8 @@ benchmark "monitoring_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Monitoring events."
   type        = "detection"
   children = [
-    detection.monitoring_metric_descriptor_deleted,
     detection.monitoring_alert_policy_deleted,
+    detection.monitoring_metric_descriptor_deleted,
   ]
 
   tags = merge(local.monitoring_common_tags, {

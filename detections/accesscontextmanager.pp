@@ -12,8 +12,8 @@ benchmark "access_context_manager_detections" {
   description = "This detection benchmark contains recommendations when scanning Admin Activity audit logs for Access Context Manager events."
   type        = "detection"
   children = [
-    detection.access_context_manager_policy_deleted,
     detection.access_context_manager_level_deleted,
+    detection.access_context_manager_policy_deleted,
   ]
 
   tags = merge(local.access_context_manager_common_tags, {
