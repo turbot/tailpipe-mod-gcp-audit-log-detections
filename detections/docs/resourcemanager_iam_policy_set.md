@@ -5,4 +5,4 @@ Detect changes to IAM policies at the project level. Unauthorized or accidental 
 **References**:
 - [IAM Policies Overview](https://cloud.google.com/iam/docs/policies)
 - [Google Cloud Audit Logs](https://cloud.google.com/logging/docs/audit)
-- [gcloud Command: set IAM policy](https://cloud.google.com/sdk/gcloud/reference/projects/set-iam-policy)
+- [gcloud Command: resource-manager org-policies set-policy](https://cloud.google.com/sdk/gcloud/reference/resource-manager/org-policies/set-policy)

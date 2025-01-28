@@ -12,6 +12,7 @@ benchmark "iam_detections" {
     detection.iam_federated_identity_provider_created,
     detection.iam_federated_identity_provider_updated,
     detection.iam_organization_policy_updated,
+    detection.iam_owner_role_policy_set,
     detection.iam_policy_granted_apigateway_admin_role,
     detection.iam_role_granted_to_all_users,
     detection.iam_role_with_high_privileges_created,
@@ -226,6 +227,19 @@ detection "iam_service_account_key_deleted" {
   })
 }
 
+detection "iam_owner_role_policy_set" {
+  title           = "IAM Owner Role Policy Set"
+  description     = "Detect when an IAM policy granting the owner role was set to check for potential privilege escalation or unauthorized access."
+  documentation   = file("./detections/docs/iam_owner_role_policy_set.md")
+  severity        = "high"
+  query           = query.iam_owner_role_policy_set
+  display_columns = local.detection_display_columns
+
+  tags = merge(local.resourcemanager_common_tags, {
+    mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
+  })
+}
+
 query "iam_service_account_created" {
   sql = <<-EOQ
     select
@@ -435,6 +449,26 @@ query "iam_service_account_key_deleted" {
       gcp_audit_log
     where
       method_name ilike 'google.iam.admin.v1.deleteserviceaccountkey'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+// testing is needed
+query "iam_owner_role_policy_set" {
+  sql = <<-EOQ
+    select
+      ${local.detection_sql_resource_column_resource_name}
+    from
+      gcp_audit_log
+    where
+      method_name ilike 'google.iam.admin.v%.setiampolicy'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
+        where roles = 'roles/owner'
+      )
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
