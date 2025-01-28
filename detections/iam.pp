@@ -342,7 +342,7 @@ query "iam_workload_identity_pool_provider_created" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "iam_role_granted_to_all_users" {
   sql = <<-EOQ
     select
@@ -358,7 +358,7 @@ query "iam_role_granted_to_all_users" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "iam_service_account_token_creator_role_assigned" {
   sql = <<-EOQ
     select
@@ -419,7 +419,7 @@ query "iam_federated_identity_provider_created" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "iam_policy_granted_apigateway_admin_role" {
   sql = <<-EOQ
     select
@@ -435,7 +435,7 @@ query "iam_policy_granted_apigateway_admin_role" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed
 query "iam_role_with_high_privileges_created" {
   sql = <<-EOQ
     select
@@ -451,7 +451,7 @@ query "iam_role_with_high_privileges_created" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed
 query "iam_federated_identity_provider_updated" {
   sql = <<-EOQ
     select

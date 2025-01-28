@@ -289,7 +289,7 @@ query "compute_snapshot_iam_policy_set" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "compute_instance_with_public_network_interface" {
   sql = <<-EOQ
     select
@@ -311,7 +311,7 @@ query "compute_instance_with_public_network_interface" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "compute_public_ip_address_created" {
   sql = <<-EOQ
     select
@@ -342,7 +342,7 @@ query "compute_vpc_network_shared_to_external_project" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "compute_disk_with_small_size" {
   sql = <<-EOQ
     select
@@ -363,7 +363,7 @@ query "compute_disk_with_small_size" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed
 query "compute_vpc_flow_logs_disabled" {
   sql = <<-EOQ
     select

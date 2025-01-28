@@ -43,7 +43,7 @@ detection "cloudfunction_deleted" {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
-
+// testing is needed
 query "cloudfunction_publicly_accessible" {
   sql = <<-EOQ
     select 

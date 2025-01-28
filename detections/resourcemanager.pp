@@ -87,7 +87,7 @@ query "resourcemanager_iam_policy_set" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed
 query "resourcemanager_login_without_mfa" {
   sql = <<-EOQ
     select
@@ -118,7 +118,7 @@ query "resourcemanager_shared_resource_access" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed
 query "resourcemanager_owner_role_policy_set" {
   sql = <<-EOQ
     select

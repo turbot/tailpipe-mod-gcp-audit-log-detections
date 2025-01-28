@@ -14,7 +14,6 @@ benchmark "mitre_attack_v161_ta0005_t1211" {
     detection.monitoring_alert_policy_deleted,
     detection.monitoring_metric_descriptor_deleted,
     detection.resourcemanager_iam_policy_set,
-
   ]
 
   tags = local.mitre_attack_v161_ta0005_t1211_common_tags

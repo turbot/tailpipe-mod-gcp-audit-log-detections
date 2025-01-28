@@ -58,7 +58,7 @@ query "storage_iam_policy_set" {
       timestamp desc;
   EOQ
 }
-
+// testing is needed event exist in the bucket
 query "storage_bucket_publicly_accessible" {
   sql = <<-EOQ
     select
