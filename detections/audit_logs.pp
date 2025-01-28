@@ -4,7 +4,6 @@ benchmark "audit_log_detections" {
   type        = "detection"
   children = [
     benchmark.access_context_manager_detections,
-    benchmark.apigateway_detections,
     benchmark.apigee_detections,
     benchmark.appengine_detections,
     benchmark.artifactregistry_detections,
@@ -13,7 +12,6 @@ benchmark "audit_log_detections" {
     benchmark.dlp_detections,
     benchmark.dns_detections,
     benchmark.iam_detections,
-    benchmark.kubernetes_detections,
     benchmark.logging_detections,
     benchmark.monitoring_detections,
     benchmark.resourcemanager_detections,

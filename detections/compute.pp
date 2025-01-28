@@ -14,7 +14,6 @@ locals {
   compute_vpc_network_shared_to_external_project_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   compute_disk_with_small_size_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   compute_vpc_flow_logs_disabled_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_instance_metadata_startup_script_updated_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "compute_detections" {
@@ -28,7 +27,6 @@ benchmark "compute_detections" {
     detection.compute_full_network_traffic_packet_deleted,
     detection.compute_full_network_traffic_packet_updated,
     detection.compute_image_iam_policy_set,
-    detection.compute_instance_metadata_startup_script_updated,
     detection.compute_instance_with_public_network_interface,
     detection.compute_public_ip_address_created,
     detection.compute_snapshot_iam_policy_set,
@@ -98,7 +96,7 @@ detection "compute_image_iam_policy_set" {
   title           = "Compute Image IAM Policy Set"
   description     = "Detect updates to compute image IAM policies, providing visibility into changes that might expose multiple resources to threats or signal unauthorized access attempts, enabling timely investigation and mitigation."
   documentation   = file("./detections/docs/compute_image_iam_policy_set.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.compute_image_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -111,7 +109,7 @@ detection "compute_disk_iam_policy_set" {
   title           = "Compute Disk IAM Policy Set"
   description     = "Detect updates to compute disk IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through proactive monitoring and response."
   documentation   = file("./detections/docs/compute_disk_iam_policy_set.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.compute_disk_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -124,7 +122,7 @@ detection "compute_snapshot_iam_policy_set" {
   title           = "Compute Snapshot IAM Policy Set"
   description     = "Detect updates to compute snapshot IAM policies, ensuring visibility into potential resource exposure or unauthorized access attempts, and mitigating security risks through prompt action."
   documentation   = file("./detections/docs/compute_snapshot_iam_policy_set.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.compute_snapshot_iam_policy_set
   display_columns = local.detection_display_columns
 
@@ -198,15 +196,197 @@ detection "compute_vpc_flow_logs_disabled" {
   })
 }
 
-detection "compute_instance_metadata_startup_script_updated" {
-  title           = "Compute Instance Metadata Startup Script Modified"
-  description     = "Detect modifications to Compute Engine instance metadata to check for unauthorized changes, such as malicious startup scripts that could deface hosted services, disrupt operations, or introduce vulnerabilities."
-  documentation   = file("./detections/docs/compute_instance_metadata_startup_script_updated.md")
-  severity        = "high"
-  query           = query.compute_instance_metadata_startup_script_updated
-  display_columns = local.detection_display_columns
+query "compute_firewall_rule_deleted" {
+  sql = <<-EOQ
+    select
+      ${local.compute_firewall_rule_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.firewalls.delete'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
 
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = "TA0040:T1491"
-  })
+query "compute_vpn_tunnel_deleted" {
+  sql = <<-EOQ
+    select
+      ${local.compute_vpn_tunnel_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.vpntunnels.delete'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_full_network_traffic_packet_deleted" {
+  sql = <<-EOQ
+    select
+      ${local.compute_full_network_traffic_packet_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.delete'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_full_network_traffic_packet_updated" {
+  sql = <<-EOQ
+    select
+      ${local.compute_full_network_traffic_packet_updated_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'google.cloud.compute.v%.packetmirrorings.patch'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_image_iam_policy_set" {
+  sql = <<-EOQ
+    select
+      ${local.compute_image_iam_policy_set_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.images.setiampolicy'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_disk_iam_policy_set" {
+  sql = <<-EOQ
+    select
+      ${local.compute_disk_iam_policy_set_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.disks.setiampolicy'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_snapshot_iam_policy_set" {
+  sql = <<-EOQ
+    select
+      ${local.compute_snapshot_iam_policy_set_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.snapshots.setiampolicy'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_instance_with_public_network_interface" {
+  sql = <<-EOQ
+    select
+      ${local.compute_instance_with_public_network_interface_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
+      ${local.detection_sql_where_conditions}
+      and exists (
+        select *
+        from unnest(
+        cast(json_extract(request, '$.networkInterfaces[*].accessConfigs[*].name') as json[])
+        ) as access_type
+        where (access_type::varchar ilike '%nat%' or access_type::varchar ilike '%external%')
+      )
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_public_ip_address_created" {
+  sql = <<-EOQ
+    select
+      ${local.compute_public_ip_address_created_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'v%.compute.addresses.insert'
+      and request.networkTier is not null
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_vpc_network_shared_to_external_project" {
+  sql = <<-EOQ
+    select
+      ${local.compute_vpc_network_shared_to_external_project_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'googleapis.cloud.compute.v%.projects.enablexpnresource'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_disk_with_small_size" {
+  sql = <<-EOQ
+    select
+      ${local.compute_disk_with_small_size_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike '%.compute.instances.insert'
+      and exists (
+        select *
+        from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
+        where json_extract(disk, '$.boot') = 'true'
+        and cast(json_extract(disk, '$.initializeParams.diskSizeGb') as integer) < 15
+      )
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "compute_vpc_flow_logs_disabled" {
+  sql = <<-EOQ
+    select
+      ${local.compute_vpc_flow_logs_disabled_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'compute.googleapis.com'
+      and method_name ilike 'google.cloud.compute.v%.subnetworks.patch'
+      and request.enableFlowLogs = 'false'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
 }

@@ -25,7 +25,7 @@ detection "detect_storage_set_iam_policies" {
   title           = "Detect Storage Set IAM Policies"
   description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
   documentation   = file("./detections/docs/detect_storage_set_iam_policies.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.detect_storage_set_iam_policies
   display_columns = local.detection_display_columns
 
@@ -55,7 +55,7 @@ query "detect_storage_set_iam_policies" {
       gcp_audit_log
     where
       service_name = 'storage.googleapis.com'
-      and method_name = 'storage.setIamPermissions'
+      and method_name ilike 'storage.setiampermissions'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -70,11 +70,11 @@ query "detect_storage_buckets_publicly_accessible" {
       gcp_audit_log
     where
       service_name = 'storage.googleapis.com'
-      and method_name = 'storage.setIamPermissions'
-      ${local.detection_sql_where_conditions}
+      and method_name ilike 'storage.setiampermissions'
       and service_data is not null
       and json_extract(service_data, '$.policyDelta.bindingDeltas') != 'null'
       and service_data like '%"member":"allUsers"%'
+      ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ

@@ -2,9 +2,9 @@ locals {
   logging_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Logging"
   })
-  detect_unauthorized_access_attempts_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_log_sink_deletion_updates_sql_columns    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  detect_logging_bucket_deletions_sql_columns     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  logging_unauthorized_access_attempt_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  logging_sink_deleted_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  logging_bucket_deleted_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "logging_detections" {
@@ -12,9 +12,9 @@ benchmark "logging_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Logging events."
   type        = "detection"
   children = [
-    detection.detect_unauthorized_access_attempts,
-    detection.detect_log_sink_deletion_updates,
-    detection.detect_logging_bucket_deletions,
+    detection.logging_bucket_deleted,
+    detection.logging_sink_deleted,
+    detection.logging_unauthorized_access_attempt,
   ]
 
   tags = merge(local.logging_common_tags, {
@@ -22,12 +22,12 @@ benchmark "logging_detections" {
   })
 }
 
-detection "detect_unauthorized_access_attempts" {
-  title           = "Detect Unauthorized Access Attempts"
-  description     = "Detect failed or unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
-  documentation   = file("./detections/docs/detect_unauthorized_access_attempts.md")
+detection "logging_unauthorized_access_attempt" {
+  title           = "Logging Unauthorized Access Attempt"
+  description     = "Detect unauthorized access attempts to GCP resources, ensuring prompt identification of potential security threats and mitigation actions."
+  documentation   = file("./detections/docs/logging_unauthorized_access_attempt.md")
   severity        = "high"
-  query           = query.detect_unauthorized_access_attempts
+  query           = query.logging_unauthorized_access_attempt
   display_columns = local.detection_display_columns
 
   tags = merge(local.logging_common_tags, {
@@ -35,12 +35,12 @@ detection "detect_unauthorized_access_attempts" {
   })
 }
 
-detection "detect_log_sink_deletion_updates" {
-  title           = "Detect Log Sink Deletions"
+detection "logging_sink_deleted" {
+  title           = "Logging Sink Deleted"
   description     = "Detect deletions of log sinks that might disrupt logging configurations or indicate unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_log_sink_deletion_updates.md")
+  documentation   = file("./detections/docs/logging_sink_deleted.md")
   severity        = "high"
-  query           = query.detect_log_sink_deletion_updates
+  query           = query.logging_sink_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.logging_common_tags, {
@@ -48,12 +48,12 @@ detection "detect_log_sink_deletion_updates" {
   })
 }
 
-detection "detect_logging_bucket_deletions" {
-  title           = "Detect Logging Bucket Deletions"
+detection "logging_bucket_deleted" {
+  title           = "Logging Bucket Deleted"
   description     = "Detect deletions of logging buckets that might disrupt logging configurations or indicate unauthorized access attempts."
-  documentation   = file("./detections/docs/detect_logging_bucket_deletions.md")
+  documentation   = file("./detections/docs/logging_bucket_deleted.md")
   severity        = "high"
-  query           = query.detect_logging_bucket_deletions
+  query           = query.logging_bucket_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.logging_common_tags, {
@@ -61,44 +61,44 @@ detection "detect_logging_bucket_deletions" {
   })
 }
 
-query "detect_log_sink_deletion_updates" {
+query "logging_unauthorized_access_attempt" {
   sql = <<-EOQ
     select
-      ${local.detect_log_sink_deletion_updates_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.configserviceV%.deletesink'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_logging_bucket_deletions" {
-  sql = <<-EOQ
-    select
-      ${local.detect_logging_bucket_deletions_sql_columns}
-    from
-      gcp_audit_log
-    where
-      service_name = 'logging.googleapis.com'
-      and method_name ilike 'google.logging.v%.configserviceV%.deletebucket'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "detect_unauthorized_access_attempts" {
-  sql = <<-EOQ
-    select
-      ${local.detect_unauthorized_access_attempts_sql_columns}
+      ${local.logging_unauthorized_access_attempt_sql_columns}
     from
       gcp_audit_log
     where
       method_name ilike 'google.logging.v%.loggingserviceV%.writelogentriesrequest'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "logging_sink_deleted" {
+  sql = <<-EOQ
+    select
+      ${local.logging_sink_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'logging.googleapis.com'
+      and method_name ilike 'google.logging.v%.configservicev%.deletesink'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "logging_bucket_deleted" {
+  sql = <<-EOQ
+    select
+      ${local.logging_bucket_deleted_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'logging.googleapis.com'
+      and method_name ilike 'google.logging.v%.configservicev%.deletebucket'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

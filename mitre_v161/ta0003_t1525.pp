@@ -9,7 +9,6 @@ benchmark "mitre_v161_ta0003_t1525" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0003_t1525.md")
   children = [
-    detection.artifact_registry_artifacts_overwritten,
     detection.artifact_registry_publicly_accessible,
   ]
 

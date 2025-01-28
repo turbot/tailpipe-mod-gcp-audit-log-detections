@@ -5,7 +5,6 @@ locals {
 
   cloudfunctions_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   cloudfunctions_operations_deleted_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  cloudfunctions_code_updated_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "cloudfunction_detections" {
@@ -13,7 +12,6 @@ benchmark "cloudfunction_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Cloudfunction events."
   type        = "detection"
   children = [
-    detection.cloudfunctions_code_updated,
     detection.cloudfunctions_operations_deleted,
     detection.cloudfunctions_publicly_accessible,
   ]
@@ -49,36 +47,6 @@ detection "cloudfunctions_operations_deleted" {
   })
 }
 
-detection "cloudfunctions_code_updated" {
-  title           = "Cloud Functions Code Modified"
-  description     = "Detect when changes to the code of Google Cloud Functions. The updates can introduce malicious logic, disrupt service functionality, or deface public-facing applications. This is particularly critical for serverless environments where functions often handle sensitive operations or user interactions. Monitoring such changes helps prevent service degradation, unauthorized access, and reputational damage."
-  documentation   = file("./detections/docs/cloudfunctions_code_updated.md")
-  severity        = "high"
-  query           = query.cloudfunctions_code_updated
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.cloudfunction_common_tags, {
-    mitre_attack_ids = "TA0040:T1531"
-  })
-}
-
-
-query "cloudfunctions_code_updated" {
-  sql = <<-EOQ
-    select 
-      ${local.cloudfunctions_code_updated_sql_columns}
-    from 
-      gcp_audit_log
-    where
-      service_name = 'cloudfunctions.googleapis.com'
-      and method_name ilike 'google.cloud.functions.v%.functionservice.updatefunction'
-      and json_extract(request, '$.function.build_config') is not null
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
 query "cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
     select 
@@ -87,7 +55,7 @@ query "cloudfunctions_publicly_accessible" {
       gcp_audit_log
     where
       service_name = 'cloudfunctions.googleapis.com'
-      and lower(method_name) = 'setiampolicy'
+      and lower(method_name) = 'google.cloud.functions.v%.cloudfunctionsservice.setiampolicy'
       ${local.detection_sql_where_conditions}
       and exists (
         select 1

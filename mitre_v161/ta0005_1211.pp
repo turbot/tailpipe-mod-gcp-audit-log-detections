@@ -13,7 +13,7 @@ benchmark "mitre_v161_ta0005_t1211" {
     detection.detect_api_monitoring_policies_deleted,
     detection.compute_vpc_flow_logs_disabled,
     detection.detect_iam_policy_removing_logging_admin_roles,
-    detection.detect_log_sink_deletion_updates,
+    detection.logging_sink_deleted,
     detection.detect_org_policies_revoked,
     detection.detect_iam_policies_set_at_project_level,
 

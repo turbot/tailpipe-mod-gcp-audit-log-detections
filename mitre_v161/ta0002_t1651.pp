@@ -9,8 +9,6 @@ benchmark "mitre_v161_ta0002_t1651" {
   type          = "detection"
   documentation = file("./mitre_v161/docs/ta0002_t1651.md")
   children = [
-    detection.apigateway_backend_command_execution_configured,
-    detection.detect_cloud_scheduler_run_jobs,
     detection.detect_containers_executed,
     detection.detect_iam_service_account_access_token_generations
   ]

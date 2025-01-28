@@ -14,9 +14,7 @@ benchmark "mitre_v161_ta0005_t1562" {
     detection.appengine_ingress_firewall_rule_updated,
     detection.artifact_registry_repository_deleted,
     detection.artifact_registry_package_deleted,
-    detection.artifact_registry_artifacts_no_layers,
     detection.compute_disk_with_small_size,
-    detection.artifact_registry_encrypted_container_image_pushed,
   ]
 
   tags = local.mitre_v161_ta0005_t1562_common_tags

@@ -3,7 +3,6 @@ locals {
     service = "GCP/Monitoring"
   })
 
-  detect_monitoring_resource_consumption_spikes_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_api_monitoring_disabled_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
   detect_api_monitoring_policies_deleted_sql_columns        = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
@@ -13,26 +12,12 @@ benchmark "monitoring_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Monitoring events."
   type        = "detection"
   children = [
-    detection.detect_monitoring_resource_consumption_spikes,
     detection.detect_api_monitoring_disabled,
     detection.detect_api_monitoring_policies_deleted,
   ]
 
   tags = merge(local.monitoring_common_tags, {
     type = "Benchmark"
-  })
-}
-
-detection "detect_monitoring_resource_consumption_spikes" {
-  title           = "Detect Unusual Resource Consumption Spikes"
-  description     = "Detect spikes in resource usage that might indicate malicious activity, such as unauthorized cryptocurrency mining or other abnormal behaviors."
-  documentation   = file("./detections/docs/detect_monitoring_resource_consumption_spikes.md")
-  severity        = "medium"
-  query           = query.detect_monitoring_resource_consumption_spikes
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.monitoring_common_tags, {
-    mitre_attack_ids = "TA0005:T1566"
   })
 }
 
@@ -60,20 +45,6 @@ detection "detect_api_monitoring_policies_deleted" {
   tags = merge(local.monitoring_common_tags, {
     mitre_attack_ids = "TA0005:T1211"
   })
-}
-
-query "detect_monitoring_resource_consumption_spikes" {
-  sql = <<-EOQ
-    select
-      ${local.detect_monitoring_resource_consumption_spikes_sql_columns}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.monitoring.v%.createtimeseries'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
 }
 
 query "detect_api_monitoring_disabled" {

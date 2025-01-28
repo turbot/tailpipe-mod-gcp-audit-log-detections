@@ -3,7 +3,7 @@ locals {
     service = "GCP/Apigee"
   })
 
-  apigee_api_accessed_vulnerable_services_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  apigee_security_action_disabled_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "apigee_detections" {
@@ -11,7 +11,7 @@ benchmark "apigee_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Apigee events."
   type        = "detection"
   children = [
-    detection.apigee_api_accessed_vulnerable_services
+    detection.apigee_security_action_disabled
   ]
 
   tags = merge(local.apigee_common_tags, {
@@ -19,12 +19,12 @@ benchmark "apigee_detections" {
   })
 }
 
-detection "apigee_api_accessed_vulnerable_services" {
-  title           = "Apigee API Accessed Vulnerable Services"
-  description     = "Detect log entries where Apigee API is accessed to a vulnerable service."
-  documentation   = file("./detections/docs/apigee_api_accessed_vulnerable_services.md")
+detection "apigee_security_action_disabled" {
+  title           = "Apigee Security Action Disabled"
+  description     = "Detect log entries where a security action is disabled in Apigee that might expose resources to threats."
+  documentation   = file("./detections/docs/apigee_security_action_disabled.md")
   severity        = "high"
-  query           = query.apigee_api_accessed_vulnerable_services
+  query           = query.apigee_security_action_disabled
   display_columns = local.detection_display_columns
 
   tags = merge(local.apigee_common_tags, {
@@ -32,15 +32,15 @@ detection "apigee_api_accessed_vulnerable_services" {
   })
 }
 
-query "apigee_api_accessed_vulnerable_services" {
+query "apigee_security_action_disabled" {
   sql = <<-EOQ
     select
-      ${local.apigee_api_accessed_vulnerable_services_sql_columns}
+      ${local.apigee_security_action_disabled_sql_columns}
     from
       gcp_audit_log
     where
       service_name = 'apigee.googleapis.com'
-      and (method_name ilike 'google.apigee.v%.accessresource' or method_name ilike 'google.apigee.v%.attackservice')
+      and (method_name ilike 'google.cloud.apigee.v%.securityactionservice.disablesecurityaction')
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

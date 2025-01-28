@@ -3,7 +3,7 @@ locals {
     service = "GCP/DLP"
   })
 
-  detect_dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+  dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "dlp_detections" {
@@ -11,7 +11,7 @@ benchmark "dlp_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DLP events."
   type        = "detection"
   children = [
-    detection.detect_dlp_reidentify_content,
+    detection.dlp_reidentify_content,
   ]
 
   tags = merge(local.dlp_common_tags, {
@@ -19,12 +19,12 @@ benchmark "dlp_detections" {
   })
 }
 
-detection "detect_dlp_reidentify_content" {
-  title           = "Detect DLP Reidentify Content"
+detection "dlp_reidentify_content" {
+  title           = "DLP Reidentify Content"
   description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
-  documentation   = file("./detections/docs/detect_dlp_reidentify_content.md")
+  documentation   = file("./detections/docs/dlp_reidentify_content.md")
   severity        = "high"
-  query           = query.detect_dlp_reidentify_content
+  query           = query.dlp_reidentify_content
   display_columns = local.detection_display_columns
 
   tags = merge(local.dlp_common_tags, {
@@ -32,10 +32,25 @@ detection "detect_dlp_reidentify_content" {
   })
 }
 
-query "detect_dlp_reidentify_content" {
+query "dlp_deidentify_content" {
   sql = <<-EOQ
     select
-      ${local.detect_dlp_reidentify_content_sql_columns}
+      ${local.dlp_reidentify_content_sql_columns}
+    from
+      gcp_audit_log
+    where
+      service_name = 'dlp.googleapis.com'
+      and method_name ilike 'google.privacy.dlp.v%.dlpservice.deidentifycontent'
+      ${local.detection_sql_where_conditions}
+    order by
+      timestamp desc;
+  EOQ
+}
+
+query "dlp_reidentify_content" {
+  sql = <<-EOQ
+    select
+      ${local.dlp_reidentify_content_sql_columns}
     from
       gcp_audit_log
     where
