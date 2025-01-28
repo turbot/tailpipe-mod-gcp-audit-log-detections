@@ -12,7 +12,7 @@ benchmark "mitre_attack_v161_ta0040" {
     benchmark.mitre_attack_v161_ta0040_t1531,
   ]
 
-  tags = merge(local.mitre_attack_v161_ta0006_common_tags, {
+  tags = merge(local.mitre_attack_v161_ta0040_common_tags, {
     type = "Benchmark"
   })
 }
