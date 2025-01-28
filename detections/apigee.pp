@@ -2,7 +2,6 @@ locals {
   apigee_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Apigee"
   })
-
 }
 
 benchmark "apigee_detections" {
@@ -20,7 +19,7 @@ benchmark "apigee_detections" {
 
 detection "apigee_security_action_disabled" {
   title           = "Apigee Security Action Disabled"
-  description     = "Detect log entries where a security action is disabled in Apigee that might expose resources to threats."
+  description     = "Detect when a security action in Apigee was disabled to check for potential exposure of resources to unauthorized access or malicious threats. Disabling security actions can compromise API protections and increase risk to the organization."
   documentation   = file("./detections/docs/apigee_security_action_disabled.md")
   severity        = "high"
   query           = query.apigee_security_action_disabled

@@ -2,7 +2,6 @@ locals {
   appengine_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/AppEngine"
   })
-
 }
 
 benchmark "appengine_detections" {
@@ -22,7 +21,7 @@ benchmark "appengine_detections" {
 
 detection "appengine_ingress_firewall_rule_created" {
   title           = "App Engine Ingress Firewall Rule Created"
-  description     = "Detect creations to App Engine ingress firewall rules that may expose resources to threats."
+  description     = "Detect when an App Engine ingress firewall rule was created to check for potential exposure of resources to unauthorized access or threats. New rules might unintentionally allow unrestricted access."
   documentation   = file("./detections/docs/appengine_ingress_firewall_rule_created.md")
   severity        = "low"
   query           = query.appengine_ingress_firewall_rule_created
@@ -34,8 +33,8 @@ detection "appengine_ingress_firewall_rule_created" {
 }
 
 detection "appengine_ingress_firewall_rule_updated" {
-  title           = "App Engine Ingress Firewall Rule Modified"
-  description     = "Detect modifications to App Engine ingress firewall rules that may expose resources to threats."
+  title           = "App Engine Ingress Firewall Rule Updated"
+  description     = "Detect when an App Engine ingress firewall rule was updated to check for potential exposure of resources to unauthorized access. Changes to existing rules might weaken security boundaries."
   documentation   = file("./detections/docs/appengine_ingress_firewall_rule_updated.md")
   severity        = "low"
   query           = query.appengine_ingress_firewall_rule_updated
@@ -48,7 +47,7 @@ detection "appengine_ingress_firewall_rule_updated" {
 
 detection "appengine_ingress_firewall_rule_deleted" {
   title           = "App Engine Ingress Firewall Rule Deleted"
-  description     = "Detect deletions to App Engine ingress firewall rules that may expose resources to threats."
+  description     = "Detect when an App Engine ingress firewall rule was deleted to check for potential disruptions to security configurations, which could expose resources to unauthorized access or malicious activities."
   documentation   = file("./detections/docs/appengine_ingress_firewall_rule_deleted.md")
   severity        = "high"
   query           = query.appengine_ingress_firewall_rule_deleted

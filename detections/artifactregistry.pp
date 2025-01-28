@@ -2,7 +2,6 @@ locals {
   artifactregistry_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ArtifactRegistry"
   })
-
 }
 
 benchmark "artifactregistry_detections" {
@@ -11,7 +10,6 @@ benchmark "artifactregistry_detections" {
   type        = "detection"
   children = [
     detection.artifact_registry_package_deleted,
-    detection.artifact_registry_publicly_accessible,
     detection.artifact_registry_repository_deleted,
   ]
 
@@ -20,22 +18,9 @@ benchmark "artifactregistry_detections" {
   })
 }
 
-detection "artifact_registry_publicly_accessible" {
-  title           = "Artifact Registry Publicly Accessible"
-  description     = "Detect Artifact Registries publicly accessible, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
-  documentation   = file("./detections/docs/artifact_registry_publicly_accessible.md")
-  severity        = "high"
-  query           = query.artifact_registry_publicly_accessible
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.artifactregistry_common_tags, {
-    mitre_attack_ids = "TA0003:T1136"
-  })
-}
-
 detection "artifact_registry_repository_deleted" {
   title           = "Artifact Registry Repository Deleted"
-  description     = "Detect Artifact Registry repository deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when an Artifact Registry repository was deleted to check for potential disruptions to resource availability or unauthorized removal of critical storage repositories."
   documentation   = file("./detections/docs/artifact_registry_repository_deleted.md")
   severity        = "high"
   query           = query.artifact_registry_repository_deleted
@@ -48,7 +33,7 @@ detection "artifact_registry_repository_deleted" {
 
 detection "artifact_registry_package_deleted" {
   title         = "Artifact Registry Package Deleted"
-  description   = "Detect Artifact Registry package deletions, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  description   = "Detect when an Artifact Registry package was deleted to check for potential loss of critical resources or unauthorized removal of packages."
   documentation = file("./detections/docs/artifact_registry_package_deleted.md")
   severity      = "medium"
   query         = query.artifact_registry_package_deleted
@@ -56,27 +41,6 @@ detection "artifact_registry_package_deleted" {
   tags = merge(local.artifactregistry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
-}
-
-// testing needed
-query "artifact_registry_publicly_accessible" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      service_name = 'artifactregistry.googleapis.com'
-      and method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy', '$.bindings[*].members[*]') as varchar[])) as member_struct(member)
-        where member = 'allAuthenticatedUsers' or member = 'allUsers'
-      )
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
 }
 
 query "artifact_registry_package_deleted" {

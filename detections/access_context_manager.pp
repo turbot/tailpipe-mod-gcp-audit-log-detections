@@ -21,9 +21,9 @@ benchmark "access_context_manager_detections" {
 
 detection "access_context_manager_policy_deleted" {
   title           = "Access Context Manager Policy Deleted"
-  description     = "Detect deletions of access policies that might disrupt security configurations or expose resources to threats."
+  description     = "Detect when an Access Context Manager policy was deleted to check for potential disruptions to security configurations, which could expose resources to unauthorized access or reduce compliance with security policies."
   documentation   = file("./detections/docs/access_context_manager_policy_deleted.md")
-  severity        = "medium"
+  severity        = "high"
   query           = query.access_context_manager_policy_deleted
   display_columns = local.detection_display_columns
 
@@ -34,9 +34,9 @@ detection "access_context_manager_policy_deleted" {
 
 detection "access_context_manager_level_deleted" {
   title           = "Access Context Manager Level Deleted"
-  description     = "Detect deletions of access levels that might disrupt security configurations or expose resources to threats."
+  description     = "Detect when an Access Context Manager level was deleted to check for potential disruptions to security boundaries, which could expose resources to unauthorized access or compromise organizational policies."
   documentation   = file("./detections/docs/access_context_manager_level_deleted.md")
-  severity        = "medium"
+  severity        = "high"
   query           = query.access_context_manager_level_deleted
   display_columns = local.detection_display_columns
 

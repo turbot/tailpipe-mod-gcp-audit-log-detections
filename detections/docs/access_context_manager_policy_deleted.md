@@ -1,6 +1,6 @@
 ## Overview
 
-Detect instances where access policies are deleted in Access Context Manager. Access policies are crucial for defining security perimeters and ensuring resources are protected. Monitoring such deletions helps prevent unauthorized access and maintains the integrity of security configurations.
+Detect when an Access Context Manager policy is deleted. Access policies are crucial for defining security perimeters and ensuring resources are protected. Monitoring such deletions helps prevent unauthorized access and maintains the integrity of security configurations.
 
 **References**:
 - [Access Context Manager Overview](https://cloud.google.com/access-context-manager/docs/overview)
