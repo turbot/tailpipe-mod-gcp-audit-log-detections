@@ -42,3 +42,7 @@ locals {
     "source_id"
   ]
 }
+
+locals {
+  detection_sql_resource_column_resource_name = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+}

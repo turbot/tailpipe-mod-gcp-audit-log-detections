@@ -50,7 +50,7 @@ detection "cloudfunctions_operations_deleted" {
 query "cloudfunctions_publicly_accessible" {
   sql = <<-EOQ
     select 
-      ${local.cloudfunctions_publicly_accessible_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from 
       gcp_audit_log
     where
@@ -70,7 +70,7 @@ query "cloudfunctions_publicly_accessible" {
 query "cloudfunctions_operations_deleted" {
   sql = <<-EOQ
     select 
-      ${local.cloudfunctions_operations_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from 
       gcp_audit_log
     where

@@ -79,7 +79,7 @@ detection "dns_record_deleted" {
 query "dns_zone_deleted" {
   sql = <<-EOQ
     select
-      ${local.dns_zone_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -94,7 +94,7 @@ query "dns_zone_deleted" {
 query "dns_zone_updated" {
   sql = <<-EOQ
     select
-      ${local.dns_zone_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -109,7 +109,7 @@ query "dns_zone_updated" {
 query "dns_record_updated" {
   sql = <<-EOQ
     select
-      ${local.dns_record_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -124,7 +124,7 @@ query "dns_record_updated" {
 query "dns_record_deleted" {
   sql = <<-EOQ
     select
-      ${local.dns_record_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

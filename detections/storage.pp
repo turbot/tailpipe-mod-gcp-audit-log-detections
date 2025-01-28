@@ -3,8 +3,6 @@ locals {
     service = "GCP/Storage"
   })
 
-  storage_iam_policy_set_sql_columns             = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  storage_bucket_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "storage_detections" {
@@ -50,7 +48,7 @@ detection "storage_bucket_publicly_accessible" {
 query "storage_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.storage_iam_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -65,7 +63,7 @@ query "storage_iam_policy_set" {
 query "storage_bucket_publicly_accessible" {
   sql = <<-EOQ
     select
-      ${local.storage_bucket_publicly_accessible_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from 
       gcp_audit_log
     where

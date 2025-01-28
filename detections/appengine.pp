@@ -3,9 +3,6 @@ locals {
     service = "GCP/AppEngine"
   })
 
-  appengine_ingress_firewall_rule_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  appengine_ingress_firewall_rule_updated_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  appengine_ingress_firewall_rule_created_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "appengine_detections" {
@@ -65,7 +62,7 @@ detection "appengine_ingress_firewall_rule_deleted" {
 query "appengine_ingress_firewall_rule_created" {
   sql = <<-EOQ
     select
-      ${local.appengine_ingress_firewall_rule_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -80,7 +77,7 @@ query "appengine_ingress_firewall_rule_created" {
 query "appengine_ingress_firewall_rule_updated" {
   sql = <<-EOQ
     select
-      ${local.appengine_ingress_firewall_rule_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -95,7 +92,7 @@ query "appengine_ingress_firewall_rule_updated" {
 query "appengine_ingress_firewall_rule_deleted" {
   sql = <<-EOQ
     select
-      ${local.appengine_ingress_firewall_rule_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

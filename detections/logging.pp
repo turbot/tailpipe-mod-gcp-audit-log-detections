@@ -2,9 +2,6 @@ locals {
   logging_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Logging"
   })
-  logging_unauthorized_access_attempt_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  logging_sink_deleted_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  logging_bucket_deleted_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "logging_detections" {
@@ -64,7 +61,7 @@ detection "logging_bucket_deleted" {
 query "logging_unauthorized_access_attempt" {
   sql = <<-EOQ
     select
-      ${local.logging_unauthorized_access_attempt_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -78,7 +75,7 @@ query "logging_unauthorized_access_attempt" {
 query "logging_sink_deleted" {
   sql = <<-EOQ
     select
-      ${local.logging_sink_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -93,7 +90,7 @@ query "logging_sink_deleted" {
 query "logging_bucket_deleted" {
   sql = <<-EOQ
     select
-      ${local.logging_bucket_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

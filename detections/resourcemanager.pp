@@ -2,10 +2,7 @@ locals {
   resourcemanager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ResourceManager"
   })
-  resourcemanager_iam_policy_set_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  resourcemanager_login_without_mfa_sql_columns           = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  resourcemanager_shared_resource_access_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  resourcemanager_owner_role_policy_set_sql_columns       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+
 }
 
 benchmark "resourcemanager_detections" {
@@ -79,7 +76,7 @@ detection "resourcemanager_owner_role_policy_set" {
 query "resourcemanager_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.resourcemanager_iam_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -94,7 +91,7 @@ query "resourcemanager_iam_policy_set" {
 query "resourcemanager_login_without_mfa" {
   sql = <<-EOQ
     select
-      ${local.resourcemanager_login_without_mfa_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -110,7 +107,7 @@ query "resourcemanager_login_without_mfa" {
 query "resourcemanager_shared_resource_access" {
   sql = <<-EOQ
     select
-      ${local.resourcemanager_shared_resource_access_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -125,7 +122,7 @@ query "resourcemanager_shared_resource_access" {
 query "resourcemanager_owner_role_policy_set" {
   sql = <<-EOQ
     select
-      ${local.resourcemanager_owner_role_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

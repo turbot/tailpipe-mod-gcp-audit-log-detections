@@ -3,9 +3,6 @@ locals {
     service = "GCP/ArtifactRegistry"
   })
 
-  artifact_registry_publicly_accessible_sql_columns              = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  artifact_registry_repository_deleted_sql_columns               = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  artifact_registry_package_deleted_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "artifactregistry_detections" {
@@ -65,7 +62,7 @@ detection "artifact_registry_package_deleted" {
 query "artifact_registry_publicly_accessible" {
   sql = <<-EOQ
     select
-      ${local.artifact_registry_publicly_accessible_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -85,7 +82,7 @@ query "artifact_registry_publicly_accessible" {
 query "artifact_registry_package_deleted" {
   sql = <<-EOQ
     select
-      ${local.artifact_registry_package_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -100,7 +97,7 @@ query "artifact_registry_package_deleted" {
 query "artifact_registry_repository_deleted" {
   sql = <<-EOQ
     select
-      ${local.artifact_registry_repository_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

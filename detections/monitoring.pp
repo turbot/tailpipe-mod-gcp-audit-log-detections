@@ -3,8 +3,6 @@ locals {
     service = "GCP/Monitoring"
   })
 
-  monitoring_metric_descriptor_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  monitoring_alert_policy_deleted_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "monitoring_detections" {
@@ -50,7 +48,7 @@ detection "monitoring_alert_policy_deleted" {
 query "monitoring_metric_descriptor_deleted" {
   sql = <<-EOQ
     select
-      ${local.monitoring_metric_descriptor_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -65,7 +63,7 @@ query "monitoring_metric_descriptor_deleted" {
 query "monitoring_alert_policy_deleted" {
   sql = <<-EOQ
     select
-      ${local.monitoring_alert_policy_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

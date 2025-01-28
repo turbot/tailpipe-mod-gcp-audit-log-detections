@@ -2,9 +2,7 @@ locals {
   sql_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/SQL"
   })
-  sql_ssl_certificate_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  sql_login_failed_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  sql_user_deleted_sql_columns            = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+
 }
 
 benchmark "sql_detections" {
@@ -64,7 +62,7 @@ detection "sql_user_deleted" {
 query "sql_ssl_certificate_deleted" {
   sql = <<-EOQ
     select
-      ${local.sql_ssl_certificate_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -79,7 +77,7 @@ query "sql_ssl_certificate_deleted" {
 query "sql_login_failed" {
   sql = <<-EOQ
     select
-      ${local.sql_login_failed_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -94,7 +92,7 @@ query "sql_login_failed" {
 query "sql_user_deleted" {
   sql = <<-EOQ
     select
-      ${local.sql_user_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

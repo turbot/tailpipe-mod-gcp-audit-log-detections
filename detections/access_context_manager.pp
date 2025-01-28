@@ -3,8 +3,6 @@ locals {
     service = "GCP/AccessContextManager"
   })
 
-  access_context_manager_policy_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  access_context_manager_level_deleted_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "access_context_manager_detections" {
@@ -50,7 +48,7 @@ detection "access_context_manager_level_deleted" {
 query "access_context_manager_policy_deleted" {
   sql = <<-EOQ
     select
-      ${local.access_context_manager_policy_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -65,7 +63,7 @@ query "access_context_manager_policy_deleted" {
 query "access_context_manager_level_deleted" {
   sql = <<-EOQ
     select
-      ${local.access_context_manager_level_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

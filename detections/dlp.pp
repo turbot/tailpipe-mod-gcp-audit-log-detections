@@ -49,7 +49,7 @@ detection "dlp_deidentify_content" {
 query "dlp_deidentify_content" {
   sql = <<-EOQ
     select
-      ${local.dlp_reidentify_content_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -64,7 +64,7 @@ query "dlp_deidentify_content" {
 query "dlp_reidentify_content" {
   sql = <<-EOQ
     select
-      ${local.dlp_reidentify_content_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

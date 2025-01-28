@@ -3,7 +3,6 @@ locals {
     service = "GCP/Apigee"
   })
 
-  apigee_security_action_disabled_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "apigee_detections" {
@@ -35,7 +34,7 @@ detection "apigee_security_action_disabled" {
 query "apigee_security_action_disabled" {
   sql = <<-EOQ
     select
-      ${local.apigee_security_action_disabled_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

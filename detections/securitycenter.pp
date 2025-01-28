@@ -3,7 +3,6 @@ locals {
     service = "GCP/SecurityCommandCenter"
   })
 
-  security_command_center_notification_config_deleted_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "security_command_center_detections" {
@@ -35,7 +34,7 @@ detection "security_command_center_notification_config_deleted" {
 query "security_command_center_notification_config_deleted" {
   sql = <<-EOQ
     select
-      ${local.security_command_center_notification_config_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where

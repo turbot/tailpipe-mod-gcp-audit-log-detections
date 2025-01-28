@@ -2,18 +2,7 @@ locals {
   compute_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Compute"
   })
-  compute_vpn_tunnel_deleted_sql_columns                       = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_firewall_rule_deleted_sql_columns                    = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_full_network_traffic_packet_deleted_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_full_network_traffic_packet_updated_sql_columns      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_image_iam_policy_set_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_disk_iam_policy_set_sql_columns                      = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_snapshot_iam_policy_set_sql_columns                  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_instance_with_public_network_interface_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_public_ip_address_created_sql_columns                = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_vpc_network_shared_to_external_project_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_disk_with_small_size_sql_columns                     = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  compute_vpc_flow_logs_disabled_sql_columns                   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
+
 }
 
 benchmark "compute_detections" {
@@ -199,7 +188,7 @@ detection "compute_vpc_flow_logs_disabled" {
 query "compute_firewall_rule_deleted" {
   sql = <<-EOQ
     select
-      ${local.compute_firewall_rule_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -214,7 +203,7 @@ query "compute_firewall_rule_deleted" {
 query "compute_vpn_tunnel_deleted" {
   sql = <<-EOQ
     select
-      ${local.compute_vpn_tunnel_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -229,7 +218,7 @@ query "compute_vpn_tunnel_deleted" {
 query "compute_full_network_traffic_packet_deleted" {
   sql = <<-EOQ
     select
-      ${local.compute_full_network_traffic_packet_deleted_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -244,7 +233,7 @@ query "compute_full_network_traffic_packet_deleted" {
 query "compute_full_network_traffic_packet_updated" {
   sql = <<-EOQ
     select
-      ${local.compute_full_network_traffic_packet_updated_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -259,7 +248,7 @@ query "compute_full_network_traffic_packet_updated" {
 query "compute_image_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.compute_image_iam_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -274,7 +263,7 @@ query "compute_image_iam_policy_set" {
 query "compute_disk_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.compute_disk_iam_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -289,7 +278,7 @@ query "compute_disk_iam_policy_set" {
 query "compute_snapshot_iam_policy_set" {
   sql = <<-EOQ
     select
-      ${local.compute_snapshot_iam_policy_set_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -304,7 +293,7 @@ query "compute_snapshot_iam_policy_set" {
 query "compute_instance_with_public_network_interface" {
   sql = <<-EOQ
     select
-      ${local.compute_instance_with_public_network_interface_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -326,7 +315,7 @@ query "compute_instance_with_public_network_interface" {
 query "compute_public_ip_address_created" {
   sql = <<-EOQ
     select
-      ${local.compute_public_ip_address_created_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -342,7 +331,7 @@ query "compute_public_ip_address_created" {
 query "compute_vpc_network_shared_to_external_project" {
   sql = <<-EOQ
     select
-      ${local.compute_vpc_network_shared_to_external_project_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -357,7 +346,7 @@ query "compute_vpc_network_shared_to_external_project" {
 query "compute_disk_with_small_size" {
   sql = <<-EOQ
     select
-      ${local.compute_disk_with_small_size_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
@@ -378,7 +367,7 @@ query "compute_disk_with_small_size" {
 query "compute_vpc_flow_logs_disabled" {
   sql = <<-EOQ
     select
-      ${local.compute_vpc_flow_logs_disabled_sql_columns}
+      ${local.detection_sql_resource_column_resource_name}
     from
       gcp_audit_log
     where
