@@ -1,6 +1,6 @@
 ## Overview
 
-Detect deletions of SSL certificates from Google Cloud SQL instances. Unauthorized or accidental deletions can weaken database security and expose resources to potential threats. Monitoring these actions ensures secure database configurations and compliance with security policies.
+Detect when an SQL SSL certificate is deleted. Unauthorized or accidental deletions can weaken database security and expose resources to potential threats. Monitoring these actions ensures secure database configurations and compliance with security policies.
 
 **References**:
 - [Cloud SQL SSL Certificates](https://cloud.google.com/sql/docs/mysql/configure-ssl-instance)

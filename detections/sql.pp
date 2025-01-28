@@ -22,7 +22,7 @@ benchmark "sql_detections" {
 
 detection "sql_ssl_certificate_deleted" {
   title           = "SQL SSL Certificate Deleted"
-  description     = "Detect SQL SSL certificate deletions that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when an SQL SSL certificate was deleted to check for potential risks, such as exposing resources to unauthorized access or disruptions in secure database connections."
   documentation   = file("./detections/docs/sql_ssl_certificate_deleted.md")
   severity        = "medium"
   query           = query.sql_ssl_certificate_deleted
@@ -35,7 +35,7 @@ detection "sql_ssl_certificate_deleted" {
 
 detection "sql_login_failed" {
   title           = "SQL Login Failed"
-  description     = "Detect failed login attempts to SQL instances. Multiple failed logins may indicate unauthorized access attempts, misconfigured applications, or potential brute force attacks targeting database instances. This detection helps identify potential security threats to database resources."
+  description     = "Detect when an SQL login attempt failed to check for potential risks of unauthorized access, brute force attacks, or misconfigured applications targeting database instances."
   documentation   = file("./detections/docs/sql_login_failed.md")
   severity        = "medium"
   query           = query.sql_login_failed
@@ -48,7 +48,7 @@ detection "sql_login_failed" {
 
 detection "sql_user_deleted" {
   title           = "SQL User Deleted"
-  description     = "Detect successful deletion of users from SQL instances. This detection helps track changes to database access controls, ensuring compliance with security policies and helping identify potential account tampering or privilege removal attacks."
+  description     = "Detect when an SQL user was deleted to check for potential risks, such as unauthorized access changes, privilege removals, or policy violations impacting database security."
   documentation   = file("./detections/docs/sql_user_deleted.md")
   severity        = "medium"
   query           = query.sql_user_deleted

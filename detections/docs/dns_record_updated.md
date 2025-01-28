@@ -1,6 +1,6 @@
 ## Overview
 
-Detect modifications to DNS records. Unauthorized changes can redirect traffic to malicious destinations, disrupt domain configurations, or expose systems to vulnerabilities. Monitoring these actions ensures DNS record integrity and security.
+Detect when a DNS record was updated. Unauthorized changes can redirect traffic to malicious destinations, disrupt domain configurations, or expose systems to vulnerabilities. Monitoring these actions ensures DNS record integrity and security.
 
 **References**:
 - [DNS Resource Record Sets Overview](https://cloud.google.com/dns/docs/records)

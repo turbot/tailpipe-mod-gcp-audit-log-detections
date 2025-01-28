@@ -2,7 +2,6 @@ locals {
   security_command_center_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/SecurityCommandCenter"
   })
-
 }
 
 benchmark "security_command_center_detections" {
@@ -20,7 +19,7 @@ benchmark "security_command_center_detections" {
 
 detection "security_command_center_notification_config_deleted" {
   title           = "Security Command Center Notification Config Deleted"
-  description     = "Detect deletions of Security Command Center notification configurations that might disrupt security configurations or expose resources to threats."
+  description     = "Detect when a Security Command Center notification configuration was deleted to check for potential risks, such as disruption of security notifications or unauthorized changes that could hinder threat monitoring."
   documentation   = file("./detections/docs/security_command_center_notification_config_deleted.md")
   severity        = "high"
   query           = query.security_command_center_notification_config_deleted

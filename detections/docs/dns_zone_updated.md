@@ -1,6 +1,6 @@
 ## Overview
 
-Detect modifications to DNS zones. Unauthorized changes can disrupt domain configurations, compromise infrastructure, or introduce vulnerabilities. Monitoring these actions helps ensure DNS configurations remain secure.
+Detect when a DNS zone was updated. Unauthorized changes can disrupt domain configurations, compromise infrastructure, or introduce vulnerabilities. Monitoring these actions helps ensure DNS configurations remain secure.
 
 **References**:
 - [DNS Managed Zones Overview](https://cloud.google.com/dns/docs/zones)

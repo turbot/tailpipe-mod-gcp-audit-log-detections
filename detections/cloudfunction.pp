@@ -2,18 +2,15 @@ locals {
   cloudfunction_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/CloudFunctions"
   })
-
-  cloudfunctions_publicly_accessible_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  cloudfunctions_operations_deleted_sql_columns  = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "cloudfunction_detections" {
-  title       = "Cloudfunction Detections"
-  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Cloudfunction events."
+  title       = "Cloud Function Detections"
+  description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Cloud Function events."
   type        = "detection"
   children = [
-    detection.cloudfunctions_operations_deleted,
-    detection.cloudfunctions_publicly_accessible,
+    detection.cloudfunction_deleted,
+    detection.cloudfunction_publicly_accessible,
   ]
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -21,12 +18,12 @@ benchmark "cloudfunction_detections" {
   })
 }
 
-detection "cloudfunctions_publicly_accessible" {
-  title           = "Cloud Functions Publicly Accessible"
-  description     = "Detect when Cloud Functions are made publicly accessible, ensuring awareness of potential exposure and mitigating security risks associated with unrestricted access."
-  documentation   = file("./detections/docs/cloudfunctions_publicly_accessible.md")
+detection "cloudfunction_publicly_accessible" {
+  title           = "Cloud Function Publicly Accessible"
+  description     = "Detect when a Cloud Function was made publicly accessible to check for potential exposure to unauthorized access and security risks."
+  documentation   = file("./detections/docs/cloudfunction_publicly_accessible.md")
   severity        = "high"
-  query           = query.cloudfunctions_publicly_accessible
+  query           = query.cloudfunction_publicly_accessible
   display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -34,12 +31,12 @@ detection "cloudfunctions_publicly_accessible" {
   })
 }
 
-detection "cloudfunctions_operations_deleted" {
-  title           = "Cloud Functions Operations Deleted"
-  description     = "Detect when Cloud Functions are deleted, enabling prompt action to prevent accidental loss of critical serverless resources or potential security issues caused by unauthorized deletions."
-  documentation   = file("./detections/docs/cloudfunctions_operations_deleted.md")
+detection "cloudfunction_deleted" {
+  title           = "Cloud Function Deleted"
+  description     = "Detect when a Cloud Function was deleted to check for potential accidental loss of critical serverless resources or unauthorized deletions."
+  documentation   = file("./detections/docs/cloudfunction_deleted.md")
   severity        = "medium"
-  query           = query.cloudfunctions_operations_deleted
+  query           = query.cloudfunction_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.cloudfunction_common_tags, {
@@ -47,7 +44,7 @@ detection "cloudfunctions_operations_deleted" {
   })
 }
 
-query "cloudfunctions_publicly_accessible" {
+query "cloudfunction_publicly_accessible" {
   sql = <<-EOQ
     select 
       ${local.detection_sql_resource_column_resource_name}
@@ -67,7 +64,7 @@ query "cloudfunctions_publicly_accessible" {
   EOQ
 }
 
-query "cloudfunctions_operations_deleted" {
+query "cloudfunction_deleted" {
   sql = <<-EOQ
     select 
       ${local.detection_sql_resource_column_resource_name}

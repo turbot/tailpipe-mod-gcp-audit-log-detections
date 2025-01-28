@@ -3,9 +3,6 @@ locals {
     service = "GCP/DNS"
   })
 
-  dns_zone_deleted_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  dns_zone_updated_sql_columns   = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
-  dns_record_updated_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "dns_detections" {
@@ -26,7 +23,7 @@ benchmark "dns_detections" {
 
 detection "dns_zone_deleted" {
   title           = "DNS Zone Deleted"
-  description     = "Detect deletions of DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  description     = "Detect when a DNS zone was deleted to check for disruptions in domain configurations that might lead to service outages or security risks."
   documentation   = file("./detections/docs/dns_zone_deleted.md")
   severity        = "high"
   query           = query.dns_zone_deleted
@@ -39,7 +36,7 @@ detection "dns_zone_deleted" {
 
 detection "dns_zone_updated" {
   title           = "DNS Zone Updated"
-  description     = "Detect modifications to DNS zones, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  description     = "Detect when a DNS zone was updated to check for unauthorized changes that might expose infrastructure to security risks or service disruptions."
   documentation   = file("./detections/docs/dns_zone_updated.md")
   severity        = "high"
   query           = query.dns_zone_updated
@@ -52,7 +49,7 @@ detection "dns_zone_updated" {
 
 detection "dns_record_updated" {
   title           = "DNS Record Updated"
-  description     = "Detect modifications to DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  description     = "Detect when a DNS record was updated to check for potential unauthorized changes that might redirect traffic to malicious endpoints or disrupt services."
   documentation   = file("./detections/docs/dns_record_updated.md")
   severity        = "high"
   query           = query.dns_record_updated
@@ -65,7 +62,7 @@ detection "dns_record_updated" {
 
 detection "dns_record_deleted" {
   title           = "DNS Record Deleted"
-  description     = "Detect deletions of DNS records, ensuring visibility into changes that could disrupt domain configurations, compromise infrastructure, or expose systems to potential threats."
+  description     = "Detect when a DNS record was deleted to check for potential disruptions to domain configurations or unauthorized attempts to modify DNS settings."
   documentation   = file("./detections/docs/dns_record_deleted.md")
   severity        = "high"
   query           = query.dns_record_deleted

@@ -1,6 +1,6 @@
 ## Overview
 
-Detect IAM policies that grant the owner role. Assigning the owner role provides full access to resources, which can expose systems to security risks if misused. Monitoring these actions ensures secure role assignments.
+Detect when an IAM policy granting the owner role is set. Assigning the owner role provides full access to resources, which can expose systems to security risks if misused. Monitoring these actions ensures secure role assignments.
 
 **References**:
 - [IAM Roles Overview](https://cloud.google.com/iam/docs/understanding-roles)

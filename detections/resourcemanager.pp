@@ -23,7 +23,7 @@ benchmark "resourcemanager_detections" {
 
 detection "resourcemanager_iam_policy_set" {
   title           = "Resource Manager IAM Policy Set"
-  description     = "Detect changes to IAM policies at the project level, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when a Resource Manager IAM policy was set to check for unauthorized changes that might expose resources to threats or compromise security."
   documentation   = file("./detections/docs/resourcemanager_iam_policy_set.md")
   severity        = "medium"
   query           = query.resourcemanager_iam_policy_set
@@ -36,7 +36,7 @@ detection "resourcemanager_iam_policy_set" {
 
 detection "resourcemanager_login_without_mfa" {
   title           = "Resource Manager Login Without MFA"
-  description     = "Detect logins without MFA, ensuring visibility into access attempts that might indicate unauthorized activities or weak authentication practices."
+  description     = "Detect when a Resource Manager login occurred without MFA to check for unauthorized access attempts or weak authentication practices."
   documentation   = file("./detections/docs/resourcemanager_login_without_mfa.md")
   severity        = "high"
   query           = query.resourcemanager_login_without_mfa
@@ -49,7 +49,7 @@ detection "resourcemanager_login_without_mfa" {
 
 detection "resourcemanager_shared_resource_access" {
   title           = "Resource Manager Shared Resource Access"
-  description     = "Detect access to shared resources that might indicate unauthorized access attempts or potential misuse of resource sharing configurations."
+  description     = "Detect when shared resource access was performed to check for unauthorized access attempts or potential misuse of shared configurations."
   documentation   = file("./detections/docs/resourcemanager_shared_resource_access.md")
   severity        = "medium"
   query           = query.resourcemanager_shared_resource_access
@@ -62,7 +62,7 @@ detection "resourcemanager_shared_resource_access" {
 
 detection "resourcemanager_owner_role_policy_set" {
   title           = "Resource Manager Owner Role Policy Set"
-  description     = "Detect IAM policies that grant the owner role, ensuring visibility into configurations that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when an IAM policy granting the owner role was set to check for potential privilege escalation or unauthorized access."
   documentation   = file("./detections/docs/resourcemanager_owner_role_policy_set.md")
   severity        = "high"
   query           = query.resourcemanager_owner_role_policy_set

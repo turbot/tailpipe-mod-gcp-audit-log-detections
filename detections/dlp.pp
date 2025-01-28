@@ -22,7 +22,7 @@ benchmark "dlp_detections" {
 
 detection "dlp_reidentify_content" {
   title           = "DLP Reidentify Content"
-  description     = "Detect reidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
+  description     = "Detect when GCP DLP content was reidentified to check for potential exposure of sensitive information, ensuring compliance with data privacy regulations and mitigating unauthorized data reidentification risks."
   documentation   = file("./detections/docs/dlp_reidentify_content.md")
   severity        = "high"
   query           = query.dlp_reidentify_content
@@ -35,7 +35,7 @@ detection "dlp_reidentify_content" {
 
 detection "dlp_deidentify_content" {
   title           = "DLP Deidentify Content"
-  description     = "Detect deidentifications of content that could expose sensitive information or violate data privacy regulations, ensuring compliance and protecting against unauthorized data exposure."
+  description     = "Detect when GCP DLP content was deidentified to check for compliance with privacy requirements and ensure proper use of sensitive data handling practices."
   documentation   = file("./detections/docs/dlp_deidentify_content.md")
   severity        = "high"
   query           = query.dlp_deidentify_content

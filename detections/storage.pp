@@ -2,7 +2,6 @@ locals {
   storage_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/Storage"
   })
-
 }
 
 benchmark "storage_detections" {
@@ -21,7 +20,7 @@ benchmark "storage_detections" {
 
 detection "storage_iam_policy_set" {
   title           = "Storage IAM Policy Set"
-  description     = "Detect changes to storage IAM policies, ensuring visibility into modifications that might expose resources to threats or signal unauthorized access attempts."
+  description     = "Detect when a storage IAM policy was set to check for potential risks of exposing resources to threats or unauthorized access attempts."
   documentation   = file("./detections/docs/storage_iam_policy_set.md")
   severity        = "low"
   query           = query.storage_iam_policy_set
@@ -34,7 +33,7 @@ detection "storage_iam_policy_set" {
 
 detection "storage_bucket_publicly_accessible" {
   title           = "Storage Bucket Publicly Accessible"
-  description     = "Detect storage buckets that are publicly accessible, ensuring awareness of potential data exposure and mitigating associated security risks."
+  description     = "Detect when a storage bucket was made publicly accessible to check for potential risks of data exposure and associated security threats."
   documentation   = file("./detections/docs/storage_bucket_publicly_accessible.md")
   severity        = "high"
   query           = query.storage_bucket_publicly_accessible
