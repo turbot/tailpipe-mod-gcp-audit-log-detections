@@ -233,8 +233,7 @@ query "iam_service_account_created" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.createserviceaccount'
+      method_name ilike 'google.iam.admin.v%.createserviceaccount'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -248,8 +247,7 @@ query "iam_service_account_key_created" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.createserviceaccountkey'
+      method_name ilike 'google.iam.admin.v%.createserviceaccountkey'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -263,8 +261,7 @@ query "iam_service_account_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.deleteserviceaccount'
+      method_name ilike 'google.iam.admin.v%.deleteserviceaccount'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -278,8 +275,7 @@ query "iam_service_account_disabled" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.disableserviceaccount'
+      method_name ilike 'google.iam.admin.v%.disableserviceaccount'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -293,8 +289,7 @@ query "iam_workload_identity_pool_provider_created" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.createworkloadidentitypoolprovider'
+      method_name ilike 'google.iam.v%.workloadidentitypools.createworkloadidentitypoolprovider'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -308,8 +303,7 @@ query "iam_role_granted_to_all_users" {
     from
       gcp_audit_log
     where
-      service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'setiampolicy'
+      method_name ilike 'cloudresourcemanager.v%.projects.setiampolicy'
       and json_extract(cast(request as json), '$.policy.bindings[*].members')::varchar like '%allUsers%'
       ${local.detection_sql_where_conditions}
     order by
@@ -324,8 +318,7 @@ query "iam_service_account_token_creator_role_assigned" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.setiampolicy'
+      method_name ilike 'google.iam.admin.v%.setiampolicy'
       and json_extract(cast(request as json), '$.policy.bindings[*].role')::varchar like '%roles/iam.serviceAccountTokenCreator%'
       ${local.detection_sql_where_conditions}
     order by
@@ -340,8 +333,7 @@ query "iam_organization_policy_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'cloudresourcemanager.v%.organizations.setiampolicy'
+      method_name ilike 'cloudresourcemanager.v%.organizations.setiampolicy'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -355,8 +347,7 @@ query "iam_workforce_pool_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepool'
+      method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepool'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -370,8 +361,7 @@ query "iam_federated_identity_provider_created" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.workforcepools.createworkforcepoolprovider'
+      method_name ilike 'google.iam.admin.v%.workforcepools.createworkforcepoolprovider'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -401,8 +391,7 @@ query "iam_role_with_high_privileges_created" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.createrole'
+      method_name ilike 'google.iam.admin.v%.createrole'
       and cast(json_extract(request, '$.role.included_permissions[*]') as varchar) like '%resourcemanager.projects.setIamPolicy%'
       ${local.detection_sql_where_conditions}
     order by
@@ -417,8 +406,7 @@ query "iam_federated_identity_provider_updated" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepoolprovider'
+      method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepoolprovider'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -432,8 +420,7 @@ query "iam_service_account_access_token_generated" {
     from
       gcp_audit_log
     where
-      service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'generateaccesstoken'
+      method_name ilike 'generateaccesstoken'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -447,8 +434,7 @@ query "iam_service_account_key_deleted" {
     from
       gcp_audit_log
     where
-      service_name = 'iam.googleapis.com'
-      and method_name ilike 'google.iam.admin.v1.deleteserviceaccountkey'
+      method_name ilike 'google.iam.admin.v1.deleteserviceaccountkey'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
