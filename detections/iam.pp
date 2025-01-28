@@ -16,15 +16,12 @@ benchmark "iam_detections" {
     detection.iam_role_granted_to_all_users,
     detection.iam_role_with_high_privileges_created,
     detection.iam_service_account_access_token_generated,
-    detection.iam_service_account_access_token_generation_failed,
     detection.iam_service_account_created,
     detection.iam_service_account_deleted,
     detection.iam_service_account_disabled,
     detection.iam_service_account_key_created,
     detection.iam_service_account_key_deleted,
-    detection.iam_service_account_signblob_failed,
     detection.iam_service_account_token_creator_role_assigned,
-    detection.iam_single_account_login_failed,
     detection.iam_workforce_pool_updated,
     detection.iam_workload_identity_pool_provider_created,
   ]
@@ -213,45 +210,6 @@ detection "iam_service_account_access_token_generated" {
 
   tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078,TA0005:T1548"
-  })
-}
-
-detection "iam_service_account_access_token_generation_failed" {
-  title           = "IAM Service Account Access Token Generation Failed"
-  description     = "Detect when an IAM service account access token generate attempt was failed, potentially indicating unauthorized access attempts, misconfigurations, or operational issues. Monitoring failed token generation helps identify security risks and ensure proper system configuration."
-  documentation   = file("./detections/docs/iam_service_account_access_token_generation_failed.md")
-  severity        = "medium"
-  query           = query.iam_service_account_access_token_generation_failed
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0006:T1110"
-  })
-}
-
-detection "iam_single_account_login_failed" {
-  title           = "IAM Single Account Login Failed"
-  description     = "Detect when multiple failed login attempt was failed for a single IAM user account, potentially indicating brute force attacks or compromised credentials. Monitoring failed login attempts helps identify unauthorized access attempts and ensures account security."
-  documentation   = file("./detections/docs/iam_single_account_login_failed.md")
-  severity        = "low"
-  query           = query.iam_single_account_login_failed
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0006:T1110"
-  })
-}
-
-detection "iam_service_account_signblob_failed" {
-  title           = "IAM Service Account SignBlob Failed"
-  description     = "Detect when an IAM service account credential was failed to sign binary blobs, potentially indicating unauthorized attempts or service account compromise. Monitoring failed SignBlob attempts helps identify suspicious activities and ensures the security of sensitive operations."
-  documentation   = file("./detections/docs/iam_service_account_signblob_failed.md")
-  severity        = "medium"
-  query           = query.iam_service_account_signblob_failed
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0006:T1552"
   })
 }
 
@@ -477,51 +435,6 @@ query "iam_service_account_access_token_generated" {
       service_name = 'iamcredentials.googleapis.com'
       and method_name ilike 'generateaccesstoken'
       ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_service_account_access_token_generation_failed" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'generateaccesstoken'
-      and status.code = 7
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_single_account_login_failed" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'signjwt'
-      and status.code = 7
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_service_account_signblob_failed" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      service_name = 'iamcredentials.googleapis.com'
-      and method_name ilike 'signblob'
-      and status.code = 7
     order by
       timestamp desc;
   EOQ

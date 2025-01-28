@@ -10,7 +10,6 @@ benchmark "sql_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for SQL events."
   type        = "detection"
   children = [
-    detection.sql_login_failed,
     detection.sql_ssl_certificate_deleted,
     detection.sql_user_deleted,
   ]
@@ -30,19 +29,6 @@ detection "sql_ssl_certificate_deleted" {
 
   tags = merge(local.sql_common_tags, {
     mitre_attack_ids = "TA0003:T1098"
-  })
-}
-
-detection "sql_login_failed" {
-  title           = "SQL Login Failed"
-  description     = "Detect when an SQL login attempt failed to check for potential risks of unauthorized access, brute force attacks, or misconfigured applications targeting database instances."
-  documentation   = file("./detections/docs/sql_login_failed.md")
-  severity        = "medium"
-  query           = query.sql_login_failed
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.sql_common_tags, {
-    mitre_attack_ids = "TA0006:T1110"
   })
 }
 
@@ -69,21 +55,6 @@ query "sql_ssl_certificate_deleted" {
       service_name = 'sqladmin.googleapis.com'
       and method_name ilike 'cloudsql.sslCerts.delete'
       ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "sql_login_failed" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      service_name = 'sqladmin.googleapis.com'
-      and method_name ilike 'cloudsql.instances.login'
-      and status.code = 7
     order by
       timestamp desc;
   EOQ
