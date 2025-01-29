@@ -303,7 +303,7 @@ query "compute_instance_with_public_network_interface" {
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+
 query "compute_public_ip_address_created" {
   sql = <<-EOQ
     select
@@ -312,7 +312,7 @@ query "compute_public_ip_address_created" {
       gcp_audit_log
     where
       method_name ilike '%.compute.addresses.insert'
-      and request.networkTier is not null
+      and (request ->> 'networkTier') is not null
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -352,7 +352,7 @@ query "compute_disk_with_small_size" {
       timestamp desc;
   EOQ
 }
-// testing is needed
+
 query "compute_vpc_flow_logs_disabled" {
   sql = <<-EOQ
     select
