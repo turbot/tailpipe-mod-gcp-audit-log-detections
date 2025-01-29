@@ -23,7 +23,7 @@ detection "monitoring_metric_descriptor_deleted" {
   title           = "Monitoring Metric Descriptor Deleted"
   description     = "Detect when a monitoring metric descriptor was deleted, potentially disrupting monitoring configurations or indicating unauthorized access attempts. Monitoring metric descriptor deletions helps ensure the integrity of monitoring setups and mitigates security risks."
   documentation   = file("./detections/docs/monitoring_metric_descriptor_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.monitoring_metric_descriptor_deleted
   display_columns = local.detection_display_columns
 
@@ -36,7 +36,7 @@ detection "monitoring_alert_policy_deleted" {
   title           = "Monitoring Alert Policy Deleted"
   description     = "Detect when a monitoring alert policy was deleted, potentially disrupting alert configurations or indicating unauthorized access attempts. Monitoring alert policy deletions helps maintain the integrity of alerting systems and mitigates security risks."
   documentation   = file("./detections/docs/monitoring_alert_policy_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.monitoring_alert_policy_deleted
   display_columns = local.detection_display_columns
 

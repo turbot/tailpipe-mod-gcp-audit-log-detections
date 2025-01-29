@@ -36,7 +36,7 @@ detection "logging_sink_deleted" {
   title           = "Logging Sink Deleted"
   description     = "Detect when a logging sink was deleted, potentially disrupting logging configurations or indicating unauthorized access attempts. Monitoring logging sink deletions helps ensure logging integrity and enables the timely identification of suspicious activities."
   documentation   = file("./detections/docs/logging_sink_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.logging_sink_deleted
   display_columns = local.detection_display_columns
 
@@ -49,7 +49,7 @@ detection "logging_bucket_deleted" {
   title           = "Logging Bucket Deleted"
   description     = "Detect when a logging bucket was deleted, potentially disrupting logging configurations or indicating unauthorized access attempts. Monitoring logging bucket deletions helps maintain logging integrity and provides visibility into suspicious activities."
   documentation   = file("./detections/docs/logging_bucket_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.logging_bucket_deleted
   display_columns = local.detection_display_columns
 

@@ -36,7 +36,7 @@ detection "sql_user_deleted" {
   title           = "SQL User Deleted"
   description     = "Detect when an SQL user was deleted to check for potential risks, such as unauthorized access changes, privilege removals, or policy violations impacting database security."
   documentation   = file("./detections/docs/sql_user_deleted.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.sql_user_deleted
   display_columns = local.detection_display_columns
 

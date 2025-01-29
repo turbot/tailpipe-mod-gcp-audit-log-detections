@@ -22,7 +22,7 @@ detection "storage_iam_policy_set" {
   title           = "Storage IAM Policy Set"
   description     = "Detect when a storage IAM policy was set to check for potential risks of exposing resources to threats or unauthorized access attempts."
   documentation   = file("./detections/docs/storage_iam_policy_set.md")
-  severity        = "low"
+  severity        = "medium"
   query           = query.storage_iam_policy_set
   display_columns = local.detection_display_columns
 

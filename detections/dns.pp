@@ -25,7 +25,7 @@ detection "dns_zone_deleted" {
   title           = "DNS Zone Deleted"
   description     = "Detect when a DNS zone was deleted to check for disruptions in domain configurations that might lead to service outages or security risks."
   documentation   = file("./detections/docs/dns_zone_deleted.md")
-  severity        = "high"
+  severity        = "low"
   query           = query.dns_zone_deleted
   display_columns = local.detection_display_columns
 
@@ -38,7 +38,7 @@ detection "dns_zone_updated" {
   title           = "DNS Zone Updated"
   description     = "Detect when a DNS zone was updated to check for unauthorized changes that might expose infrastructure to security risks or service disruptions."
   documentation   = file("./detections/docs/dns_zone_updated.md")
-  severity        = "high"
+  severity        = "low"
   query           = query.dns_zone_updated
   display_columns = local.detection_display_columns
 
@@ -51,7 +51,7 @@ detection "dns_record_updated" {
   title           = "DNS Record Updated"
   description     = "Detect when a DNS record was updated to check for potential unauthorized changes that might redirect traffic to malicious endpoints or disrupt services."
   documentation   = file("./detections/docs/dns_record_updated.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.dns_record_updated
   display_columns = local.detection_display_columns
 
@@ -64,7 +64,7 @@ detection "dns_record_deleted" {
   title           = "DNS Record Deleted"
   description     = "Detect when a DNS record was deleted to check for potential disruptions to domain configurations or unauthorized attempts to modify DNS settings."
   documentation   = file("./detections/docs/dns_record_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.dns_record_deleted
   display_columns = local.detection_display_columns
 

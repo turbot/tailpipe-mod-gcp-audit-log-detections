@@ -11,7 +11,6 @@ benchmark "dlp_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DLP events."
   type        = "detection"
   children = [
-    detection.dlp_deidentify_content,
     detection.dlp_reidentify_content,
   ]
 
@@ -31,33 +30,6 @@ detection "dlp_reidentify_content" {
   tags = merge(local.dlp_common_tags, {
     mitre_attack_ids = "TA0009:T1119"
   })
-}
-
-detection "dlp_deidentify_content" {
-  title           = "DLP Deidentify Content"
-  description     = "Detect when GCP DLP content was deidentified to check for compliance with privacy requirements and ensure proper use of sensitive data handling practices."
-  documentation   = file("./detections/docs/dlp_deidentify_content.md")
-  severity        = "high"
-  query           = query.dlp_deidentify_content
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.dlp_common_tags, {
-    mitre_attack_ids = "TA0009:T1119"
-  })
-}
-
-query "dlp_deidentify_content" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.privacy.dlp.v%.dlpservice.deidentifycontent'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
 }
 
 query "dlp_reidentify_content" {
