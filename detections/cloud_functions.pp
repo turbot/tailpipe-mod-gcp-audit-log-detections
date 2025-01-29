@@ -43,21 +43,27 @@ detection "cloud_functions_deleted" {
     mitre_attack_ids = "TA0002:T1648"
   })
 }
-// testing is needed
+
 query "cloud_functions_publicly_accessible" {
   sql = <<-EOQ
+    with policy as(
+      select
+        *,
+        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        service_name = 'cloudfunctions.googleapis.com'
+        and method_name ilike 'SetIamPolicy'
+    )
     select 
       ${local.detection_sql_resource_column_resource_name}
     from 
-      gcp_audit_log
+      policy
     where
-      lower(method_name) = 'google.cloud.functions.v%.cloudfunctionssservice.setiampolicy'
+      (bindings ->> 'role') = 'roles/cloudfunctions.invoker'
+      and (json_contains((bindings ->> 'members'), '"allUsers"') or json_contains((bindings ->> 'members'), '"allAuthenticatedUsers"'))
       ${local.detection_sql_where_conditions}
-      and exists (
-        select 1
-        from unnest(json_extract(request, '$.policy.bindings[*].members[*]')::varchar[]) as t(member)
-        where trim(both '"' from member) = 'allAuthenticatedUsers' or trim(both '"' from member) = 'allUsers'
-      )
     order by
       timestamp desc;
   EOQ
