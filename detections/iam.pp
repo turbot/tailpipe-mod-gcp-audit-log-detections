@@ -14,7 +14,6 @@ benchmark "iam_detections" {
     detection.iam_organization_policy_updated,
     detection.iam_owner_role_policy_set,
     detection.iam_policy_granted_apigateway_admin_role,
-    detection.iam_role_granted_to_all_users,
     detection.iam_role_with_high_privileges_created,
     detection.iam_service_account_access_token_generated,
     detection.iam_service_account_created,
@@ -94,19 +93,6 @@ detection "iam_workload_identity_pool_provider_created" {
 
   tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1078"
-  })
-}
-
-detection "iam_role_granted_to_all_users" {
-  title           = "IAM Role Granted to All Authenticated Users"
-  description     = "Detect when an IAM role was granted access to all authenticated users, potentially exposing sensitive resources to over-permissioned configurations and increasing the risk of unauthorized access or misuse."
-  documentation   = file("./detections/docs/iam_role_granted_to_all_users.md")
-  severity        = "high"
-  query           = query.iam_role_granted_to_all_users
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1199,TA0003:T1098,TA0005:T1548"
   })
 }
 
@@ -304,29 +290,6 @@ query "iam_workload_identity_pool_provider_created" {
       gcp_audit_log
     where
       method_name ilike 'google.iam.v%.workloadidentitypools.createworkloadidentitypoolprovider'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-// testing is needed generating event is a bit top
-query "iam_role_granted_to_all_users" {
-  sql = <<-EOQ
-    with role_bindings as(
-      select
-        *,
-        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
-      from
-        gcp_audit_log
-      where
-        method_name ilike 'google.iam.admin.v%.SetIAMPolicy'
-    )
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      role_bindings
-    where
-      (bindings ->> 'members') ilike '%allUsers%' or (bindings ->> 'members') ilike '%allAuthenticatedUsers%'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

@@ -10,7 +10,6 @@ benchmark "mitre_attack_v161_ta0003_t1098" {
   documentation = file("./mitre_attack_v161/docs/ta0003_t1098.md")
   children = [
     detection.iam_owner_role_policy_set,
-    detection.iam_role_granted_to_all_users,
     detection.iam_service_account_deleted,
     detection.iam_service_account_disabled,
     detection.iam_service_account_key_created,
