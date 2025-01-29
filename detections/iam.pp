@@ -139,7 +139,7 @@ detection "iam_federated_identity_provider_created" {
   title           = "IAM Federated Identity Provider Created"
   description     = "Detect when an IAM federated identity provider was created, potentially indicating misuse or unauthorized access attempts. Monitoring federated identity provider creation helps identify security risks and ensures compliance with identity and access management policies."
   documentation   = file("./detections/docs/iam_federated_identity_provider_created.md")
-  severity        = "medium"
+  severity        = "low"
   query           = query.iam_federated_identity_provider_created
   display_columns = local.detection_display_columns
 
