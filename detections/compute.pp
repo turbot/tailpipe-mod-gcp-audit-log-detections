@@ -133,8 +133,8 @@ detection "compute_instance_with_public_network_interface" {
 }
 
 detection "compute_public_ip_address_created" {
-  title           = "Public IP Address Created"
-  description     = "Detect when a public IP address is created to check for potential exposure of resources to external threats or unauthorized access."
+  title           = "Compute Public IP Address Created"
+  description     = "Detect when a Compute public IP address is created to check for potential exposure of resources to external threats or unauthorized access."
   documentation   = file("./detections/docs/compute_public_ip_address_created.md")
   severity        = "high"
   query           = query.compute_public_ip_address_created
@@ -146,8 +146,8 @@ detection "compute_public_ip_address_created" {
 }
 
 detection "compute_vpc_network_shared_to_external_project" {
-  title           = "VPC Network Shared to External Project"
-  description     = "Detect when a VPC network is shared with an external project to check for risks of exposing resources to unauthorized access or external threats."
+  title           = "Compute VPC Network Shared to External Project"
+  description     = "Detect when a Compute VPC network is shared with an external project to check for risks of exposing resources to unauthorized access or external threats."
   documentation   = file("./detections/docs/compute_vpc_network_shared_to_external_project.md")
   severity        = "high"
   query           = query.compute_vpc_network_shared_to_external_project
@@ -160,7 +160,7 @@ detection "compute_vpc_network_shared_to_external_project" {
 
 detection "compute_vpc_flow_logs_disabled" {
   title           = "Compute VPC Flow Logs Disabled"
-  description     = "Detect when VPC flow logs are disabled to check for risks of losing visibility into network traffic monitoring, which could lead to undetected malicious activity."
+  description     = "Detect when Compute VPC flow logs are disabled to check for risks of losing visibility into network traffic monitoring, which could lead to undetected malicious activity."
   documentation   = file("./detections/docs/compute_vpc_flow_logs_disabled.md")
   severity        = "medium"
   query           = query.compute_vpc_flow_logs_disabled

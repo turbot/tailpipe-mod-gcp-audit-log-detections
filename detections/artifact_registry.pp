@@ -1,10 +1,10 @@
 locals {
-  artifactregistry_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+  artifact_registry_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/ArtifactRegistry"
   })
 }
 
-benchmark "artifactregistry_detections" {
+benchmark "artifact_registry_detections" {
   title       = "Artifact Registry Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Artifact Registry events."
   type        = "detection"
@@ -13,7 +13,7 @@ benchmark "artifactregistry_detections" {
     detection.artifact_registry_repository_deleted,
   ]
 
-  tags = merge(local.artifactregistry_common_tags, {
+  tags = merge(local.artifact_registry_common_tags, {
     type = "Benchmark"
   })
 }
@@ -26,7 +26,7 @@ detection "artifact_registry_repository_deleted" {
   query           = query.artifact_registry_repository_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.artifactregistry_common_tags, {
+  tags = merge(local.artifact_registry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -38,7 +38,7 @@ detection "artifact_registry_package_deleted" {
   severity      = "low"
   query         = query.artifact_registry_package_deleted
 
-  tags = merge(local.artifactregistry_common_tags, {
+  tags = merge(local.artifact_registry_common_tags, {
     mitre_attack_ids = "TA0005:T1562"
   })
 }
@@ -50,7 +50,7 @@ query "artifact_registry_package_deleted" {
     from
       gcp_audit_log
     where
-      method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deletepackage'
+      method_name ilike 'google.devtools.artifact_registry.v%.artifact_registry.deletepackage'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -64,7 +64,7 @@ query "artifact_registry_repository_deleted" {
     from
       gcp_audit_log
     where
-      method_name ilike 'google.devtools.artifactregistry.v%.artifactregistry.deleterepository'
+      method_name ilike 'google.devtools.artifact_registry.v%.artifact_registry.deleterepository'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

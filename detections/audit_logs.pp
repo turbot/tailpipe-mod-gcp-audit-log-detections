@@ -5,8 +5,8 @@ benchmark "audit_log_detections" {
   children = [
     benchmark.access_context_manager_detections,
     benchmark.apigee_detections,
-    benchmark.appengine_detections,
-    benchmark.artifactregistry_detections,
+    benchmark.app_engine_detections,
+    benchmark.artifact_registry_detections,
     benchmark.cloud_functions_detections,
     benchmark.compute_detections,
     benchmark.dlp_detections,
