@@ -11,24 +11,10 @@ benchmark "logging_detections" {
   children = [
     detection.logging_bucket_deleted,
     detection.logging_sink_deleted,
-    detection.logging_unauthorized_access_attempt,
   ]
 
   tags = merge(local.logging_common_tags, {
     type = "Benchmark"
-  })
-}
-
-detection "logging_unauthorized_access_attempt" {
-  title           = "Logging Unauthorized Access Attempt"
-  description     = "Detect when a logging unauthorized access attempt was made to GCP resources, potentially indicating security threats or compromised credentials. Monitoring such attempts helps ensure prompt identification and mitigation of risks to the environment and protects resources from unauthorized actions."
-  documentation   = file("./detections/docs/logging_unauthorized_access_attempt.md")
-  severity        = "high"
-  query           = query.logging_unauthorized_access_attempt
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.logging_common_tags, {
-    mitre_attack_ids = "TA0006:T1078"
   })
 }
 
@@ -56,20 +42,6 @@ detection "logging_bucket_deleted" {
   tags = merge(local.logging_common_tags, {
     mitre_attack_ids = "TA0004:T1078"
   })
-}
-
-query "logging_unauthorized_access_attempt" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.logging.v%.loggingserviceV%.writelogentriesrequest'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
 }
 
 query "logging_sink_deleted" {

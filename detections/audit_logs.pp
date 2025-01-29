@@ -14,7 +14,7 @@ benchmark "audit_log_detections" {
     benchmark.iam_detections,
     benchmark.logging_detections,
     benchmark.monitoring_detections,
-    benchmark.resourcemanager_detections,
+    benchmark.resource_manager_detections,
     benchmark.security_command_center_detections,
     benchmark.sql_detections,
     benchmark.storage_detections,

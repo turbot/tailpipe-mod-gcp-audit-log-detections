@@ -2,8 +2,6 @@ locals {
   dlp_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
     service = "GCP/DLP"
   })
-
-  dlp_reidentify_content_sql_columns = replace(local.detection_sql_columns, "__RESOURCE_SQL__", "resource_name")
 }
 
 benchmark "dlp_detections" {
@@ -20,7 +18,7 @@ benchmark "dlp_detections" {
 }
 
 detection "dlp_reidentify_content" {
-  title           = "DLP Reidentify Content"
+  title           = "DLP Re-identify Content"
   description     = "Detect when GCP DLP content was reidentified to check for potential exposure of sensitive information, ensuring compliance with data privacy regulations and mitigating unauthorized data reidentification risks."
   documentation   = file("./detections/docs/dlp_reidentify_content.md")
   severity        = "high"

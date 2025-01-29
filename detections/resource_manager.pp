@@ -5,12 +5,12 @@ locals {
 
 }
 
-benchmark "resourcemanager_detections" {
+benchmark "resource_manager_detections" {
   title       = "Resource Manager Detections"
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Resource Manager events."
   type        = "detection"
   children = [
-    detection.resourcemanager_iam_policy_set,
+    detection.resource_manager_iam_policy_set,
   ]
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -18,12 +18,12 @@ benchmark "resourcemanager_detections" {
   })
 }
 
-detection "resourcemanager_iam_policy_set" {
+detection "resource_manager_iam_policy_set" {
   title           = "Resource Manager IAM Policy Set"
   description     = "Detect when a Resource Manager IAM policy was set to check for unauthorized changes that might expose resources to threats or compromise security."
-  documentation   = file("./detections/docs/resourcemanager_iam_policy_set.md")
+  documentation   = file("./detections/docs/resource_manager_iam_policy_set.md")
   severity        = "medium"
-  query           = query.resourcemanager_iam_policy_set
+  query           = query.resource_manager_iam_policy_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.resourcemanager_common_tags, {
@@ -31,7 +31,7 @@ detection "resourcemanager_iam_policy_set" {
   })
 }
 
-query "resourcemanager_iam_policy_set" {
+query "resource_manager_iam_policy_set" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}

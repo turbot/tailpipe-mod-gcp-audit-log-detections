@@ -10,10 +10,10 @@ benchmark "dns_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for DNS events."
   type        = "detection"
   children = [
-    detection.dns_record_deleted,
-    detection.dns_record_updated,
-    detection.dns_zone_deleted,
-    detection.dns_zone_updated,
+    detection.dns_managed_zone_deleted,
+    detection.dns_managed_zone_updated,
+    detection.dns_record_set_deleted,
+    detection.dns_record_set_updated,
   ]
 
   tags = merge(local.dns_common_tags, {
@@ -21,12 +21,12 @@ benchmark "dns_detections" {
   })
 }
 
-detection "dns_zone_deleted" {
-  title           = "DNS Zone Deleted"
-  description     = "Detect when a DNS zone was deleted to check for disruptions in domain configurations that might lead to service outages or security risks."
-  documentation   = file("./detections/docs/dns_zone_deleted.md")
+detection "dns_managed_zone_deleted" {
+  title           = "DNS Managed Zone Deleted"
+  description     = "Detect when a DNS managed zone was deleted to check for disruptions in domain configurations that might lead to service outages or security risks."
+  documentation   = file("./detections/docs/dns_managed_zone_deleted.md")
   severity        = "low"
-  query           = query.dns_zone_deleted
+  query           = query.dns_managed_zone_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -34,12 +34,12 @@ detection "dns_zone_deleted" {
   })
 }
 
-detection "dns_zone_updated" {
-  title           = "DNS Zone Updated"
-  description     = "Detect when a DNS zone was updated to check for unauthorized changes that might expose infrastructure to security risks or service disruptions."
-  documentation   = file("./detections/docs/dns_zone_updated.md")
+detection "dns_managed_zone_updated" {
+  title           = "DNS Managed Zone Updated"
+  description     = "Detect when a DNS managed zone was updated to check for unauthorized changes that might expose infrastructure to security risks or service disruptions."
+  documentation   = file("./detections/docs/dns_managed_zone_updated.md")
   severity        = "low"
-  query           = query.dns_zone_updated
+  query           = query.dns_managed_zone_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -47,12 +47,12 @@ detection "dns_zone_updated" {
   })
 }
 
-detection "dns_record_updated" {
-  title           = "DNS Record Updated"
-  description     = "Detect when a DNS record was updated to check for potential unauthorized changes that might redirect traffic to malicious endpoints or disrupt services."
-  documentation   = file("./detections/docs/dns_record_updated.md")
+detection "dns_record_set_updated" {
+  title           = "DNS Record Set Updated"
+  description     = "Detect when a DNS record set was updated to check for potential unauthorized changes that might redirect traffic to malicious endpoints or disrupt services."
+  documentation   = file("./detections/docs/dns_record_set_updated.md")
   severity        = "medium"
-  query           = query.dns_record_updated
+  query           = query.dns_record_set_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -60,12 +60,12 @@ detection "dns_record_updated" {
   })
 }
 
-detection "dns_record_deleted" {
-  title           = "DNS Record Deleted"
-  description     = "Detect when a DNS record was deleted to check for potential disruptions to domain configurations or unauthorized attempts to modify DNS settings."
-  documentation   = file("./detections/docs/dns_record_deleted.md")
+detection "dns_record_set_deleted" {
+  title           = "DNS Record Set Deleted"
+  description     = "Detect when a DNS record set was deleted to check for potential disruptions to domain configurations or unauthorized attempts to modify DNS settings."
+  documentation   = file("./detections/docs/dns_record_set_deleted.md")
   severity        = "medium"
-  query           = query.dns_record_deleted
+  query           = query.dns_record_set_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.dns_common_tags, {
@@ -73,7 +73,7 @@ detection "dns_record_deleted" {
   })
 }
 
-query "dns_zone_deleted" {
+query "dns_managed_zone_deleted" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -88,7 +88,7 @@ query "dns_zone_deleted" {
   EOQ
 }
 
-query "dns_zone_updated" {
+query "dns_managed_zone_updated" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -102,7 +102,7 @@ query "dns_zone_updated" {
   EOQ
 }
 
-query "dns_record_updated" {
+query "dns_record_set_updated" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -116,7 +116,7 @@ query "dns_record_updated" {
   EOQ
 }
 
-query "dns_record_deleted" {
+query "dns_record_set_deleted" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}

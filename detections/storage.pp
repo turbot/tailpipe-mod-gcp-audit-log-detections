@@ -9,8 +9,8 @@ benchmark "storage_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for Storage events."
   type        = "detection"
   children = [
-    detection.storage_bucket_publicly_accessible,
-    detection.storage_iam_policy_set,
+    detection.storage_bucket_iam_permission_granted_public_access,
+    detection.storage_bucket_iam_permission_set,
   ]
 
   tags = merge(local.storage_common_tags, {
@@ -18,12 +18,12 @@ benchmark "storage_detections" {
   })
 }
 
-detection "storage_iam_policy_set" {
-  title           = "Storage IAM Policy Set"
-  description     = "Detect when a storage IAM policy was set to check for potential risks of exposing resources to threats or unauthorized access attempts."
-  documentation   = file("./detections/docs/storage_iam_policy_set.md")
+detection "storage_bucket_iam_permission_set" {
+  title           = "Storage Bucket IAM Permission Set"
+  description     = "Detect when a storage IAM permission was set to check for potential risks of exposing resources to threats or unauthorized access attempts."
+  documentation   = file("./detections/docs/storage_bucket_iam_permission_set.md")
   severity        = "medium"
-  query           = query.storage_iam_policy_set
+  query           = query.storage_bucket_iam_permission_set
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -31,12 +31,12 @@ detection "storage_iam_policy_set" {
   })
 }
 
-detection "storage_bucket_publicly_accessible" {
-  title           = "Storage Bucket Publicly Accessible"
+detection "storage_bucket_iam_permission_granted_public_access" {
+  title           = "Storage Bucket IAM Permission Granted Public Access"
   description     = "Detect when a storage bucket was made publicly accessible to check for potential risks of data exposure and associated security threats."
-  documentation   = file("./detections/docs/storage_bucket_publicly_accessible.md")
+  documentation   = file("./detections/docs/storage_bucket_iam_permission_granted_public_access.md")
   severity        = "high"
-  query           = query.storage_bucket_publicly_accessible
+  query           = query.storage_bucket_iam_permission_granted_public_access
   display_columns = local.detection_display_columns
 
   tags = merge(local.storage_common_tags, {
@@ -44,7 +44,7 @@ detection "storage_bucket_publicly_accessible" {
   })
 }
 
-query "storage_iam_policy_set" {
+query "storage_bucket_iam_permission_set" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -58,7 +58,7 @@ query "storage_iam_policy_set" {
   EOQ
 }
 
-query "storage_bucket_publicly_accessible" {
+query "storage_bucket_iam_permission_granted_public_access" {
   sql = <<-EOQ
     with policy as(
       select
