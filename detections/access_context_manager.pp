@@ -36,7 +36,7 @@ detection "access_context_manager_level_deleted" {
   title           = "Access Context Manager Level Deleted"
   description     = "Detect when an Access Context Manager level was deleted to check for potential disruptions to security boundaries, which could expose resources to unauthorized access or compromise organizational policies."
   documentation   = file("./detections/docs/access_context_manager_level_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.access_context_manager_level_deleted
   display_columns = local.detection_display_columns
 

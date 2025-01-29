@@ -11,7 +11,6 @@ benchmark "compute_detections" {
   type        = "detection"
   children = [
     detection.compute_disk_iam_policy_set,
-    detection.compute_disk_with_small_size,
     detection.compute_firewall_rule_deleted,
     detection.compute_full_network_traffic_packet_deleted,
     detection.compute_full_network_traffic_packet_updated,
@@ -33,7 +32,7 @@ detection "compute_vpn_tunnel_deleted" {
   title           = "VPN Tunnel Deleted"
   description     = "Detect when a VPN tunnel is deleted to check for potential disruptions to secure network connections or unauthorized access attempts that may expose resources to threats."
   documentation   = file("./detections/docs/compute_vpn_tunnel_deleted.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.compute_vpn_tunnel_deleted
   display_columns = local.detection_display_columns
 
@@ -159,24 +158,11 @@ detection "compute_vpc_network_shared_to_external_project" {
   })
 }
 
-detection "compute_disk_with_small_size" {
-  title           = "Compute Disk with Small Size"
-  description     = "Detect when a Compute disk is configured with an unusually small size to check for risks of resource misconfigurations or potential inefficiencies."
-  documentation   = file("./detections/docs/compute_disk_with_small_size.md")
-  severity        = "low"
-  query           = query.compute_disk_with_small_size
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
-}
-
 detection "compute_vpc_flow_logs_disabled" {
   title           = "Compute VPC Flow Logs Disabled"
   description     = "Detect when VPC flow logs are disabled to check for risks of losing visibility into network traffic monitoring, which could lead to undetected malicious activity."
   documentation   = file("./detections/docs/compute_vpc_flow_logs_disabled.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.compute_vpc_flow_logs_disabled
   display_columns = local.detection_display_columns
 
@@ -327,26 +313,6 @@ query "compute_vpc_network_shared_to_external_project" {
       gcp_audit_log
     where
       method_name ilike '%.compute.projects.enablexpnresource'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-// testing is needed event exist in the bucket
-query "compute_disk_with_small_size" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike '%.compute.instances.insert'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'disks', '$[*]') as json[])) as disk_struct(disk)
-        where json_extract(disk, '$.boot') = 'true'
-        and cast(json_extract(disk, '$.initializeParams.diskSizeGb') as integer) < 15
-      )
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

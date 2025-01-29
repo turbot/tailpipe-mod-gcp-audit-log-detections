@@ -23,7 +23,7 @@ detection "appengine_ingress_firewall_rule_created" {
   title           = "App Engine Ingress Firewall Rule Created"
   description     = "Detect when an App Engine ingress firewall rule was created to check for potential exposure of resources to unauthorized access or threats. New rules might unintentionally allow unrestricted access."
   documentation   = file("./detections/docs/appengine_ingress_firewall_rule_created.md")
-  severity        = "low"
+  severity        = "medium"
   query           = query.appengine_ingress_firewall_rule_created
   display_columns = local.detection_display_columns
 
@@ -36,7 +36,7 @@ detection "appengine_ingress_firewall_rule_updated" {
   title           = "App Engine Ingress Firewall Rule Updated"
   description     = "Detect when an App Engine ingress firewall rule was updated to check for potential exposure of resources to unauthorized access. Changes to existing rules might weaken security boundaries."
   documentation   = file("./detections/docs/appengine_ingress_firewall_rule_updated.md")
-  severity        = "low"
+  severity        = "high"
   query           = query.appengine_ingress_firewall_rule_updated
   display_columns = local.detection_display_columns
 

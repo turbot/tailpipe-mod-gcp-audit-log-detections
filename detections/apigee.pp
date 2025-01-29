@@ -21,7 +21,7 @@ detection "apigee_security_action_disabled" {
   title           = "Apigee Security Action Disabled"
   description     = "Detect when a security action in Apigee was disabled to check for potential exposure of resources to unauthorized access or malicious threats. Disabling security actions can compromise API protections and increase risk to the organization."
   documentation   = file("./detections/docs/apigee_security_action_disabled.md")
-  severity        = "high"
+  severity        = "medium"
   query           = query.apigee_security_action_disabled
   display_columns = local.detection_display_columns
 

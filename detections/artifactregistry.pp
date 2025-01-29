@@ -22,7 +22,7 @@ detection "artifact_registry_repository_deleted" {
   title           = "Artifact Registry Repository Deleted"
   description     = "Detect when an Artifact Registry repository was deleted to check for potential disruptions to resource availability or unauthorized removal of critical storage repositories."
   documentation   = file("./detections/docs/artifact_registry_repository_deleted.md")
-  severity        = "high"
+  severity        = "low"
   query           = query.artifact_registry_repository_deleted
   display_columns = local.detection_display_columns
 
@@ -35,7 +35,7 @@ detection "artifact_registry_package_deleted" {
   title         = "Artifact Registry Package Deleted"
   description   = "Detect when an Artifact Registry package was deleted to check for potential loss of critical resources or unauthorized removal of packages."
   documentation = file("./detections/docs/artifact_registry_package_deleted.md")
-  severity      = "medium"
+  severity      = "low"
   query         = query.artifact_registry_package_deleted
 
   tags = merge(local.artifactregistry_common_tags, {
