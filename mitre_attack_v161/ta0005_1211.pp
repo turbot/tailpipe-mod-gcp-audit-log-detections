@@ -9,7 +9,7 @@ benchmark "mitre_attack_v161_ta0005_t1211" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0005_t1211.md")
   children = [
-    detection.compute_vpc_flow_logs_disabled,
+    detection.compute_subnetwork_flow_logs_disabled,
     detection.logging_sink_deleted,
     detection.monitoring_alert_policy_deleted,
     detection.monitoring_metric_descriptor_deleted,

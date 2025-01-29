@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when VPC flow logs were disabled in Compute Engine. Disabling flow logs reduces network visibility and may hinder threat detection. Monitoring these actions helps maintain network observability.
+Detect when Compute Subnetwork flow logs were disabled in Compute Engine. Disabling flow logs reduces network visibility and may hinder threat detection. Monitoring these actions helps maintain network observability.
 
 **References**:
 - [VPC Flow Logs Overview](https://cloud.google.com/vpc/docs/flow-logs)

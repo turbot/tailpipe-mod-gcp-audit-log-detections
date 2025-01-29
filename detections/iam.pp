@@ -9,12 +9,8 @@ benchmark "iam_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for IAM events."
   type        = "detection"
   children = [
-    detection.iam_federated_identity_provider_created,
-    detection.iam_federated_identity_provider_updated,
     detection.iam_organization_policy_updated,
     detection.iam_owner_role_policy_set,
-    detection.iam_policy_granted_apigateway_admin_role,
-    detection.iam_role_with_high_privileges_created,
     detection.iam_service_account_access_token_generated,
     detection.iam_service_account_created,
     detection.iam_service_account_deleted,
@@ -22,8 +18,6 @@ benchmark "iam_detections" {
     detection.iam_service_account_key_created,
     detection.iam_service_account_key_deleted,
     detection.iam_service_account_token_creator_role_assigned,
-    detection.iam_workforce_pool_updated,
-    detection.iam_workload_identity_pool_provider_created,
   ]
 
   tags = merge(local.iam_common_tags, {
@@ -83,19 +77,6 @@ detection "iam_service_account_disabled" {
   })
 }
 
-detection "iam_workload_identity_pool_provider_created" {
-  title           = "IAM Workload Identity Pool Provider Created"
-  description     = "Detect when an IAM workload identity pool provider was created, potentially indicating misuse or unauthorized access attempts. Monitoring workload identity pool provider creation helps identify security risks and ensures compliance with access control policies."
-  documentation   = file("./detections/docs/iam_workload_identity_pool_provider_created.md")
-  severity        = "medium"
-  query           = query.iam_workload_identity_pool_provider_created
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1078"
-  })
-}
-
 detection "iam_service_account_token_creator_role_assigned" {
   title           = "IAM Service Account Token Creator Role Assigned"
   description     = "Detect when the IAM Service Account Token Creator role was assigned, which may indicate potential misuse or unauthorized access attempts. Monitoring this assignment helps identify suspicious activity and maintain control over token creation capabilities."
@@ -119,71 +100,6 @@ detection "iam_organization_policy_updated" {
 
   tags = merge(local.iam_common_tags, {
     mitre_attack_ids = "TA0001:T1199"
-  })
-}
-
-detection "iam_workforce_pool_updated" {
-  title           = "IAM Workforce Pool Updated"
-  description     = "Detect when an IAM workforce pool was updated, potentially indicating misuse or unauthorized access attempts. Monitoring workforce pool updates helps ensure security compliance and prevents accidental or malicious misconfigurations."
-  documentation   = file("./detections/docs/iam_workforce_pool_updated.md")
-  severity        = "medium"
-  query           = query.iam_workforce_pool_updated
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0003:T1098"
-  })
-}
-
-detection "iam_federated_identity_provider_created" {
-  title           = "IAM Federated Identity Provider Created"
-  description     = "Detect when an IAM federated identity provider was created, potentially indicating misuse or unauthorized access attempts. Monitoring federated identity provider creation helps identify security risks and ensures compliance with identity and access management policies."
-  documentation   = file("./detections/docs/iam_federated_identity_provider_created.md")
-  severity        = "low"
-  query           = query.iam_federated_identity_provider_created
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0003:T1136"
-  })
-}
-
-detection "iam_policy_granted_apigateway_admin_role" {
-  title           = "IAM Policy Granted API Gateway Admin Role"
-  description     = "Detect when an API Gateway Admin role was granted by IAM policy, potentially indicating misuse or unauthorized access attempts. Monitoring such policy changes helps ensure security and prevents unauthorized administrative access to API Gateway resources."
-  documentation   = file("./detections/docs/iam_policy_granted_apigateway_admin_role.md")
-  severity        = "medium"
-  query           = query.iam_policy_granted_apigateway_admin_role
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0003:T1136"
-  })
-}
-
-detection "iam_role_with_high_privileges_created" {
-  title           = "IAM Role with High Privileges Created"
-  description     = "Detect when a high privilege IAM role was created, potentially indicating misuse or unauthorized access attempts. Monitoring the creation of such roles helps mitigate risks associated with privilege escalation and unauthorized activities."
-  documentation   = file("./detections/docs/iam_role_with_high_privileges_created.md")
-  severity        = "high"
-  query           = query.iam_role_with_high_privileges_created
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0005:T1548"
-  })
-}
-
-detection "iam_federated_identity_provider_updated" {
-  title           = "IAM Federated Identity Provider Updated"
-  description     = "Detect when an IAM federated identity provider was updated, potentially indicating misuse or unauthorized access attempts. Monitoring updates to federated identity providers helps ensure compliance with security policies and prevents unauthorized changes."
-  documentation   = file("./detections/docs/iam_federated_identity_provider_updated.md")
-  severity        = "medium"
-  query           = query.iam_federated_identity_provider_updated
-  display_columns = local.detection_display_columns
-
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0003:T1136"
   })
 }
 
@@ -282,20 +198,6 @@ query "iam_service_account_disabled" {
   EOQ
 }
 
-query "iam_workload_identity_pool_provider_created" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.iam.v%.workloadidentitypools.createworkloadidentitypoolprovider'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
 query "iam_service_account_token_creator_role_assigned" {
   sql = <<-EOQ
     with role_bindings as(
@@ -333,87 +235,6 @@ query "iam_organization_policy_updated" {
   EOQ
 }
 
-query "iam_workforce_pool_updated" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepool'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_federated_identity_provider_created" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.iam.admin.v%.workforcepools.createworkforcepoolprovider'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_policy_granted_apigateway_admin_role" {
-  sql = <<-EOQ
-    with role_bindings as(
-      select
-        *,
-        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
-      from
-        gcp_audit_log
-      where
-        service_name = 'cloudresourcemanager.googleapis.com'
-        and method_name ilike 'setiampolicy'
-    )
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from   
-      role_bindings
-    where
-      (bindings ->> 'role') like '%roles/apigateway.admin%'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_role_with_high_privileges_created" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.iam.admin.v%.createrole'
-      and json_contains((request -> 'role' -> 'included_permissions'), '"resourcemanager.projects.setIamPolicy"')
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
-query "iam_federated_identity_provider_updated" {
-  sql = <<-EOQ
-    select
-      ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
-    where
-      method_name ilike 'google.iam.v%.workloadidentitypools.updateworkloadidentitypoolprovider'
-      ${local.detection_sql_where_conditions}
-    order by
-      timestamp desc;
-  EOQ
-}
-
 query "iam_service_account_access_token_generated" {
   sql = <<-EOQ
     select
@@ -421,6 +242,7 @@ query "iam_service_account_access_token_generated" {
     from
       gcp_audit_log
     where
+      service_name = 'iamcredentials.googleapis.com'
       method_name ilike 'generateaccesstoken'
       ${local.detection_sql_where_conditions}
     order by

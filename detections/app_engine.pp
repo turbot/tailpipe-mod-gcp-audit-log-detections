@@ -9,9 +9,9 @@ benchmark "app_engine_detections" {
   description = "This benchmark contains recommendations when scanning Admin Activity audit logs for App Engine events."
   type        = "detection"
   children = [
-    detection.app_engine_ingress_firewall_rule_created,
-    detection.app_engine_ingress_firewall_rule_deleted,
-    detection.app_engine_ingress_firewall_rule_updated,
+    detection.app_engine_firewall_ingress_rule_created,
+    detection.app_engine_firewall_ingress_rule_deleted,
+    detection.app_engine_firewall_ingress_rule_updated,
   ]
 
   tags = merge(local.app_engine_common_tags, {
@@ -19,12 +19,12 @@ benchmark "app_engine_detections" {
   })
 }
 
-detection "app_engine_ingress_firewall_rule_created" {
-  title           = "App Engine Ingress Firewall Rule Created"
-  description     = "Detect when an App Engine ingress firewall rule was created to check for potential exposure of resources to unauthorized access or threats. New rules might unintentionally allow unrestricted access."
-  documentation   = file("./detections/docs/app_engine_ingress_firewall_rule_created.md")
+detection "app_engine_firewall_ingress_rule_created" {
+  title           = "App Engine Firewall Ingress Rule Created"
+  description     = "Detect when an App Engine Firewall Ingress Rule was created to check for potential exposure of resources to unauthorized access or threats. New rules might unintentionally allow unrestricted access."
+  documentation   = file("./detections/docs/app_engine_firewall_ingress_rule_created.md")
   severity        = "medium"
-  query           = query.app_engine_ingress_firewall_rule_created
+  query           = query.app_engine_firewall_ingress_rule_created
   display_columns = local.detection_display_columns
 
   tags = merge(local.app_engine_common_tags, {
@@ -32,12 +32,12 @@ detection "app_engine_ingress_firewall_rule_created" {
   })
 }
 
-detection "app_engine_ingress_firewall_rule_updated" {
-  title           = "App Engine Ingress Firewall Rule Updated"
-  description     = "Detect when an App Engine ingress firewall rule was updated to check for potential exposure of resources to unauthorized access. Changes to existing rules might weaken security boundaries."
-  documentation   = file("./detections/docs/app_engine_ingress_firewall_rule_updated.md")
+detection "app_engine_firewall_ingress_rule_updated" {
+  title           = "App Engine Firewall Ingress Rule Updated"
+  description     = "Detect when an App Engine Firewall Ingress Rule was updated to check for potential exposure of resources to unauthorized access. Changes to existing rules might weaken security boundaries."
+  documentation   = file("./detections/docs/app_engine_firewall_ingress_rule_updated.md")
   severity        = "high"
-  query           = query.app_engine_ingress_firewall_rule_updated
+  query           = query.app_engine_firewall_ingress_rule_updated
   display_columns = local.detection_display_columns
 
   tags = merge(local.app_engine_common_tags, {
@@ -45,12 +45,12 @@ detection "app_engine_ingress_firewall_rule_updated" {
   })
 }
 
-detection "app_engine_ingress_firewall_rule_deleted" {
-  title           = "App Engine Ingress Firewall Rule Deleted"
-  description     = "Detect when an App Engine ingress firewall rule was deleted to check for potential disruptions to security configurations, which could expose resources to unauthorized access or malicious activities."
-  documentation   = file("./detections/docs/app_engine_ingress_firewall_rule_deleted.md")
+detection "app_engine_firewall_ingress_rule_deleted" {
+  title           = "App Engine Firewall Ingress Rule Deleted"
+  description     = "Detect when an App Engine Firewall Ingress Rule was deleted to check for potential disruptions to security configurations, which could expose resources to unauthorized access or malicious activities."
+  documentation   = file("./detections/docs/app_engine_firewall_ingress_rule_deleted.md")
   severity        = "high"
-  query           = query.app_engine_ingress_firewall_rule_deleted
+  query           = query.app_engine_firewall_ingress_rule_deleted
   display_columns = local.detection_display_columns
 
   tags = merge(local.app_engine_common_tags, {
@@ -58,7 +58,7 @@ detection "app_engine_ingress_firewall_rule_deleted" {
   })
 }
 
-query "app_engine_ingress_firewall_rule_created" {
+query "app_engine_firewall_ingress_rule_created" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -72,7 +72,7 @@ query "app_engine_ingress_firewall_rule_created" {
   EOQ
 }
 
-query "app_engine_ingress_firewall_rule_updated" {
+query "app_engine_firewall_ingress_rule_updated" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}
@@ -86,7 +86,7 @@ query "app_engine_ingress_firewall_rule_updated" {
   EOQ
 }
 
-query "app_engine_ingress_firewall_rule_deleted" {
+query "app_engine_firewall_ingress_rule_deleted" {
   sql = <<-EOQ
     select
       ${local.detection_sql_resource_column_resource_name}

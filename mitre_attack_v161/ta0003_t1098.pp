@@ -13,7 +13,6 @@ benchmark "mitre_attack_v161_ta0003_t1098" {
     detection.iam_service_account_deleted,
     detection.iam_service_account_disabled,
     detection.iam_service_account_key_created,
-    detection.iam_workforce_pool_updated,
     detection.sql_ssl_certificate_deleted,
     detection.sql_user_deleted,
   ]

@@ -12,8 +12,6 @@ benchmark "mitre_attack_v161_ta0004_t1078" {
     detection.access_context_manager_access_level_deleted,
     detection.access_context_manager_policy_deleted,
     detection.compute_disk_iam_policy_set,
-    detection.compute_full_network_traffic_packet_deleted,
-    detection.compute_full_network_traffic_packet_updated,
     detection.compute_image_iam_policy_set,
     detection.compute_snapshot_iam_policy_set,
     detection.compute_vpn_tunnel_deleted,

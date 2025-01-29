@@ -7,7 +7,7 @@ benchmark "audit_log_detections" {
     benchmark.apigee_detections,
     benchmark.app_engine_detections,
     benchmark.artifact_registry_detections,
-    benchmark.cloud_functions_detections,
+    benchmark.cloud_run_detections,
     benchmark.compute_detections,
     benchmark.dlp_detections,
     benchmark.dns_detections,

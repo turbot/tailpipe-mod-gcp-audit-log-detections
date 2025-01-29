@@ -9,9 +9,6 @@ benchmark "mitre_attack_v161_ta0005_t1548" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0005_t1548.md")
   children = [
-    detection.compute_vpc_network_shared_to_external_project,
-    detection.iam_federated_identity_provider_updated,
-    detection.iam_role_with_high_privileges_created,
     detection.iam_service_account_access_token_generated,
     detection.iam_service_account_token_creator_role_assigned,
   ]
