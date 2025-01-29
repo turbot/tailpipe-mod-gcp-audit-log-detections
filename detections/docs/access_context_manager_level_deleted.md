@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when an Access Context Manager level is deleted. Access levels define criteria for allowing access to resources, such as device trust or user location. Monitoring these deletions helps maintain strict security controls and prevents unauthorized access.
+Detect when an Access Context Manager level was deleted. Access levels define criteria for allowing access to resources, such as device trust or user location. Monitoring these deletions helps maintain strict security controls and prevents unauthorized access.
 
 **References**:
 - [Access Levels in Access Context Manager](https://cloud.google.com/access-context-manager/docs/overview)

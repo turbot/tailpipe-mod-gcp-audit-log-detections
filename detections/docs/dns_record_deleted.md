@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a DNS record is deleted. Unauthorized deletions can disrupt domain configurations, cause service outages, or expose systems to vulnerabilities. Monitoring these actions helps ensure DNS record integrity and availability.
+Detect when a DNS record was deleted. Unauthorized deletions can disrupt domain configurations, cause service outages, or expose systems to vulnerabilities. Monitoring these actions helps ensure DNS record integrity and availability.
 
 **References**:
 - [DNS Resource Record Sets Overview](https://cloud.google.com/dns/docs/records)

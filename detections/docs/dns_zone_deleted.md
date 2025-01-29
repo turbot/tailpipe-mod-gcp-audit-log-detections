@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a DNS zone is deleted. Unauthorized or accidental deletions can disrupt domain configurations, cause service outages, or expose systems to threats. Monitoring these actions ensures the integrity and availability of DNS configurations.
+Detect when a DNS zone was deleted. Unauthorized or accidental deletions can disrupt domain configurations, cause service outages, or expose systems to threats. Monitoring these actions ensures the integrity and availability of DNS configurations.
 
 **References**:
 - [DNS Managed Zones Overview](https://cloud.google.com/dns/docs/zones)

@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a Compute snapshot IAM policy is set. Unauthorized changes can expose sensitive backups to potential security risks. Monitoring such updates ensures proper access management.
+Detect when a Compute snapshot IAM policy was set. Unauthorized changes can expose sensitive backups to potential security risks. Monitoring such updates ensures proper access management.
 
 **References**:
 - [IAM Policy Management](https://cloud.google.com/iam/docs/policies)

@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a Cloud Function is made publicly accessible. Publicly accessible Cloud Functions can expose sensitive business logic or data, increasing the risk of unauthorized access or abuse. Monitoring such changes ensures that access remains restricted to authorized users only.
+Detect when a Cloud Function was made publicly accessible. Publicly accessible Cloud Functions can expose sensitive business logic or data, increasing the risk of unauthorized access or abuse. Monitoring such changes ensures that access remains restricted to authorized users only.
 
 **References**:
 - [Securing Cloud Functions](https://cloud.google.com/functions/docs/securing)

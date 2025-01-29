@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a Compute image IAM policy is set. These changes can expose sensitive images to unauthorized access, leading to potential security risks. Monitoring such updates ensures proper access controls.
+Detect when a Compute image IAM policy was set. These changes can expose sensitive images to unauthorized access, leading to potential security risks. Monitoring such updates ensures proper access controls.
 
 **References**:
 - [IAM Policy Management](https://cloud.google.com/iam/docs/policies)

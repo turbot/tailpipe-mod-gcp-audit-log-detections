@@ -1,6 +1,6 @@
 ## Overview
 
-Detect when a Security Command Center notification configuration is deleted. Unauthorized or accidental deletions can disrupt critical alerting mechanisms and hinder threat detection efforts. Monitoring these actions ensures proper security alert configurations are maintained.
+Detect when a Security Command Center notification configuration was deleted. Unauthorized or accidental deletions can disrupt critical alerting mechanisms and hinder threat detection efforts. Monitoring these actions ensures proper security alert configurations are maintained.
 
 **References**:
 - [Security Command Center Notifications](https://cloud.google.com/security-command-center/docs/how-to-notifications)
