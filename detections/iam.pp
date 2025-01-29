@@ -309,31 +309,47 @@ query "iam_workload_identity_pool_provider_created" {
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+// testing is needed generating event is a bit top
 query "iam_role_granted_to_all_users" {
   sql = <<-EOQ
+    with role_bindings as(
+      select
+        *,
+        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        method_name ilike 'google.iam.admin.v%.SetIAMPolicy'
+    )
     select
       ${local.detection_sql_resource_column_resource_name}
     from
-      gcp_audit_log
+      role_bindings
     where
-      method_name ilike 'cloudresourcemanager.v%.projects.setiampolicy'
-      and json_extract(cast(request as json), '$.policy.bindings[*].members')::varchar like '%allUsers%'
+      (bindings ->> 'members') ilike '%allUsers%' or (bindings ->> 'members') ilike '%allAuthenticatedUsers%'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+
 query "iam_service_account_token_creator_role_assigned" {
   sql = <<-EOQ
+    with role_bindings as(
+      select
+        *,
+        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        method_name ilike 'google.iam.admin.v%.setiampolicy'
+    )
     select
       ${local.detection_sql_resource_column_resource_name}
     from
-      gcp_audit_log
+      role_bindings
     where
-      method_name ilike 'google.iam.admin.v%.setiampolicy'
-      and json_extract(cast(request as json), '$.policy.bindings[*].role')::varchar like '%roles/iam.serviceAccountTokenCreator%'
+      (bindings ->> 'role') like '%roles/iam.serviceAccountTokenCreator%'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -381,23 +397,31 @@ query "iam_federated_identity_provider_created" {
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+
 query "iam_policy_granted_apigateway_admin_role" {
   sql = <<-EOQ
+    with role_bindings as(
+      select
+        *,
+        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        service_name = 'cloudresourcemanager.googleapis.com'
+        and method_name ilike 'setiampolicy'
+    )
     select
       ${local.detection_sql_resource_column_resource_name}
-    from
-      gcp_audit_log
+    from   
+      role_bindings
     where
-      service_name = 'cloudresourcemanager.googleapis.com'
-      and method_name ilike 'setiampolicy'
-      and json_extract(cast(request as json), '$.policy.bindings[*].role')::varchar like '%roles/apigateway.admin%'
+      (bindings ->> 'role') like '%roles/apigateway.admin%'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
-// testing is needed
+
 query "iam_role_with_high_privileges_created" {
   sql = <<-EOQ
     select
@@ -406,13 +430,13 @@ query "iam_role_with_high_privileges_created" {
       gcp_audit_log
     where
       method_name ilike 'google.iam.admin.v%.createrole'
-      and cast(json_extract(request, '$.role.included_permissions[*]') as varchar) like '%resourcemanager.projects.setIamPolicy%'
+      and json_contains((request -> 'role' -> 'included_permissions'), '"resourcemanager.projects.setIamPolicy"')
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
   EOQ
 }
-// testing is needed
+
 query "iam_federated_identity_provider_updated" {
   sql = <<-EOQ
     select
@@ -420,7 +444,7 @@ query "iam_federated_identity_provider_updated" {
     from
       gcp_audit_log
     where
-      method_name ilike 'google.iam.admin.v%.workforcepools.updateworkforcepoolprovider'
+      method_name ilike 'google.iam.v%.WorkloadIdentityPools.UpdateWorkloadIdentityPoolProvider'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -455,20 +479,23 @@ query "iam_service_account_key_deleted" {
   EOQ
 }
 
-// testing is needed
 query "iam_owner_role_policy_set" {
   sql = <<-EOQ
+    with role_bindings as(
+      select
+        *,
+        unnest(from_json((request -> 'policy' -> 'bindings'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        method_name ilike 'google.iam.admin.v%.setiampolicy'
+    )
     select
       ${local.detection_sql_resource_column_resource_name}
     from
-      gcp_audit_log
+      role_bindings
     where
-      method_name ilike 'google.iam.admin.v%.setiampolicy'
-      and exists (
-        select *
-        from unnest(cast(json_extract(request -> 'policy' -> 'bindings', '$[*].role') as varchar[])) as roles
-        where roles = 'roles/owner'
-      )
+      (bindings ->> 'role') = 'roles/owner'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
