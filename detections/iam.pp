@@ -407,7 +407,7 @@ query "iam_federated_identity_provider_updated" {
     from
       gcp_audit_log
     where
-      method_name ilike 'google.iam.v%.WorkloadIdentityPools.UpdateWorkloadIdentityPoolProvider'
+      method_name ilike 'google.iam.v%.workloadidentitypools.updateworkloadidentitypoolprovider'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
@@ -435,7 +435,7 @@ query "iam_service_account_key_deleted" {
     from
       gcp_audit_log
     where
-      method_name ilike 'google.iam.admin.v1.deleteserviceaccountkey'
+      method_name ilike 'google.iam.admin.v%.deleteserviceaccountkey'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

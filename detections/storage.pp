@@ -57,18 +57,24 @@ query "storage_iam_policy_set" {
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+
 query "storage_bucket_publicly_accessible" {
   sql = <<-EOQ
-    select
+    with policy as(
+      select
+        *,
+        unnest(from_json((service_data -> 'policyDelta' -> 'bindingDeltas'), '["JSON"]')) as bindings
+      from
+        gcp_audit_log
+      where
+        method_name ilike 'storage.setiampermissions'
+    )
+    select 
       ${local.detection_sql_resource_column_resource_name}
     from 
-      gcp_audit_log
+      policy
     where
-      method_name ilike 'storage.setiampermissions'
-      and service_data is not null
-      and json_extract(service_data, '$.policyDelta.bindingDeltas') != 'null'
-      and service_data like '%"member":"allUsers"%'
+      (bindings ->> 'member') = 'allUsers'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;

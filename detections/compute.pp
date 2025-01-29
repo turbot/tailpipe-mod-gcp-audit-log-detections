@@ -268,22 +268,38 @@ query "compute_snapshot_iam_policy_set" {
       timestamp desc;
   EOQ
 }
-// testing is needed event exist in the bucket
+
 query "compute_instance_with_public_network_interface" {
   sql = <<-EOQ
+    with network_if as (
+      select
+        ${local.detection_sql_resource_column_resource_name} as resource_name,
+        timestamp,
+        unnest(from_json(request -> 'networkinterfaces', '["json"]')) as netif
+      from
+        gcp_audit_log
+      where
+        (
+        method_name ilike '%.compute.instances.insert'
+        or method_name ilike '%.compute.instances.update'
+        )
+        ${local.detection_sql_where_conditions}
+    ),
+    access_cfg as (
+      select
+        resource_name,
+        timestamp,
+        unnest(from_json(netif -> 'accessconfigs', '["json"]')) as ac
+      from network_if
+    )
     select
-      ${local.detection_sql_resource_column_resource_name}
+      resource_name
     from
-      gcp_audit_log
+      access_cfg
     where
-      (method_name ilike '%.compute.instances.insert' or method_name ilike '%.compute.instances.update')
-      ${local.detection_sql_where_conditions}
-      and exists (
-        select *
-        from unnest(
-        cast(json_extract(request, '$.networkInterfaces[*].accessConfigs[*].name') as json[])
-        ) as access_type
-        where (access_type::varchar ilike '%nat%' or access_type::varchar ilike '%external%')
+      (
+        (ac ->> 'name') ilike '%nat%'
+        or (ac ->> 'name') ilike '%external%'
       )
     order by
       timestamp desc;
