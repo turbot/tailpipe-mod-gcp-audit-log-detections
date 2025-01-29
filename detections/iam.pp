@@ -243,7 +243,7 @@ query "iam_service_account_access_token_generated" {
       gcp_audit_log
     where
       service_name = 'iamcredentials.googleapis.com'
-      method_name ilike 'generateaccesstoken'
+      and method_name ilike 'generateaccesstoken'
       ${local.detection_sql_where_conditions}
     order by
       timestamp desc;
