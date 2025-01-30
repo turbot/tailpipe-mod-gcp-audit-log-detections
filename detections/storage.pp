@@ -26,9 +26,7 @@ detection "storage_bucket_iam_permission_set" {
   query           = query.storage_bucket_iam_permission_set
   display_columns = local.detection_display_columns
 
-  tags = merge(local.storage_common_tags, {
-    mitre_attack_ids = "TA0004:T1078"
-  })
+  tags = local.storage_common_tags
 }
 
 detection "storage_bucket_iam_permission_granted_public_access" {
