@@ -24,8 +24,8 @@ dashboard "activity_dashboard" {
     }
 
     chart {
-      title = "Logs by Severity"
-      query = query.activity_dashboard_logs_by_severity
+      title = "Logs by Type"
+      query = query.activity_dashboard_logs_by_type
       type  = "column"
       width = 6
     }
@@ -95,19 +95,19 @@ query "activity_dashboard_logs_by_project" {
   EOQ
 }
 
-query "activity_dashboard_logs_by_severity" {
-  title = "Logs by Severity"
+query "activity_dashboard_logs_by_type" {
+  title = "Logs by Type"
 
   sql = <<-EOQ
     select
-      severity as "Severity",
+      split_part(log_name, '%2F', 2) as "Type",
       count(*) as "Logs"
     from
       gcp_audit_log
     where
-      severity is not null
+      split_part(log_name, '%2F', 2) is not null
     group by
-      severity
+      split_part(log_name, '%2F', 2)
     order by
       count(*) desc
     limit 10;
