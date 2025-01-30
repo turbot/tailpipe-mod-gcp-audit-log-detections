@@ -31,13 +31,6 @@ dashboard "activity_dashboard" {
     }
 
     chart {
-      title = "Top 10 Services"
-      query = query.activity_dashboard_logs_by_service
-      type  = "table"
-      width = 6
-    }
-
-    chart {
       title = "Top 10 Actors"
       query = query.activity_dashboard_logs_by_actor
       type  = "table"
@@ -45,15 +38,22 @@ dashboard "activity_dashboard" {
     }
 
     chart {
-      title = "Top 10 Source IPs"
+      title = "Top 10 Source IPs (Excluding GCP Internal)"
       query = query.activity_dashboard_logs_by_source_ip
       type  = "table"
       width = 6
     }
 
     chart {
-      title = "Top 10 Operations"
-      query = query.activity_dashboard_logs_by_operations
+      title = "Top 10 Services"
+      query = query.activity_dashboard_logs_by_service
+      type  = "table"
+      width = 6
+    }
+
+    chart {
+      title = "Top 10 Events"
+      query = query.activity_dashboard_logs_by_event
       type  = "table"
       width = 6
     }
@@ -66,13 +66,32 @@ dashboard "activity_dashboard" {
 # -----------------------------
 
 query "activity_dashboard_total_logs" {
-  title = "Total Log Count"
+  title = "Log Count"
 
   sql = <<-EOQ
     select
       count(*) as "Total Logs"
     from
       gcp_audit_log;
+  EOQ
+}
+
+query "activity_dashboard_logs_by_project" {
+  title = "Logs by Project"
+
+  sql = <<-EOQ
+    select
+      split_part(log_name, '/', 2) as "Project",
+      count(*) as "Logs"
+    from
+      gcp_audit_log
+    where
+      split_part(log_name, '/', 2) is not null
+    group by
+      split_part(log_name, '/', 2)
+    order by
+      count(*) desc
+    limit 10;
   EOQ
 }
 
@@ -94,24 +113,7 @@ query "activity_dashboard_logs_by_severity" {
     limit 10;
   EOQ
 }
-query "activity_dashboard_logs_by_project" {
-  title = "Logs by Project"
 
-  sql = <<-EOQ
-    select
-      split_part(log_name, '/', 2) as "Project",
-      count(*) as "Logs"
-    from
-      gcp_audit_log
-    where
-      split_part(log_name, '/', 2) is not null
-    group by
-      split_part(log_name, '/', 2)
-    order by
-      count(*) desc
-    limit 10;
-  EOQ
-}
 query "activity_dashboard_logs_by_service" {
   title = "Logs by Service"
 
@@ -131,12 +133,12 @@ query "activity_dashboard_logs_by_service" {
   EOQ
 }
 
-query "activity_dashboard_logs_by_operations" {
-  title = "Top 10 Operations"
+query "activity_dashboard_logs_by_event" {
+  title = "Top 10 Events"
 
   sql = <<-EOQ
     select
-      method_name as "Operation",
+      method_name as "Event",
       count(*) as "Logs"
     from
       gcp_audit_log
@@ -180,6 +182,7 @@ query "activity_dashboard_logs_by_source_ip" {
       gcp_audit_log
     where
       tp_source_ip is not null
+      and tp_source_ip != 'gce-internal-ip'
     group by
       tp_source_ip
     order by
