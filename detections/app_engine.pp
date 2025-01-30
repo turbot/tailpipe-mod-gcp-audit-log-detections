@@ -27,9 +27,7 @@ detection "app_engine_firewall_ingress_rule_created" {
   query           = query.app_engine_firewall_ingress_rule_created
   display_columns = local.detection_display_columns
 
-  tags = merge(local.app_engine_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
+  tags = local.app_engine_common_tags
 }
 
 detection "app_engine_firewall_ingress_rule_updated" {
@@ -40,9 +38,7 @@ detection "app_engine_firewall_ingress_rule_updated" {
   query           = query.app_engine_firewall_ingress_rule_updated
   display_columns = local.detection_display_columns
 
-  tags = merge(local.app_engine_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
+  tags = local.app_engine_common_tags
 }
 
 detection "app_engine_firewall_ingress_rule_deleted" {
@@ -53,9 +49,7 @@ detection "app_engine_firewall_ingress_rule_deleted" {
   query           = query.app_engine_firewall_ingress_rule_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.app_engine_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
+  tags = local.app_engine_common_tags
 }
 
 query "app_engine_firewall_ingress_rule_created" {

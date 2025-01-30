@@ -13,9 +13,7 @@ benchmark "resource_manager_detections" {
     detection.resource_manager_iam_policy_set,
   ]
 
-  tags = merge(local.resourcemanager_common_tags, {
-    type = "Benchmark"
-  })
+  tags = local.resourcemanager_common_tags
 }
 
 detection "resource_manager_iam_policy_set" {

@@ -25,9 +25,7 @@ detection "dlp_reidentify_content" {
   query           = query.dlp_reidentify_content
   display_columns = local.detection_display_columns
 
-  tags = merge(local.dlp_common_tags, {
-    mitre_attack_ids = "TA0005:T1140"
-  })
+  tags = local.dlp_common_tags
 }
 
 query "dlp_reidentify_content" {

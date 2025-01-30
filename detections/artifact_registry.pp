@@ -38,9 +38,7 @@ detection "artifact_registry_package_deleted" {
   severity      = "low"
   query         = query.artifact_registry_package_deleted
 
-  tags = merge(local.artifact_registry_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
+  tags = local.artifact_registry_common_tags
 }
 
 query "artifact_registry_package_deleted" {

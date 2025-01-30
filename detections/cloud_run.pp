@@ -25,9 +25,7 @@ detection "cloud_run_function_deleted" {
   query           = query.cloud_run_function_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.cloud_run_function_common_tags, {
-    mitre_attack_ids = "TA0002:T1648"
-  })
+  tags = local.cloud_run_function_common_tags
 }
 
 query "cloud_run_function_deleted" {

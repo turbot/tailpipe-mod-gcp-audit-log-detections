@@ -32,9 +32,7 @@ detection "compute_vpn_tunnel_deleted" {
   query           = query.compute_vpn_tunnel_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = " TA0005:T1578.003"
-  })
+  tags = local.compute_common_tags
 }
 
 detection "compute_firewall_rule_deleted" {
@@ -45,9 +43,7 @@ detection "compute_firewall_rule_deleted" {
   query           = query.compute_firewall_rule_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = "TA0005:T1578.005"
-  })
+  tags = local.compute_common_tags
 }
 
 detection "compute_image_iam_policy_set" {
@@ -91,9 +87,7 @@ detection "compute_instance_with_public_network_interface" {
   query           = query.compute_instance_with_public_network_interface
   display_columns = local.detection_display_columns
 
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = "TA0001:T1190"
-  })
+  tags = local.compute_common_tags
 }
 
 detection "compute_subnetwork_flow_logs_disabled" {
@@ -104,9 +98,7 @@ detection "compute_subnetwork_flow_logs_disabled" {
   query           = query.compute_subnetwork_flow_logs_disabled
   display_columns = local.detection_display_columns
 
-  tags = merge(local.compute_common_tags, {
-    mitre_attack_ids = "TA0005:T1562.001"
-  })
+  tags = local.compute_common_tags
 }
 
 query "compute_firewall_rule_deleted" {

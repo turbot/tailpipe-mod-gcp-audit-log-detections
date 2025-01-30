@@ -72,9 +72,7 @@ detection "iam_service_account_disabled" {
   query           = query.iam_service_account_disabled
   display_columns = local.detection_display_columns
 
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
-  })
+  tags = local.iam_common_tags
 }
 
 detection "iam_service_account_token_creator_role_assigned" {
@@ -85,9 +83,7 @@ detection "iam_service_account_token_creator_role_assigned" {
   query           = query.iam_service_account_token_creator_role_assigned
   display_columns = local.detection_display_columns
 
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1199,TA0003:T1136,TA0005:T1548"
-  })
+  tags = local.iam_common_tags
 }
 
 detection "iam_organization_policy_updated" {
@@ -98,9 +94,7 @@ detection "iam_organization_policy_updated" {
   query           = query.iam_organization_policy_updated
   display_columns = local.detection_display_columns
 
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1199"
-  })
+  tags = local.iam_common_tags
 }
 
 detection "iam_service_account_access_token_generated" {
@@ -111,9 +105,7 @@ detection "iam_service_account_access_token_generated" {
   query           = query.iam_service_account_access_token_generated
   display_columns = local.detection_display_columns
 
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1078,TA0005:T1548"
-  })
+  tags = local.iam_common_tags
 }
 
 detection "iam_service_account_key_deleted" {
@@ -124,9 +116,7 @@ detection "iam_service_account_key_deleted" {
   query           = query.iam_service_account_key_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0040:T1531"
-  })
+  tags = local.iam_common_tags
 }
 
 detection "iam_owner_role_policy_set" {
@@ -137,9 +127,7 @@ detection "iam_owner_role_policy_set" {
   query           = query.iam_owner_role_policy_set
   display_columns = local.detection_display_columns
 
-  tags = merge(local.resourcemanager_common_tags, {
-    mitre_attack_ids = "TA0003:T1098,TA0003:T1136"
-  })
+  tags = local.resourcemanager_common_tags
 }
 
 query "iam_service_account_created" {
