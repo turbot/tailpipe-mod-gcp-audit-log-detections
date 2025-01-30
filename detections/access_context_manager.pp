@@ -28,7 +28,7 @@ detection "access_context_manager_policy_deleted" {
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
-    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
+    mitre_attack_ids = "TA0005:T1578.005"
   })
 }
 
@@ -41,7 +41,7 @@ detection "access_context_manager_access_level_deleted" {
   display_columns = local.detection_display_columns
 
   tags = merge(local.access_context_manager_common_tags, {
-    mitre_attack_ids = "TA0001:T1190,TA0004:T1078"
+    mitre_attack_ids = "TA0005:T1578.005"
   })
 }
 

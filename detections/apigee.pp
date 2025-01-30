@@ -26,7 +26,7 @@ detection "apigee_security_action_disabled" {
   display_columns = local.detection_display_columns
 
   tags = merge(local.apigee_common_tags, {
-    mitre_attack_ids = "TA0001:T1190"
+    mitre_attack_ids = "TA0005:T1562.001"
   })
 }
 
