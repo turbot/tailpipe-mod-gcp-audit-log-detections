@@ -4,7 +4,7 @@
 
 [GCP](https://cloud.google.com) provides on-demand cloud computing platforms and APIs to authenticated customers on a metered pay-as-you-go basis.
 
-The [GCP Audit Log Detections Mod](https://hub.powerpipe.mods/turbot/tailpipe-mod-gcp-audit-log-detections) contains pre-built dashboards and detections, which can be used to monitor and analyze activity across your GCP projects.
+The [GCP Audit Log Detections Mod](https://hub.powerpipe.io/mods/turbot/tailpipe-mod-gcp-audit-log-detections) contains pre-built dashboards and detections, which can be used to monitor and analyze activity across your GCP projects.
 
 Run detection benchmarks:
 ![image](docs/images/gcp_audit_log_mitre_dashboard.png)
