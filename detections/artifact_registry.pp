@@ -26,9 +26,7 @@ detection "artifact_registry_repository_deleted" {
   query           = query.artifact_registry_repository_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.artifact_registry_common_tags, {
-    mitre_attack_ids = "TA0005:T1562"
-  })
+  tags = local.artifact_registry_common_tags
 }
 
 detection "artifact_registry_package_deleted" {

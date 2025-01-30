@@ -27,9 +27,7 @@ detection "sql_ssl_certificate_deleted" {
   query           = query.sql_ssl_certificate_deleted
   display_columns = local.detection_display_columns
 
-  tags = merge(local.sql_common_tags, {
-    mitre_attack_ids = "TA0003:T1098"
-  })
+  tags = local.sql_common_tags
 }
 
 detection "sql_user_deleted" {
