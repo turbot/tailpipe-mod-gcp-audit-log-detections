@@ -14,6 +14,9 @@ benchmark "mitre_attack_v161_ta0005_t1562" {
     detection.app_engine_firewall_ingress_rule_updated,
     detection.artifact_registry_package_deleted,
     detection.artifact_registry_repository_deleted,
+    detection.iam_organization_policy_updated,
+    detection.logging_bucket_deleted,
+    detection.logging_sink_deleted,
   ]
 
   tags = local.mitre_attack_v161_ta0005_t1562_common_tags

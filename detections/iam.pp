@@ -47,7 +47,7 @@ detection "iam_service_account_key_created" {
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1078,TA0003:T1098,TA0003:T1136"
+    mitre_attack_ids = "TA0001:T1078.004,TA0003:T1098,TA0003:T1136"
   })
 }
 
@@ -60,7 +60,7 @@ detection "iam_service_account_deleted" {
   display_columns = local.detection_display_columns
 
   tags = merge(local.iam_common_tags, {
-    mitre_attack_ids = "TA0001:T1078,TA0003:T1098"
+    mitre_attack_ids = "TA0001:T1078.004,TA0003:T1098"
   })
 }
 
@@ -72,7 +72,9 @@ detection "iam_service_account_disabled" {
   query           = query.iam_service_account_disabled
   display_columns = local.detection_display_columns
 
-  tags = local.iam_common_tags
+  tags = merge(local.iam_common_tags, {
+    mitre_attack_ids = "TA0040:T1490"
+  })
 }
 
 detection "iam_service_account_token_creator_role_assigned" {
@@ -83,7 +85,9 @@ detection "iam_service_account_token_creator_role_assigned" {
   query           = query.iam_service_account_token_creator_role_assigned
   display_columns = local.detection_display_columns
 
-  tags = local.iam_common_tags
+  tags = merge(local.iam_common_tags, {
+    mitre_attack_ids = "TA0003:T1136,TA0005:T1548"
+  })
 }
 
 detection "iam_organization_policy_updated" {
@@ -94,7 +98,9 @@ detection "iam_organization_policy_updated" {
   query           = query.iam_organization_policy_updated
   display_columns = local.detection_display_columns
 
-  tags = local.iam_common_tags
+  tags = merge(local.iam_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
 }
 
 detection "iam_service_account_access_token_generated" {
@@ -105,7 +111,9 @@ detection "iam_service_account_access_token_generated" {
   query           = query.iam_service_account_access_token_generated
   display_columns = local.detection_display_columns
 
-  tags = local.iam_common_tags
+  tags = merge(local.iam_common_tags, {
+    mitre_attack_ids = "TA0005:T1550, TA0002:T1651"
+  })
 }
 
 detection "iam_service_account_key_deleted" {
@@ -127,7 +135,9 @@ detection "iam_owner_role_policy_set" {
   query           = query.iam_owner_role_policy_set
   display_columns = local.detection_display_columns
 
-  tags = local.resourcemanager_common_tags
+  tags = merge(local.resourcemanager_common_tags, {
+    mitre_attack_ids = "TA0003:T1098"
+  })
 }
 
 query "iam_service_account_created" {
