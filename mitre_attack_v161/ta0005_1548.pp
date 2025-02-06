@@ -9,6 +9,7 @@ benchmark "mitre_attack_v161_ta0005_t1548" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0005_t1548.md")
   children = [
+    detection.iam_service_account_access_token_generated,
     detection.iam_service_account_token_creator_role_assigned,
   ]
 

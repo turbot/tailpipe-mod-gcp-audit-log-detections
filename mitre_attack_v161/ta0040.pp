@@ -9,7 +9,6 @@ benchmark "mitre_attack_v161_ta0040" {
   type          = "detection"
   documentation = file("./mitre_attack_v161/docs/ta0040.md")
   children = [
-    benchmark.mitre_attack_v161_ta0040_t1490,
     benchmark.mitre_attack_v161_ta0040_t1531,
   ]
 
