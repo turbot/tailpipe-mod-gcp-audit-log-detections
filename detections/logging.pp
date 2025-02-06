@@ -26,7 +26,9 @@ detection "logging_sink_deleted" {
   query           = query.logging_sink_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.logging_common_tags
+  tags = merge(local.logging_common_tags, {
+    mitre_attack_ids = "TA0005:T1562"
+  })
 }
 
 detection "logging_bucket_deleted" {
@@ -37,7 +39,9 @@ detection "logging_bucket_deleted" {
   query           = query.logging_bucket_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.logging_common_tags
+  tags = merge(local.logging_common_tags, {
+    mitre_attack_ids = "TA0040:T1485"
+  })
 }
 
 query "logging_sink_deleted" {
