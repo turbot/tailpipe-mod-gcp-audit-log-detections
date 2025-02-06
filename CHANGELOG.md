@@ -1,3 +1,9 @@
+## v0.2.0 [2025-02-06]
+
+_Enhancements_
+
+- Added documentation for `activity_dashboard` dashboard. ([#4](https://github.com/turbot/tailpipe-mod-gcp-audit-log-detections/pull/4))
+
 ## v0.1.0 [2025-01-30]
 
 _What's new?_

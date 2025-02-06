@@ -1,5 +1,7 @@
 dashboard "activity_dashboard" {
-  title = "Audit Log Activity Dashboard"
+
+  title         = "Audit Log Activity Dashboard"
+  documentation = file("./dashboards/docs/activity_dashboard.md")
 
   tags = {
     type    = "Dashboard"
