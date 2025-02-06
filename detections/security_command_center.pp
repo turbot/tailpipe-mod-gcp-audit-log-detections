@@ -25,7 +25,9 @@ detection "security_command_center_notification_config_deleted" {
   query           = query.security_command_center_notification_config_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.security_command_center_common_tags
+  tags = merge(local.security_command_center_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
+  })
 }
 
 query "security_command_center_notification_config_deleted" {
