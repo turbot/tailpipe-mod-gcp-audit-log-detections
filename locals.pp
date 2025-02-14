@@ -19,7 +19,10 @@ locals {
   tp_index as project,
   tp_id as source_id,
   -- Create new aliases to preserve original row data
+  operation as operation_src,
+  resource as resource_src,
   *
+  exclude operation, resource
   EOQ
 
   detection_sql_where_conditions = <<-EOQ
@@ -27,6 +30,7 @@ locals {
     -- TODO: Do we need to check operation?
     -- and (operation_src is null or operation_src.last = true)
   EOQ
+
   // Keep same order as SQL statement for easier readability
   detection_display_columns = [
     "timestamp",
