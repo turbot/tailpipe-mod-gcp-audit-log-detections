@@ -1,5 +1,6 @@
 locals {
   resourcemanager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Resource Manager"
     service = "GCP/ResourceManager"
   })
 
@@ -39,4 +40,6 @@ query "resource_manager_iam_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.resourcemanager_common_tags
 }

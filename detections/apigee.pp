@@ -1,5 +1,6 @@
 locals {
   apigee_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Apigee"
     service = "GCP/Apigee"
   })
 }
@@ -40,4 +41,6 @@ query "apigee_security_action_disabled" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.apigee_common_tags
 }

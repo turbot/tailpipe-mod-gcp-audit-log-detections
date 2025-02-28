@@ -1,5 +1,6 @@
 locals {
   access_context_manager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Access Context Manager"
     service = "GCP/AccessContextManager"
   })
 
@@ -53,6 +54,8 @@ query "access_context_manager_policy_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.access_context_manager_common_tags
 }
 
 query "access_context_manager_access_level_deleted" {
@@ -67,4 +70,6 @@ query "access_context_manager_access_level_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.access_context_manager_common_tags
 }

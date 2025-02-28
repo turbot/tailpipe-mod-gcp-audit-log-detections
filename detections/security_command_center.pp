@@ -1,5 +1,6 @@
 locals {
   security_command_center_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Security Command Center"
     service = "GCP/SecurityCommandCenter"
   })
 }
@@ -40,4 +41,6 @@ query "security_command_center_notification_config_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.security_command_center_common_tags
 }

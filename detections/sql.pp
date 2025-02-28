@@ -1,5 +1,6 @@
 locals {
   sql_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "SQL"
     service = "GCP/SQL"
   })
 
@@ -53,6 +54,8 @@ query "sql_ssl_certificate_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.sql_common_tags
 }
 
 query "sql_user_deleted" {
@@ -67,4 +70,6 @@ query "sql_user_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.sql_common_tags
 }

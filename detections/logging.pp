@@ -1,5 +1,6 @@
 locals {
   logging_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Logging"
     service = "GCP/Logging"
   })
 }
@@ -52,6 +53,8 @@ query "logging_sink_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.logging_common_tags
 }
 
 query "logging_bucket_deleted" {
@@ -66,4 +69,6 @@ query "logging_bucket_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.logging_common_tags
 }

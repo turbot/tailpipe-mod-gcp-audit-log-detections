@@ -1,5 +1,6 @@
 locals {
   iam_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "IAM"
     service = "GCP/IAM"
   })
 }
@@ -142,6 +143,8 @@ query "iam_service_account_created" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_key_created" {
@@ -156,6 +159,8 @@ query "iam_service_account_key_created" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_deleted" {
@@ -170,6 +175,8 @@ query "iam_service_account_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_disabled" {
@@ -184,6 +191,8 @@ query "iam_service_account_disabled" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_token_creator_role_assigned" {
@@ -207,6 +216,8 @@ query "iam_service_account_token_creator_role_assigned" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_organization_policy_updated" {
@@ -221,6 +232,8 @@ query "iam_organization_policy_updated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_access_token_generated" {
@@ -236,6 +249,8 @@ query "iam_service_account_access_token_generated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_service_account_key_deleted" {
@@ -250,6 +265,8 @@ query "iam_service_account_key_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }
 
 query "iam_owner_role_policy_set" {
@@ -273,4 +290,6 @@ query "iam_owner_role_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.iam_common_tags
 }

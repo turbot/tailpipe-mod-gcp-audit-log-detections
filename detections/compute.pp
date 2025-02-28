@@ -1,5 +1,6 @@
 locals {
   compute_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Compute"
     service = "GCP/Compute"
   })
 
@@ -113,6 +114,8 @@ query "compute_firewall_rule_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_vpn_tunnel_deleted" {
@@ -127,6 +130,8 @@ query "compute_vpn_tunnel_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_image_iam_policy_set" {
@@ -141,6 +146,8 @@ query "compute_image_iam_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_disk_iam_policy_set" {
@@ -155,6 +162,8 @@ query "compute_disk_iam_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_snapshot_iam_policy_set" {
@@ -169,6 +178,8 @@ query "compute_snapshot_iam_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_instance_with_public_network_interface" {
@@ -205,6 +216,8 @@ query "compute_instance_with_public_network_interface" {
       order by
         timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }
 
 query "compute_subnetwork_flow_logs_disabled" {
@@ -220,4 +233,6 @@ query "compute_subnetwork_flow_logs_disabled" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.compute_common_tags
 }

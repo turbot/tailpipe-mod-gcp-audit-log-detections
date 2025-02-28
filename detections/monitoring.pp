@@ -1,8 +1,8 @@
 locals {
   monitoring_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Monitoring"
     service = "GCP/Monitoring"
   })
-
 }
 
 benchmark "monitoring_detections" {
@@ -51,6 +51,8 @@ query "monitoring_metric_descriptor_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.monitoring_common_tags
 }
 
 query "monitoring_alert_policy_deleted" {
@@ -65,4 +67,6 @@ query "monitoring_alert_policy_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.monitoring_common_tags
 }

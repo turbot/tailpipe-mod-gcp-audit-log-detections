@@ -1,5 +1,6 @@
 locals {
   dns_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "DNS"
     service = "GCP/DNS"
   })
 
@@ -78,6 +79,8 @@ query "dns_managed_zone_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_managed_zone_updated" {
@@ -92,6 +95,8 @@ query "dns_managed_zone_updated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_record_set_updated" {
@@ -106,6 +111,8 @@ query "dns_record_set_updated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_record_set_deleted" {
@@ -120,4 +127,6 @@ query "dns_record_set_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }

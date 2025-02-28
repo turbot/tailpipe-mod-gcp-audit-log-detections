@@ -1,5 +1,6 @@
 locals {
   dlp_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "DLP"
     service = "GCP/DLP"
   })
 }
@@ -40,4 +41,6 @@ query "dlp_reidentify_content" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dlp_common_tags
 }
