@@ -25,10 +25,10 @@ locals {
   exclude operation, resource
   EOQ
 
+  # TODO: Do we need to check operation?
+  # and (operation_src is null or operation_src.last = true)
   detection_sql_where_conditions = <<-EOQ
     and severity != 'Error'
-    -- TODO: Do we need to check operation?
-    -- and (operation_src is null or operation_src.last = true)
   EOQ
 
   // Keep same order as SQL statement for easier readability

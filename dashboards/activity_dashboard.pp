@@ -132,8 +132,8 @@ query "activity_dashboard_logs_by_type" {
 }
 
 query "activity_dashboard_logs_by_service" {
-  title       = "Logs by Service"
-  description = "Count the total log entries grouped by service."
+  title       = "Top 10 Services"
+  description = "List the top 10 services by frequency."
 
   sql = <<-EOQ
     select
@@ -204,8 +204,8 @@ query "activity_dashboard_logs_by_actor" {
 }
 
 query "activity_dashboard_logs_by_source_ip" {
-  title       = "Top 10 Source IPs"
-  description = "List the 10 most active source IPs."
+  title       = "Top 10 Source IPs (Excluding GCP Internal)"
+  description = "List the 10 most active source IPs, excluding events from GCP internal."
 
   sql = <<-EOQ
     select
