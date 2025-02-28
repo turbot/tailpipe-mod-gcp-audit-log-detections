@@ -2,7 +2,7 @@
 
 _Enhancements_
 
-- Add `operation_src` and `resource_src` columns to all detections to preserve original log data in columns with consistent naming.
+- Added `operation_src` and `resource_src` columns to retain original log data with consistent column naming.
 
 ## v0.2.0 [2025-02-06]
 
