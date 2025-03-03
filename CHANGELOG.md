@@ -1,3 +1,11 @@
+## v0.3.0 [2025-03-03]
+
+_Enhancements_
+
+- Added `title`, `description`, and `folder = "Project"` tag to `Activity Dashboard` queries for improved organization and clarity. ([#7](https://github.com/turbot/tailpipe-mod-gcp-audit-log-detections/pull/7))
+- Added `folder = "<service>"` tag to `service common tag locals` for better query categorization. ([#7](https://github.com/turbot/tailpipe-mod-gcp-audit-log-detections/pull/7))
+- Standardized all queries to use `service common tags`, ensuring consistency across detection queries. ([#7](https://github.com/turbot/tailpipe-mod-gcp-audit-log-detections/pull/7))
+
 ## v0.3.0 [2025-02-14]
 
 _Enhancements_
