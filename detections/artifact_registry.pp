@@ -1,5 +1,6 @@
 locals {
   artifact_registry_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Artifact Registry"
     service = "GCP/ArtifactRegistry"
   })
 }
@@ -55,6 +56,8 @@ query "artifact_registry_package_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.artifact_registry_common_tags
 }
 
 query "artifact_registry_repository_deleted" {
@@ -69,4 +72,6 @@ query "artifact_registry_repository_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.artifact_registry_common_tags
 }

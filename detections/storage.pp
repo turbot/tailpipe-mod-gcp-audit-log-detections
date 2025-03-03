@@ -1,5 +1,6 @@
 locals {
   storage_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Storage"
     service = "GCP/Storage"
   })
 }
@@ -56,6 +57,8 @@ query "storage_bucket_iam_permission_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.storage_common_tags
 }
 
 query "storage_bucket_iam_permission_granted_public_access" {
@@ -79,4 +82,6 @@ query "storage_bucket_iam_permission_granted_public_access" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.storage_common_tags
 }

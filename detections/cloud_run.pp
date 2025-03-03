@@ -1,5 +1,6 @@
 locals {
   cloud_run_function_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Cloud Run Function"
     service = "GCP/CloudRunFunction"
   })
 }
@@ -42,4 +43,6 @@ query "cloud_run_function_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.cloud_run_function_common_tags
 }
