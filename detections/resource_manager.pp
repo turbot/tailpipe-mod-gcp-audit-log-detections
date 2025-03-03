@@ -1,5 +1,6 @@
 locals {
   resourcemanager_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Resource Manager"
     service = "GCP/ResourceManager"
   })
 
@@ -24,7 +25,10 @@ detection "resource_manager_iam_policy_set" {
   query           = query.resource_manager_iam_policy_set
   display_columns = local.detection_display_columns
 
-  tags = local.resourcemanager_common_tags
+  
+  tags = merge(local.resourcemanager_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
+  })
 }
 
 query "resource_manager_iam_policy_set" {
@@ -39,4 +43,6 @@ query "resource_manager_iam_policy_set" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.resourcemanager_common_tags
 }

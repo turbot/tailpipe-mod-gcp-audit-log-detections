@@ -1,5 +1,6 @@
 locals {
   cloud_run_function_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Cloud Run Function"
     service = "GCP/CloudRunFunction"
   })
 }
@@ -25,7 +26,9 @@ detection "cloud_run_function_deleted" {
   query           = query.cloud_run_function_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.cloud_run_function_common_tags
+  tags = merge(local.cloud_run_function_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.004"
+  })
 }
 
 query "cloud_run_function_deleted" {
@@ -40,4 +43,6 @@ query "cloud_run_function_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.cloud_run_function_common_tags
 }

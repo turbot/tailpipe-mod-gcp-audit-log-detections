@@ -1,5 +1,6 @@
 locals {
   sql_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "SQL"
     service = "GCP/SQL"
   })
 
@@ -27,7 +28,9 @@ detection "sql_ssl_certificate_deleted" {
   query           = query.sql_ssl_certificate_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.sql_common_tags
+  tags = merge(local.sql_common_tags, {
+    mitre_attack_ids = "TA0003:T1098"
+  })
 }
 
 detection "sql_user_deleted" {
@@ -38,7 +41,9 @@ detection "sql_user_deleted" {
   query           = query.sql_user_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.sql_common_tags
+  tags = merge(local.sql_common_tags, {
+    mitre_attack_ids = "TA0003:T1098"
+  })
 }
 
 query "sql_ssl_certificate_deleted" {
@@ -53,6 +58,8 @@ query "sql_ssl_certificate_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.sql_common_tags
 }
 
 query "sql_user_deleted" {
@@ -67,4 +74,6 @@ query "sql_user_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.sql_common_tags
 }

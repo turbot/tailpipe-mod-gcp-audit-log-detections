@@ -1,8 +1,8 @@
 locals {
   monitoring_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "Monitoring"
     service = "GCP/Monitoring"
   })
-
 }
 
 benchmark "monitoring_detections" {
@@ -25,7 +25,9 @@ detection "monitoring_metric_descriptor_deleted" {
   query           = query.monitoring_metric_descriptor_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.monitoring_common_tags
+  tags = merge(local.monitoring_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.005"
+  })
 }
 
 detection "monitoring_alert_policy_deleted" {
@@ -36,7 +38,9 @@ detection "monitoring_alert_policy_deleted" {
   query           = query.monitoring_alert_policy_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.monitoring_common_tags
+  tags = merge(local.monitoring_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.005"
+  })
 }
 
 query "monitoring_metric_descriptor_deleted" {
@@ -51,6 +55,8 @@ query "monitoring_metric_descriptor_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.monitoring_common_tags
 }
 
 query "monitoring_alert_policy_deleted" {
@@ -65,4 +71,6 @@ query "monitoring_alert_policy_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.monitoring_common_tags
 }

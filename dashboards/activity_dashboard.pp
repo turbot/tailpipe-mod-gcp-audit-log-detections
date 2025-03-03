@@ -68,7 +68,8 @@ dashboard "activity_dashboard" {
 # -----------------------------
 
 query "activity_dashboard_total_logs" {
-  title = "Log Count"
+  title       = "Log Count"
+  description = "Count the total log entries."
 
   sql = <<-EOQ
     select
@@ -76,10 +77,15 @@ query "activity_dashboard_total_logs" {
     from
       gcp_audit_log;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_project" {
-  title = "Logs by Project"
+  title       = "Logs by Project"
+  description = "Count the total log entries grouped by project."
 
   sql = <<-EOQ
     select
@@ -95,29 +101,39 @@ query "activity_dashboard_logs_by_project" {
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_type" {
-  title = "Logs by Type"
+  title       = "Logs by Type"
+  description = "Count the total log entries grouped by type."
 
   sql = <<-EOQ
     select
-      split_part(log_name, '%2F', 2) as "Type",
+      split_part(replace(log_name, '%2F', '/'),'/', 5) as "Type",
       count(*) as "Logs"
     from
       gcp_audit_log
     where
-      split_part(log_name, '%2F', 2) is not null
+      split_part(replace(log_name, '%2F', '/'),'/', 5) is not null
     group by
-      split_part(log_name, '%2F', 2)
+      split_part(replace(log_name, '%2F', '/'),'/', 5)
     order by
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_service" {
-  title = "Logs by Service"
+  title       = "Top 10 Services"
+  description = "List the top 10 services by frequency."
 
   sql = <<-EOQ
     select
@@ -133,10 +149,15 @@ query "activity_dashboard_logs_by_service" {
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_event" {
-  title = "Top 10 Events"
+  title       = "Top 10 Events"
+  description = "List the 10 most frequently called events."
 
   sql = <<-EOQ
     select
@@ -152,10 +173,15 @@ query "activity_dashboard_logs_by_event" {
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_actor" {
-  title = "Top 10 Actors"
+  title       = "Top 10 Actors"
+  description = "List the 10 most active actors."
 
   sql = <<-EOQ
     select
@@ -171,10 +197,15 @@ query "activity_dashboard_logs_by_actor" {
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }
 
 query "activity_dashboard_logs_by_source_ip" {
-  title = "Top 10 Source IPs"
+  title       = "Top 10 Source IPs (Excluding GCP Internal)"
+  description = "List the 10 most active source IPs, excluding events from GCP internal."
 
   sql = <<-EOQ
     select
@@ -191,4 +222,8 @@ query "activity_dashboard_logs_by_source_ip" {
       count(*) desc
     limit 10;
   EOQ
+
+  tags = {
+    folder = "Project"
+  }
 }

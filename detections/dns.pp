@@ -1,5 +1,6 @@
 locals {
   dns_common_tags = merge(local.gcp_audit_log_detections_common_tags, {
+    folder  = "DNS"
     service = "GCP/DNS"
   })
 
@@ -29,7 +30,9 @@ detection "dns_managed_zone_deleted" {
   query           = query.dns_managed_zone_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.dns_common_tags
+  tags = merge(local.dns_common_tags, {
+    mitre_attack_ids = "TA0040:T1565.001"
+  })
 }
 
 detection "dns_managed_zone_updated" {
@@ -40,7 +43,9 @@ detection "dns_managed_zone_updated" {
   query           = query.dns_managed_zone_updated
   display_columns = local.detection_display_columns
 
-  tags = local.dns_common_tags
+  tags = merge(local.dns_common_tags, {
+    mitre_attack_ids = "TA0040:T1565.001"
+  })
 }
 
 detection "dns_record_set_updated" {
@@ -51,7 +56,9 @@ detection "dns_record_set_updated" {
   query           = query.dns_record_set_updated
   display_columns = local.detection_display_columns
 
-  tags = local.dns_common_tags
+  tags = merge(local.dns_common_tags, {
+    mitre_attack_ids = "TA0040:T1565.001"
+  })
 }
 
 detection "dns_record_set_deleted" {
@@ -62,7 +69,9 @@ detection "dns_record_set_deleted" {
   query           = query.dns_record_set_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.dns_common_tags
+  tags = merge(local.dns_common_tags, {
+    mitre_attack_ids = "TA0040:T1565.001"
+  })
 }
 
 query "dns_managed_zone_deleted" {
@@ -78,6 +87,8 @@ query "dns_managed_zone_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_managed_zone_updated" {
@@ -92,6 +103,8 @@ query "dns_managed_zone_updated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_record_set_updated" {
@@ -106,6 +119,8 @@ query "dns_record_set_updated" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
 
 query "dns_record_set_deleted" {
@@ -120,4 +135,6 @@ query "dns_record_set_deleted" {
     order by
       timestamp desc;
   EOQ
+
+  tags = local.dns_common_tags
 }
