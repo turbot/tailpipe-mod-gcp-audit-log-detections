@@ -27,7 +27,9 @@ detection "artifact_registry_repository_deleted" {
   query           = query.artifact_registry_repository_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.artifact_registry_common_tags
+  tags = merge(local.artifact_registry_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.003"
+  })
 }
 
 detection "artifact_registry_package_deleted" {
@@ -37,7 +39,9 @@ detection "artifact_registry_package_deleted" {
   severity      = "low"
   query         = query.artifact_registry_package_deleted
 
-  tags = local.artifact_registry_common_tags
+  tags = merge(local.app_engine_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.003"
+  })
 }
 
 query "artifact_registry_package_deleted" {

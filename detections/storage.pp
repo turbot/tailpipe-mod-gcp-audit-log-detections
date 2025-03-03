@@ -27,7 +27,9 @@ detection "storage_bucket_iam_permission_set" {
   query           = query.storage_bucket_iam_permission_set
   display_columns = local.detection_display_columns
 
-  tags = local.storage_common_tags
+  tags = merge(local.storage_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.005"
+  })
 }
 
 detection "storage_bucket_iam_permission_granted_public_access" {
@@ -38,7 +40,9 @@ detection "storage_bucket_iam_permission_granted_public_access" {
   query           = query.storage_bucket_iam_permission_granted_public_access
   display_columns = local.detection_display_columns
 
-  tags = local.storage_common_tags
+  tags = merge(local.storage_common_tags, {
+    mitre_attack_ids = "TA0001:T1190"
+  })
 }
 
 query "storage_bucket_iam_permission_set" {

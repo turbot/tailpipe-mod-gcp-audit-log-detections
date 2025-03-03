@@ -25,7 +25,10 @@ detection "resource_manager_iam_policy_set" {
   query           = query.resource_manager_iam_policy_set
   display_columns = local.detection_display_columns
 
-  tags = local.resourcemanager_common_tags
+  
+  tags = merge(local.resourcemanager_common_tags, {
+    mitre_attack_ids = "TA0005:T1211"
+  })
 }
 
 query "resource_manager_iam_policy_set" {

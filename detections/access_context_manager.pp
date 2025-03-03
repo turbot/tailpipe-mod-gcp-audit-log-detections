@@ -28,7 +28,9 @@ detection "access_context_manager_policy_deleted" {
   query           = query.access_context_manager_policy_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.access_context_manager_common_tags
+  tags = merge(local.access_context_manager_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.005"
+  })
 }
 
 detection "access_context_manager_access_level_deleted" {
@@ -39,7 +41,9 @@ detection "access_context_manager_access_level_deleted" {
   query           = query.access_context_manager_access_level_deleted
   display_columns = local.detection_display_columns
 
-  tags = local.access_context_manager_common_tags
+  tags = merge(local.access_context_manager_common_tags, {
+    mitre_attack_ids = "TA0005:T1578.005"
+  })
 }
 
 query "access_context_manager_policy_deleted" {
