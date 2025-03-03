@@ -102,14 +102,14 @@ query "activity_dashboard_logs_by_type" {
 
   sql = <<-EOQ
     select
-      split_part(log_name, '%2F', 2) as "Type",
+      split_part(replace(log_name, '%2F', '/'),'/', 5) as "Type",
       count(*) as "Logs"
     from
       gcp_audit_log
     where
-      split_part(log_name, '%2F', 2) is not null
+      split_part(replace(log_name, '%2F', '/'),'/', 5) is not null
     group by
-      split_part(log_name, '%2F', 2)
+      split_part(replace(log_name, '%2F', '/'),'/', 5)
     order by
       count(*) desc
     limit 10;

@@ -25,7 +25,9 @@ detection "apigee_security_action_disabled" {
   query           = query.apigee_security_action_disabled
   display_columns = local.detection_display_columns
 
-  tags = local.apigee_common_tags
+  tags = merge(local.apigee_common_tags, {
+    mitre_attack_ids = "TA0005:T1562.001"
+  })
 }
 
 query "apigee_security_action_disabled" {
