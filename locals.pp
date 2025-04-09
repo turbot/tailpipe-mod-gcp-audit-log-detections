@@ -22,7 +22,7 @@ locals {
   operation as operation_src,
   resource as resource_src,
   *
-  exclude operation, resource
+  exclude (operation, resource)
   EOQ
 
   # TODO: Do we need to check operation?
